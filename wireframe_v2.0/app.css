@@ -1,0 +1,315 @@
+/* =====================================================================
+   NE Books 자사몰 개편 — Front 와이어프레임 v2.0 (PoC retrofit layer)
+   NE Design.md v0.11.5-alpha 적용 (Scenario C · non-React/static HTML)
+
+   - 색/spacing/rounded/font는 전부 NE token(var(--ne-*) / var(--space-*) /
+     var(--rounded-*) / var(--font-*))만 사용. raw hex/rgba 0건.
+   - live .ne-* 계약(ne-btn / ne-card / ne-badge / ne-page·grid·stack·cluster)은
+     baseline CSS를 그대로 link하여 사용하고, 본 파일은 그 위의 PoC 도메인 layer다
+     (must_tier_todo인 form/tabs/table/modal/도메인 카드 시각층 보완).
+   - root canvas = ne-surface-base (baseline components.css의 body 배선 준수).
+   - 구조용 px(사이드바 폭, 썸네일 비율 등)는 layout dimension이며 spacing token과 구분.
+   ===================================================================== */
+
+/* PoC reset — baseline CSS는 box-sizing을 설정하지 않아 padding overflow 방지용으로만 둔다 */
+*, *::before, *::after { box-sizing: border-box; }
+
+/* ── App shell ───────────────────────────────────────────── */
+.nb-shell { min-height: 100vh; }
+
+.nb-header {
+  position: sticky; top: 0; z-index: var(--z-sticky-header);
+  display: flex; align-items: center; gap: var(--space-md);
+  padding: var(--space-sm) var(--space-lg);
+  background: var(--ne-surface-section);
+  border-bottom: 1px solid var(--ne-boundary);
+}
+.nb-header h1 { font-size: 16px; font-weight: 700; color: var(--ne-text-heading); letter-spacing: -0.01em; }
+.nb-header .nb-meta { margin-left: auto; font-size: 12px; color: var(--ne-text-tertiary); }
+
+.nb-body { display: flex; align-items: flex-start; }
+
+.nb-sidebar {
+  width: 240px; flex: 0 0 240px;
+  position: sticky; top: 57px; height: calc(100vh - 57px); overflow-y: auto;
+  background: var(--ne-surface-section);
+  border-right: 1px solid var(--ne-boundary);
+  padding: var(--space-md) 0;
+}
+.nb-nav-group {
+  padding: var(--space-xs) var(--space-md) var(--space-xxs);
+  margin-top: var(--space-xs);
+  font-size: 12px; font-weight: 700; letter-spacing: 0.04em;
+  color: var(--ne-text-tertiary);
+}
+.nb-nav-item {
+  display: block; padding: var(--space-xs) var(--space-md);
+  border-left: 3px solid transparent;
+  color: var(--ne-text-body); text-decoration: none; font-size: 13px;
+  cursor: pointer;
+}
+.nb-nav-item:hover { background: var(--ne-mono-overlay-hover); }   /* clickable 요소만 hover */
+.nb-nav-item.active {
+  background: var(--ne-surface-base);
+  border-left-color: var(--ne-primary);   /* small signal, large fill 아님 */
+  color: var(--ne-text-heading); font-weight: 700;
+}
+.nb-nav-item .nb-sid { display: block; font-size: 10px; color: var(--ne-text-tertiary); font-weight: 400; }
+
+.nb-main { flex: 1; min-width: 0; padding: var(--space-lg); background: var(--ne-surface-base); }
+
+/* ── Screen sections ─────────────────────────────────────── */
+.nb-screen { display: none; }
+.nb-screen.active { display: block; }
+
+/* 화면 상단 정보바 */
+.nb-topbar { margin-bottom: var(--space-md); }
+.nb-topbar .nb-titlerow { display: flex; align-items: baseline; flex-wrap: wrap; gap: var(--space-sm); }
+.nb-topbar h2 { font-size: 22px; font-weight: 800; color: var(--ne-text-heading); letter-spacing: -0.015em; }
+.nb-topbar .nb-purpose { margin-top: var(--space-xs); color: var(--ne-text-body); font-size: 13px; }
+.nb-sid-badge {
+  font-size: 11px; font-weight: 700;
+  background: var(--ne-text-heading); color: var(--ne-text-on-dark);
+  padding: 2px var(--space-xs); border-radius: var(--rounded-xs);
+}
+.nb-chips { margin-top: var(--space-sm); display: flex; flex-wrap: wrap; gap: var(--space-xs); }
+
+/* ── 화면 본문 2단 (콘텐츠 + 정책메모) ───────────────────── */
+.nb-content { display: flex; gap: var(--space-md); align-items: flex-start; }
+.nb-main-col { flex: 1; min-width: 0; }
+.nb-aside { flex: 0 0 280px; width: 280px; position: sticky; top: 72px; }
+
+/* 정책 메모 (muted band card) */
+.nb-policy { }
+.nb-policy h4 {
+  display: flex; align-items: center; gap: var(--space-xxs);
+  font-size: 13px; color: var(--ne-text-heading);
+  padding-bottom: var(--space-xs); margin-bottom: var(--space-xs);
+  border-bottom: 1px solid var(--ne-boundary);
+}
+.nb-policy ul { list-style: none; margin: 0; padding: 0; font-size: 12px; color: var(--ne-text-body); }
+.nb-policy li { padding: var(--space-xs) 0; border-bottom: 1px dotted var(--ne-boundary); }
+.nb-policy li:last-child { border-bottom: none; }
+.nb-policy b { color: var(--ne-text-heading); }
+.nb-need {
+  display: inline-block; font-size: 10px; font-weight: 500;
+  background: var(--ne-status-warning-bg); color: var(--ne-status-warning);
+  padding: 0 var(--space-xxs); border-radius: var(--rounded-pill); margin-right: var(--space-xxs);
+}
+
+/* ── Card 보조 (baseline .ne-card 위 PoC 헤더/구조) ──────── */
+.nb-card { margin-bottom: var(--space-md); }
+.nb-card-title {
+  display: flex; align-items: center; gap: var(--space-xs);
+  font-size: 14px; font-weight: 700; color: var(--ne-text-heading);
+  padding-bottom: var(--space-xs); margin-bottom: var(--space-sm);
+  border-bottom: 1px solid var(--ne-boundary);
+}
+.nb-ref { margin-left: auto; font-size: 10px; font-weight: 400; color: var(--ne-text-tertiary); }
+.nb-section-title {
+  display: flex; align-items: center; gap: var(--space-xs); flex-wrap: wrap;
+  font-size: 16px; font-weight: 800; color: var(--ne-text-heading);
+  margin: var(--space-lg) 0 var(--space-sm);
+}
+.nb-section-title .nb-ref { font-weight: 400; }
+
+/* ── 공통 유틸 (inline style 대체) ───────────────────────── */
+.nb-row { display: flex; align-items: center; justify-content: space-between; gap: var(--space-sm); flex-wrap: wrap; }
+.nb-inline { display: flex; align-items: center; gap: var(--space-xs); flex-wrap: wrap; }
+.nb-inline-top { align-items: flex-start; }
+.nb-btn-row { display: flex; gap: var(--space-xs); flex-wrap: wrap; }
+.nb-fnote { font-size: 11px; color: var(--ne-text-tertiary); margin-top: var(--space-xxs); }
+.nb-dim { color: var(--ne-text-tertiary); }
+.nb-hr { height: 1px; background: var(--ne-boundary); border: none; margin: var(--space-md) 0; }
+.nb-grow { flex: 1; min-width: 0; }
+
+/* placeholder (이미지/배너 자리) — small inset fill = ne-surface-card 허용 */
+.nb-ph {
+  background: var(--ne-surface-card);
+  border: 1px dashed var(--ne-boundary);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--ne-text-tertiary); font-size: 11px; text-align: center;
+  border-radius: var(--rounded-sm);
+}
+.nb-thumb { width: 100%; aspect-ratio: 3 / 4; }
+
+/* ── 안내 문구 / 빈 상태 ─────────────────────────────────── */
+.nb-notice {
+  background: var(--ne-surface-section);
+  border-left: 3px solid var(--ne-boundary);
+  padding: var(--space-xs) var(--space-sm);
+  font-size: 12px; color: var(--ne-text-body);
+  margin: var(--space-xs) 0; border-radius: var(--rounded-xs);
+}
+.nb-notice--warn {
+  background: var(--ne-status-warning-bg);
+  border-left-color: var(--ne-status-warning-border);
+  color: var(--ne-status-warning);
+}
+.nb-empty {
+  border: 1px dashed var(--ne-boundary); background: var(--ne-surface-section);
+  padding: var(--space-xl); text-align: center; color: var(--ne-text-tertiary);
+  font-size: 13px; border-radius: var(--rounded-md);
+}
+
+/* ── Table (PoC layer; ne-table 미구현) ──────────────────── */
+.nb-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.nb-table th, .nb-table td {
+  border: 1px solid var(--ne-boundary);
+  padding: var(--space-xs) var(--space-sm);
+  text-align: left; vertical-align: middle; color: var(--ne-text-body);
+}
+.nb-table th { background: var(--ne-surface-section); font-weight: 700; color: var(--ne-text-heading); font-size: 11px; }
+.nb-table td.num { text-align: right; }
+.nb-table td.center { text-align: center; }
+/* 비-interactive table은 hover background 없음 (surface_context_policy) */
+.nb-table-wrap { width: 100%; overflow-x: auto; }   /* mobile_defaults: table scroll wrapper */
+
+/* ── Forms (PoC layer; ne-form-* 미배선 — token으로 보완) ── */
+.nb-field { margin-bottom: var(--space-sm); }
+.nb-field > label { display: block; font-size: 12px; color: var(--ne-text-body); font-weight: 500; margin-bottom: var(--space-xxs); }
+.nb-req { color: var(--ne-status-danger); }
+.nb-input, input[type=text].nb-input, input[type=number].nb-input,
+input[type=email].nb-input, input[type=tel].nb-input, select.nb-input, textarea.nb-input {
+  width: 100%; box-sizing: border-box;
+  height: 44px; padding: 0 var(--space-md);
+  border: 1px solid var(--ne-boundary); border-radius: var(--rounded-md);
+  background: var(--ne-surface-base); color: var(--ne-text-heading);
+  font-family: var(--font-primary); font-size: 14px;
+}
+textarea.nb-input { height: auto; min-height: 96px; padding: var(--space-sm) var(--space-md); resize: vertical; }
+.nb-input::placeholder { color: var(--ne-text-tertiary); }
+.nb-input:hover { border-color: var(--ne-text-tertiary); }
+.nb-input:focus-visible, .nb-input:focus {
+  outline: none; border-color: var(--ne-text-tertiary);
+  box-shadow: 0 0 0 3px var(--ne-mono-focus-ring);
+}
+.nb-input--sm { height: 36px; }
+.nb-check-label { font-size: 12px; color: var(--ne-text-body); display: inline-flex; align-items: center; gap: var(--space-xxs); cursor: pointer; }
+input[type=checkbox], input[type=radio] { accent-color: var(--ne-primary); width: 16px; height: 16px; }
+
+/* 수량 스테퍼 */
+.nb-stepper { display: inline-flex; align-items: stretch; }
+.nb-stepper .nb-qty { width: 56px; height: 36px; text-align: center; border-left: none; border-right: none; border-radius: 0; }
+.nb-stepper .ne-btn { border-radius: 0; }
+.nb-stepper .ne-btn:first-child { border-top-left-radius: var(--rounded-md); border-bottom-left-radius: var(--rounded-md); }
+.nb-stepper .ne-btn:last-child { border-top-right-radius: var(--rounded-md); border-bottom-right-radius: var(--rounded-md); }
+
+/* ── Tabs (PoC layer; ne-tabs 키보드 spec deferred) ──────── */
+.nb-tabs { display: flex; flex-wrap: wrap; gap: var(--space-xxs); border-bottom: 1px solid var(--ne-boundary); margin-bottom: var(--space-sm); }
+.nb-tab {
+  padding: var(--space-xs) var(--space-md);
+  border: 1px solid var(--ne-boundary); border-bottom: none;
+  background: var(--ne-surface-section); color: var(--ne-text-tertiary);
+  font-size: 12px; cursor: pointer;
+  border-top-left-radius: var(--rounded-sm); border-top-right-radius: var(--rounded-sm);
+}
+.nb-tab:hover { background: var(--ne-mono-overlay-hover); }
+.nb-tab.active {
+  background: var(--ne-surface-base); color: var(--ne-text-heading); font-weight: 700;
+  border-top: 2px solid var(--ne-text-heading);
+}
+
+/* ── 교재 카드 (도메인 컴포넌트 — PoC layer, ne-card 기반) ─ */
+.nb-book-card { display: flex; flex-direction: column; gap: var(--space-xs); padding: var(--space-sm); }
+.nb-book-card .nb-badges { display: flex; gap: var(--space-xxs); flex-wrap: wrap; min-height: 22px; }
+.nb-book-card .nb-cardtype { align-self: flex-start; }
+.nb-book-card .nb-meta { font-size: 11px; color: var(--ne-text-tertiary); }
+.nb-book-card .nb-title { font-size: 13px; font-weight: 700; color: var(--ne-text-heading); line-height: 1.35; min-height: 34px; }
+.nb-book-card .nb-copy { font-size: 11px; color: var(--ne-text-body); }
+.nb-price .nb-list { color: var(--ne-text-tertiary); text-decoration: line-through; font-size: 11px; }
+.nb-price .nb-sale { font-size: 15px; font-weight: 800; color: var(--ne-text-heading); }
+.nb-price .nb-rate { font-weight: 700; color: var(--ne-text-heading); font-size: 12px; }
+.nb-point { font-size: 11px; color: var(--ne-text-body); }
+.nb-card-btns { display: flex; gap: var(--space-xxs); margin-top: var(--space-xxs); }
+.nb-card-btns .ne-btn { flex: 1; padding-left: var(--space-xs); padding-right: var(--space-xs); }
+
+/* 자료대상 / 상태 플래그는 ne-badge 사용 (별도 스타일 없음) */
+
+/* ── 금액 요약 박스 ──────────────────────────────────────── */
+.nb-sum .nb-sum-line { display: flex; justify-content: space-between; padding: var(--space-xs) 0; font-size: 13px; border-bottom: 1px dotted var(--ne-boundary); }
+.nb-sum .nb-sum-line.total { border-bottom: none; border-top: 2px solid var(--ne-text-heading); margin-top: var(--space-xxs); padding-top: var(--space-sm); font-size: 16px; font-weight: 800; color: var(--ne-text-heading); }
+.nb-sum .nb-minus { color: var(--ne-status-danger-strong); }
+
+/* ── 결제 2단 레이아웃 ───────────────────────────────────── */
+.nb-pay-layout { display: grid; grid-template-columns: 1fr 320px; gap: var(--space-md); align-items: start; }
+.nb-pay-aside { position: sticky; top: 72px; }
+
+/* ── 옵션 선택 카드 (배송지/결제수단/쿠폰) ───────────────── */
+.nb-opt-list { display: flex; flex-direction: column; gap: var(--space-xs); }
+.nb-opt { display: flex; gap: var(--space-sm); align-items: flex-start; padding: var(--space-sm) var(--space-md); border: 1px solid var(--ne-boundary); border-radius: var(--rounded-md); background: var(--ne-surface-base); cursor: pointer; }
+.nb-opt:hover { background: var(--ne-mono-overlay-hover); }   /* selectable item → hover 허용 */
+.nb-opt.selected { border-color: var(--ne-text-heading); border-width: 2px; }
+.nb-opt input { margin-top: 3px; }
+.nb-opt .nb-opt-title { font-weight: 700; font-size: 13px; color: var(--ne-text-heading); }
+.nb-opt .nb-opt-desc { font-size: 11px; color: var(--ne-text-tertiary); }
+.nb-pay-methods { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-xs); }
+
+/* ── Modal (PoC 최소 구현 — portal/focus-trap/scroll-lock deferred) ── */
+.nb-modal-overlay {
+  display: none; position: fixed; inset: 0; z-index: var(--z-dialog-overlay);
+  /* scrim: 토큰 기반 색 파생(raw rgba 금지 → color-mix on semantic token) */
+  background: color-mix(in srgb, var(--ne-text-heading) 48%, transparent);
+  align-items: center; justify-content: center; padding: var(--space-lg);
+}
+.nb-modal-overlay.open { display: flex; }
+.nb-modal {
+  background: var(--ne-surface-base); border: 1px solid var(--ne-boundary);
+  border-radius: var(--rounded-lg); width: 560px; max-width: 100%; max-height: 88vh; overflow: auto;
+}
+.nb-modal-head { display: flex; align-items: center; gap: var(--space-sm); padding: var(--space-sm) var(--space-md); border-bottom: 1px solid var(--ne-boundary); background: var(--ne-surface-section); }
+.nb-modal-head h3 { font-size: 15px; font-weight: 700; color: var(--ne-text-heading); }
+.nb-modal-head .nb-x { margin-left: auto; }
+.nb-modal-body { padding: var(--space-md); }
+.nb-modal-foot { display: flex; gap: var(--space-xs); justify-content: flex-end; padding: var(--space-sm) var(--space-md); border-top: 1px solid var(--ne-boundary); background: var(--ne-surface-section); }
+
+/* ── 플로팅 최근 본 도서 ─────────────────────────────────── */
+.nb-floating {
+  display: none; position: fixed; right: var(--space-md); bottom: var(--space-md);
+  width: 124px; z-index: var(--z-dropdown);
+  background: var(--ne-surface-base); border: 1px solid var(--ne-boundary); border-radius: var(--rounded-md);
+  font-size: 11px; overflow: hidden;
+}
+.nb-floating.show { display: block; }
+.nb-floating .nb-fr-head { background: var(--ne-surface-section); color: var(--ne-text-heading); padding: var(--space-xxs) var(--space-xs); text-align: center; font-weight: 700; border-bottom: 1px solid var(--ne-boundary); }
+.nb-floating .nb-fr-item { padding: var(--space-xs); border-bottom: 1px solid var(--ne-boundary); text-align: center; color: var(--ne-text-body); }
+.nb-floating .nb-fr-item .nb-ph { height: 56px; margin-bottom: var(--space-xxs); }
+
+/* ── 메인 화면 전용 ──────────────────────────────────────── */
+.nb-utility { display: flex; flex-wrap: wrap; gap: var(--space-sm); padding: var(--space-xs) var(--space-sm); background: var(--ne-surface-section); border: 1px solid var(--ne-boundary); border-radius: var(--rounded-sm); font-size: 11px; color: var(--ne-text-tertiary); }
+.nb-storehead { display: flex; align-items: center; gap: var(--space-md); padding: var(--space-sm) var(--space-md); border: 1px solid var(--ne-boundary); border-radius: var(--rounded-md); background: var(--ne-surface-base); margin-top: var(--space-xs); }
+.nb-logo { font-weight: 800; font-size: 18px; letter-spacing: -0.02em; color: var(--ne-text-heading); border: 2px solid var(--ne-text-heading); padding: var(--space-xxs) var(--space-xs); border-radius: var(--rounded-sm); }
+.nb-search { flex: 1; display: flex; gap: var(--space-xxs); }
+.nb-gnb { display: flex; flex-wrap: wrap; border: 1px solid var(--ne-boundary); border-top: none; background: var(--ne-surface-section); border-radius: 0 0 var(--rounded-md) var(--rounded-md); }
+.nb-gnb a { padding: var(--space-xs) var(--space-md); font-size: 13px; color: var(--ne-text-body); text-decoration: none; border-right: 1px solid var(--ne-boundary); }
+.nb-gnb a:hover { background: var(--ne-mono-overlay-hover); }
+.nb-dots { color: var(--ne-text-tertiary); letter-spacing: 4px; text-align: center; }
+.nb-dot { display: inline-block; width: 8px; height: 8px; border-radius: var(--rounded-full); background: var(--ne-boundary); margin: 0 3px; }
+.nb-dot.on { background: var(--ne-text-heading); }
+
+/* ── 아이콘 (approved Lucide subset, inline SVG · currentColor) ── */
+.nb-ico { display: inline-flex; width: 1em; height: 1em; vertical-align: -0.125em; }
+.nb-ico svg { width: 100%; height: 100%; stroke: currentColor; fill: none; }
+.nb-ico--lg { width: 18px; height: 18px; }
+
+/* ── 폭/간격 보조 유틸 (inline style 잔여 제거용) ─────────── */
+.nb-w-thumb-sm { width: 46px; height: 60px; }
+.nb-w-banner { width: 90px; height: 64px; }
+.nb-h-visual { height: 170px; }
+.nb-h-block { height: 140px; }
+.nb-h-block-sm { height: 120px; }
+.nb-mt { margin-top: var(--space-md); }
+.nb-center { text-align: center; }
+.nb-stack-col { display: flex; flex-direction: column; gap: var(--space-xs); }
+
+/* ── 반응형 (desktop-only + 최소 fallback) ───────────────── */
+@media (max-width: 1100px) {
+  .nb-aside { display: none; }
+  .nb-pay-layout { grid-template-columns: 1fr; }
+}
+@media (max-width: 900px) {
+  .nb-pay-methods { grid-template-columns: 1fr; }
+}
+@media (max-width: 760px) {
+  .nb-sidebar { display: none; }
+}

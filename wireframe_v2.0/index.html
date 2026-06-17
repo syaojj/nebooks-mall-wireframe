@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NE Books 자사몰 개편 · Front 와이어프레임 v2.0 (NE Design.md 적용)</title>
+<!--
+  =====================================================================
+  NE Books 자사몰 개편 — Front 와이어프레임 v2.0
+  NE Design.md v0.11.5-alpha 적용 / Scenario C (non-React/static HTML retrofit)
+
+  - 기능 기준: NE Books 개편 기능 정의서_v1.0_260617.xlsx
+    (Sheet 01 개요 / 02 GAP / 03 Front IA / 06 교재목록 / 07 교재상세 /
+     09 장바구니 / 10 주문결제)
+  - 디자인 기준: NE Design.md (DESIGN.md = source of truth)
+    live .ne-* 계약 = ne-btn / ne-card / ne-badge / ne-page·grid·stack·cluster
+    그 외 form/tabs/table/modal/도메인 카드는 PoC layer(app.css)에서 token으로 보완.
+  - 색/spacing/font는 전부 NE token. raw hex/rgba/emoji 0건. approved Lucide subset만.
+  - 화면 구조·라우팅·로직은 v1 PoC 보존(audit-first retrofit).
+  =====================================================================
+-->
+<!-- NE 공식 폰트 (DESIGN.md typography.embedding) — 오프라인 시 system-ui fallback -->
+<link rel="stylesheet" href="https://front.neungyule.com/css/pretendardvariable.css">
+<!-- baseline CSS 3종 (fork target, 그대로 link) -->
+<link rel="stylesheet" href="styles/tokens.css">
+<link rel="stylesheet" href="styles/layout.css">
+<link rel="stylesheet" href="styles/components.css">
+<!-- PoC retrofit layer -->
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<div class="nb-shell">
+
+<!-- ============ 글로벌 헤더 (와이어프레임 도구바 · muted band chrome) ============ -->
+<header class="nb-header">
+  <h1>NE Books 자사몰 개편 · Front 와이어프레임 v2.0</h1>
+  <span class="ne-badge ne-badge-category-mono">기획 검토용</span>
+  <span class="ne-badge ne-badge-category-color">NE Design.md v0.11.5</span>
+  <span class="nb-meta">기준: 기능정의서_260617 · Sheet 01·02·03·06·07·09·10</span>
+</header>
+
+<div class="nb-body">
+
+  <!-- ============ 좌측 화면 네비게이션 (Front IA 기준) ============ -->
+  <nav class="nb-sidebar" id="sidebar">
+    <div class="nb-nav-group">메인</div>
+    <a class="nb-nav-item" data-screen="main"><span class="nb-sid">MAIN-001</span>메인</a>
+    <div class="nb-nav-group">교재</div>
+    <a class="nb-nav-item" data-screen="list"><span class="nb-sid">BOOK-LIST-001</span>교재목록</a>
+    <a class="nb-nav-item" data-screen="view"><span class="nb-sid">BOOK-VIEW-001</span>교재상세</a>
+    <div class="nb-nav-group">학습자료실</div>
+    <a class="nb-nav-item" data-screen="data"><span class="nb-sid">DATA-001</span>학습자료실</a>
+    <div class="nb-nav-group">주문/결제</div>
+    <a class="nb-nav-item" data-screen="cart"><span class="nb-sid">CART-001</span>장바구니</a>
+    <a class="nb-nav-item" data-screen="order"><span class="nb-sid">ORDER-001</span>주문/결제</a>
+    <a class="nb-nav-item" data-screen="complete"><span class="nb-sid">ORDER-002</span>결제완료</a>
+    <div class="nb-nav-group">마이페이지</div>
+    <a class="nb-nav-item" data-screen="myorder"><span class="nb-sid">MY-001</span>주문내역</a>
+    <a class="nb-nav-item" data-screen="point"><span class="nb-sid">MY-003</span>포인트</a>
+    <a class="nb-nav-item" data-screen="coupon"><span class="nb-sid">MY-004</span>쿠폰</a>
+    <div class="nb-nav-group">고객센터</div>
+    <a class="nb-nav-item" data-screen="cs"><span class="nb-sid">CS-005</span>1:1 문의</a>
+  </nav>
+
+  <main class="nb-main ne-page ne-page--default">
+
+  <!-- ================================================================
+       1) 메인  (MAIN-001 / Sheet 08 메인 · Sheet 02 GAP) — surface_intent: mixed
+       ================================================================ -->
+  <section class="nb-screen" id="screen-main">
+    <div class="nb-topbar">
+      <div class="nb-titlerow">
+        <span class="nb-sid-badge">MAIN-001</span>
+        <h2>메인</h2>
+        <span class="ne-badge ne-badge-status-neutral">개선</span>
+      </div>
+      <div class="nb-purpose">화면 목적 : 교재 탐색 중심 사이트를 <b>교재 탐색 + 구매 + Tutor/Waffle 진입 허브</b>로 개편한 서비스 메인.</div>
+      <div class="nb-chips">
+        <span class="ne-badge ne-badge-category-mono">통합검색 + 인기검색어(1~10위)</span>
+        <span class="ne-badge ne-badge-category-mono">실시간 검색 미리보기</span>
+        <span class="ne-badge ne-badge-category-mono">장바구니 : 비회원도 사용 가능</span>
+        <span class="ne-badge ne-badge-category-mono">베스트셀러 : 학년군 탭(주별 판매량 상위 5)</span>
+        <span class="ne-badge ne-badge-status-warning">추천교재 노출 기준 운영 정책 확인</span>
+      </div>
+    </div>
+
+    <div class="nb-content">
+      <div class="nb-main-col">
+
+        <!-- 상단 유틸리티 바 (Sheet08 R3~R4) -->
+        <div class="nb-utility">
+          <span>NE능률</span><span>교과서</span><span>영어</span><span>수학교재</span><span>ELT교재</span><span>영자신문</span><span>영어레벨테스트</span>
+          <span style="margin-left:auto">통합회원가입</span><span>로그인</span>
+        </div>
+
+        <!-- 헤더: 로고 / 통합검색 / 장바구니 / MY / 고객센터 (Sheet08 R5~R11) -->
+        <div class="nb-storehead">
+          <div class="nb-logo">NE_Books</div>
+          <div class="nb-search">
+            <input class="nb-input nb-grow" type="text" placeholder="교재명 / 검색어 입력 (클릭 시 인기검색어 · 입력 시 실시간 미리보기)">
+            <button class="ne-btn ne-btn-neutral" aria-label="검색"><span class="nb-ico" data-ic="search" aria-hidden="true"></span>검색</button>
+          </div>
+          <button class="ne-btn ne-btn-neutral-subtle" data-goto="cart">장바구니 <span class="ne-badge ne-badge-category-mono">비회원OK</span></button>
+          <button class="ne-btn ne-btn-neutral-subtle" data-goto="myorder">MY</button>
+          <button class="ne-btn ne-btn-neutral-subtle">고객센터</button>
+        </div>
+
+        <!-- GNB (Sheet08 R15~R21) -->
+        <nav class="nb-gnb">
+          <a href="#">ELT</a><a href="#">초/중등</a><a href="#">고등</a>
+          <a href="#">교과서/자습서</a><a href="#">수험/일반</a>
+          <a href="#">수학/국어 <span class="nb-dim">(통합)</span></a>
+          <a href="#" data-goto="data">학습자료실</a>
+        </nav>
+
+        <!-- 메인 비주얼 배너 (Sheet08 R22~R26) -->
+        <div class="ne-card nb-card nb-mt">
+          <div class="nb-card-title">메인 비주얼 배너 <span class="nb-ref">Sheet08 R22~R26 · 와이드 프로모션, 도트 페이지네이션 / 과목탭·화살표 제거</span></div>
+          <div class="nb-ph nb-h-visual">프로모션·신간·이벤트 통합 비주얼 (자동 롤링) · 클릭 시 교재상세/이벤트 이동</div>
+          <div class="nb-dots nb-mt"><span class="nb-dot on"></span><span class="nb-dot"></span><span class="nb-dot"></span><span class="nb-dot"></span></div>
+        </div>
+
+        <!-- 베스트셀러 (Sheet08 R27~R28) -->
+        <div class="nb-section-title">베스트셀러 <span class="nb-ref">Sheet08 R27 · 학년군 탭 · 주별 판매량 상위 5 · 판매중만</span></div>
+        <div class="nb-tabs" data-tabgroup="best">
+          <div class="nb-tab active">전체</div><div class="nb-tab">ELT</div><div class="nb-tab">초등</div><div class="nb-tab">중등</div><div class="nb-tab">고등</div><div class="nb-tab">수험/일반</div>
+        </div>
+        <div class="ne-grid ne-grid--auto">
+          <!-- 교재 카드 (Sheet08 R28): 이미지/교재명/정가/할인가/할인율/상세/장바구니/NEW·HOT -->
+          <div class="ne-card nb-book-card">
+            <div class="nb-badges"><span class="ne-badge ne-badge-category-mono">NEW</span></div>
+            <div class="nb-ph nb-thumb">표지</div>
+            <div class="nb-meta">능률 · ELT · Bricks</div>
+            <div class="nb-title">Bricks Reading 150 · L1</div>
+            <div class="nb-price"><span class="nb-list">15,000원</span> <span class="nb-sale">13,500원</span> <span class="nb-rate">10%</span></div>
+            <div class="nb-point">적립 150P</div>
+            <div class="nb-card-btns"><button class="ne-btn ne-btn-sm ne-btn-neutral-subtle" data-goto="view">상세</button><button class="ne-btn ne-btn-sm ne-btn-neutral cart-add">장바구니</button></div>
+          </div>
+          <div class="ne-card nb-book-card">
+            <div class="nb-badges"><span class="ne-badge ne-badge-category-mono">HOT</span></div>
+            <div class="nb-ph nb-thumb">표지</div>
+            <div class="nb-meta">능률 · 중등 · 능률중학</div>
+            <div class="nb-title">능률 중학영어 독해 LEVEL 2</div>
+            <div class="nb-price"><span class="nb-list">13,000원</span> <span class="nb-sale">11,700원</span> <span class="nb-rate">10%</span></div>
+            <div class="nb-point">적립 130P</div>
+            <div class="nb-card-btns"><button class="ne-btn ne-btn-sm ne-btn-neutral-subtle" data-goto="view">상세</button><button class="ne-btn ne-btn-sm ne-btn-neutral cart-add">장바구니</button></div>
+          </div>
+          <div class="ne-card nb-book-card">
+            <div class="nb-badges"></div>
+            <div class="nb-ph nb-thumb">표지</div>
+            <div class="nb-meta">능률 · 고등 · 빠른독해</div>
+            <div class="nb-title">빠른독해 바른독해 기초</div>
+            <div class="nb-price"><span class="nb-sale">14,000원</span></div>
+            <div class="nb-point">적립 140P</div>
+            <div class="nb-card-btns"><button class="ne-btn ne-btn-sm ne-btn-neutral-subtle" data-goto="view">상세</button><button class="ne-btn ne-btn-sm ne-btn-neutral cart-add">장바구니</button></div>
+          </div>
+          <div class="ne-card nb-book-card">
+            <div class="nb-badges"><span class="ne-badge ne-badge-status-danger">품절</span></div>
+            <div class="nb-ph nb-thumb">표지</div>
+            <div class="nb-meta">능률 · 수험 · 빈칸백서</div>
+            <div class="nb-title">수능 빈칸백서 실전편</div>
+            <div class="nb-price"><span class="nb-sale">16,000원</span></div>
+            <div class="nb-point">적립 160P</div>
+            <div class="nb-card-btns"><button class="ne-btn ne-btn-sm ne-btn-neutral-subtle" data-goto="view">상세</button><button class="ne-btn ne-btn-sm ne-btn-neutral" disabled>품절</button></div>
+          </div>
+        </div>
+
+        <!-- 추천 교재 (Sheet08 R29~R30) -->
+        <div class="nb-section-title">추천 교재 <span class="nb-ref">Sheet08 R29 · 학년군 탭 · 지정 교재 5건 · Admin '추천 교재 관리'</span></div>
+        <div class="nb-tabs" data-tabgroup="reco">
+          <div class="nb-tab active">전체</div><div class="nb-tab">ELT</div><div class="nb-tab">초등</div><div class="nb-tab">중등</div><div class="nb-tab">고등</div><div class="nb-tab">수험/일반</div>
+        </div>
+        <div class="ne-grid ne-grid--auto">
+          <div class="ne-card nb-book-card"><div class="nb-badges"></div><div class="nb-ph nb-thumb">표지</div><div class="nb-title">추천교재 A</div><div class="nb-price"><span class="nb-sale">12,000원</span></div><div class="nb-card-btns"><button class="ne-btn ne-btn-sm ne-btn-neutral-subtle" data-goto="view">상세</button><button class="ne-btn ne-btn-sm ne-btn-neutral cart-add">장바구니</button></div></div>
+          <div class="ne-card nb-book-card"><div class="nb-badges"></div><div class="nb-ph nb-thumb">표지</div><div class="nb-title">추천교재 B</div><div class="nb-price"><span class="nb-sale">12,000원</span></div><div class="nb-card-btns"><button class="ne-btn ne-btn-sm ne-btn-neutral-subtle" data-goto="view">상세</button><button class="ne-btn ne-btn-sm ne-btn-neutral cart-add">장바구니</button></div></div>
+          <div class="ne-card nb-book-card"><div class="nb-badges"></div><div class="nb-ph nb-thumb">표지</div><div class="nb-title">추천교재 C</div><div class="nb-price"><span class="nb-sale">12,000원</span></div><div class="nb-card-btns"><button class="ne-btn ne-btn-sm ne-btn-neutral-subtle" data-goto="view">상세</button><button class="ne-btn ne-btn-sm ne-btn-neutral cart-add">장바구니</button></div></div>
+          <div class="ne-card nb-book-card"><div class="nb-badges"></div><div class="nb-ph nb-thumb">표지</div><div class="nb-title">추천교재 D</div><div class="nb-price"><span class="nb-sale">12,000원</span></div><div class="nb-card-btns"><button class="ne-btn ne-btn-sm ne-btn-neutral-subtle" data-goto="view">상세</button><button class="ne-btn ne-btn-sm ne-btn-neutral cart-add">장바구니</button></div></div>
+        </div>
+
+        <!-- 프로모션·이벤트 (Sheet08 R31) -->
+        <div class="nb-section-title">프로모션 · 큐레이션 · 이벤트 <span class="nb-ref">Sheet08 R31 · 라벨 + 썸네일 + 제목 + 한줄설명 · 한 줄 2건 자동롤링</span></div>
+        <div class="ne-grid ne-grid--2">
+          <div class="ne-card nb-card" style="margin:0"><div class="nb-inline nb-inline-top"><div class="nb-ph nb-w-banner">썸네일</div><div><span class="ne-badge ne-badge-category-mono">이벤트</span><div class="nb-title nb-mt">신학기 교재전 최대 20%</div><div class="nb-copy">한 줄 설명 영역</div></div></div></div>
+          <div class="ne-card nb-card" style="margin:0"><div class="nb-inline nb-inline-top"><div class="nb-ph nb-w-banner">썸네일</div><div><span class="ne-badge ne-badge-category-mono">신간</span><div class="nb-title nb-mt">2026 신간 큐레이션</div><div class="nb-copy">한 줄 설명 영역</div></div></div></div>
+        </div>
+
+        <div class="ne-grid ne-grid--2 nb-mt">
+          <div class="ne-card nb-card" style="margin:0">
+            <div class="nb-card-title">선생님을 위한 티칭 플랫폼 NE Tutor <span class="nb-ref">Sheet08 R34~R38</span></div>
+            <div class="nb-btn-row">
+              <button class="ne-btn ne-btn-sm ne-btn-neutral-subtle">선생님 수업자료</button>
+              <button class="ne-btn ne-btn-sm ne-btn-neutral-subtle">온라인 문제뱅크 <span class="nb-dim">(비로그인 시 안내)</span></button>
+              <button class="ne-btn ne-btn-sm ne-btn-neutral-subtle">평가 서비스(NELT/성취테스트)</button>
+            </div>
+          </div>
+          <div class="ne-card nb-card" style="margin:0">
+            <div class="nb-card-title">교재 200% 활용하기 <span class="nb-ref">Sheet08 R39~R44 · (구)학습자료 바로가기</span></div>
+            <div class="nb-btn-row">
+              <button class="ne-btn ne-btn-sm ne-btn-neutral-subtle" data-goto="data">학습 자료실</button>
+              <button class="ne-btn ne-btn-sm ne-btn-neutral-subtle">정답 및 해설(팝업)</button>
+              <button class="ne-btn ne-btn-sm ne-btn-neutral-subtle">MP3 다운(팝업)</button>
+              <button class="ne-btn ne-btn-sm ne-btn-neutral-subtle">NE Waffle</button>
+              <button class="ne-btn ne-btn-sm ne-btn-neutral-subtle">맞춤형 교재추천</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 공지사항 (Sheet08 R45~R46) -->
+        <div class="ne-card nb-card nb-mt">
+          <div class="nb-card-title">공지사항 <span class="nb-ref">Sheet08 R45~R46 · 라벨(필독/중요/안내)+제목+등록일</span></div>
+          <div class="nb-table-wrap">
+            <table class="nb-table">
+              <tr><td style="width:70px"><span class="ne-badge ne-badge-status-danger">필독</span></td><td>[안내] NE Books 자사몰 개편 및 구매 서비스 오픈 안내</td><td style="width:96px" class="center">2026-06-17</td></tr>
+              <tr><td><span class="ne-badge ne-badge-status-warning">중요</span></td><td>NE Point 통합 및 B&amp;G 포인트 승계 안내</td><td class="center">2026-06-10</td></tr>
+            </table>
+          </div>
+        </div>
+
+        <!-- 푸터 (Sheet08 R52~R57) -->
+        <div class="ne-card nb-card">
+          <div class="nb-card-title">푸터 <span class="nb-ref">Sheet08 R52~R57</span></div>
+          <div class="nb-fnote">개인정보처리방침 · 이용약관 · 이메일무단수집거부 · 지사안내 · 사이트맵 / <b>통신판매신고번호(신규 추가 필요)</b> / 회사정보 · CPO · 대표번호 1833-8368 / Copyright NE능률</div>
+        </div>
+
+      </div><!-- /nb-main-col -->
+
+      <aside class="nb-aside">
+        <div class="ne-card ne-card--muted nb-policy">
+          <h4><span class="nb-ico" data-ic="info" aria-hidden="true"></span> 정책 메모 · 메인</h4>
+          <ul>
+            <li><b>통합검색</b> : 클릭 시 인기검색어 1~10위, 입력 시작 시 실시간 미리보기</li>
+            <li><b>장바구니</b> : 비회원도 사용 가능(신규) / <b>MY</b> : 회원만</li>
+            <li><b>베스트셀러</b> : 학년군 탭, 주별 판매량 상위 5, 판매중만</li>
+            <li><b>추천교재</b> : 학년군별 지정 5건, 전체 탭은 학년군별 우선순위 1번 1건씩</li>
+            <li><span class="nb-need">확인</span> 수학 바로가기·NELT 소개·과목탭·슬라이드 화살표 = <b>제거</b> 항목</li>
+            <li><span class="nb-need">확인</span> 통신판매신고번호 신규 확보 필요</li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       2) 교재목록  (BOOK-LIST-001 / Sheet 06) — surface_intent: base-only
+       ================================================================ -->
+  <section class="nb-screen" id="screen-list">
+    <div class="nb-topbar">
+      <div class="nb-titlerow">
+        <span class="nb-sid-badge">BOOK-LIST-001</span>
+        <h2>교재목록</h2>
+        <span class="ne-badge ne-badge-status-neutral">개선</span>
+      </div>
+      <div class="nb-purpose">화면 목적 : 레벨·제품유형·시리즈·브랜드 기반의 교재 탐색 및 구매 진입.</div>
+      <div class="nb-chips">
+        <span class="ne-badge ne-badge-category-mono">필터 : 레벨(다중)·제품유형(다중)·시리즈(단일)·브랜드(단일)</span>
+        <span class="ne-badge ne-badge-category-mono">조건 변경 시 자동 조회</span>
+        <span class="ne-badge ne-badge-category-mono">정렬 : Books 기존 기준 유지</span>
+        <span class="ne-badge ne-badge-category-mono">좌측 보조영역 제거 · 최근 본 도서 하단 플로팅</span>
+        <span class="ne-badge ne-badge-category-mono">보기유형 : 교재구매형 ↔ E-Book·자료형</span>
+        <span class="ne-badge ne-badge-category-mono">장바구니=비회원OK · 바로구매=회원만</span>
+        <span class="ne-badge ne-badge-status-warning">제품유형 매핑 · 브랜드/시리즈 노출 정책 확인</span>
+      </div>
+    </div>
+
+    <div class="nb-content">
+      <div class="nb-main-col">
+
+        <!-- 페이지 타이틀 + 필터 (Sheet06 R3~R8) -->
+        <div class="ne-card nb-card">
+          <div class="nb-card-title">초등 &gt; ELT &gt; Reading <span class="nb-ref">Sheet06 R3 · 선택 카테고리명 자동 노출</span></div>
+          <div class="nb-inline nb-inline-top" style="gap:var(--space-lg)">
+            <div style="min-width:180px">
+              <label class="nb-check-label" style="font-weight:500">레벨 <span class="nb-dim">(다중)</span></label>
+              <div class="nb-inline nb-mt">
+                <label class="nb-check-label"><input type="checkbox"> 유아</label><label class="nb-check-label"><input type="checkbox"> 초등</label>
+                <label class="nb-check-label"><input type="checkbox"> 중등</label><label class="nb-check-label"><input type="checkbox"> 고등</label><label class="nb-check-label"><input type="checkbox"> 성인</label>
+              </div>
+              <div class="nb-fnote">※ B&amp;G 레벨 체계 적용 여부 확인 필요</div>
+            </div>
+            <div style="min-width:240px">
+              <label class="nb-check-label" style="font-weight:500">제품유형 <span class="nb-dim">(다중)</span></label>
+              <div class="nb-inline nb-mt">
+                <label class="nb-check-label"><input type="checkbox"> 메인교재</label><label class="nb-check-label"><input type="checkbox"> Word Book</label>
+                <label class="nb-check-label"><input type="checkbox"> Test &amp; Worksheet</label><label class="nb-check-label"><input type="checkbox"> Tests</label>
+                <label class="nb-check-label"><input type="checkbox"> Teacher's Guide</label><label class="nb-check-label"><input type="checkbox"> Class Pack</label>
+              </div>
+              <div class="nb-fnote">※ 기존 데이터 매핑 필요</div>
+            </div>
+            <div style="min-width:150px">
+              <label class="nb-check-label" style="font-weight:500">시리즈 <span class="nb-dim">(단일)</span></label>
+              <select class="nb-input nb-input--sm nb-mt"><option>전체 시리즈</option><option>Bricks Reading (24)</option><option>능률 중학영어 (12)</option></select>
+              <div class="nb-fnote">※ 시리즈별 교재 수 표시 / 노출 방식 확정 필요</div>
+            </div>
+            <div style="min-width:140px">
+              <label class="nb-check-label" style="font-weight:500">브랜드 <span class="nb-dim">(단일)</span></label>
+              <select class="nb-input nb-input--sm nb-mt"><option>전체 브랜드</option><option>NE능률</option><option>Bricks</option></select>
+              <div class="nb-fnote">※ 브랜드 운영 정책 필요</div>
+            </div>
+          </div>
+          <div class="nb-notice">조건 조합 변경 시 <b>자동 조회</b>됩니다. (Sheet06 R8 · 조회 성능 검토 필요)</div>
+        </div>
+
+        <!-- 조회/정렬/보기유형 바 (Sheet06 R9, R12, R13) -->
+        <div class="nb-row" style="margin-bottom:var(--space-sm)">
+          <div>총 <b>128</b>건 · 페이지당 노출 개수 <span class="nb-dim">(결정 필요)</span></div>
+          <div class="nb-inline">
+            <div class="nb-tabs" style="margin:0;border:none" data-tabgroup="viewtype" id="viewtype-tabs">
+              <div class="nb-tab active">교재구매형</div><div class="nb-tab">E-Book·자료형</div>
+            </div>
+            <select class="nb-input nb-input--sm" style="width:auto">
+              <option>최신순</option><option>인기순</option><option>과거순</option><option>별점순</option><option>가나다순</option><option>역 가나다순</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 교재구매형 카드 (Sheet06 R14~R24) -->
+        <div id="cards-buy">
+          <div class="ne-grid ne-grid--auto">
+            <div class="ne-card nb-book-card">
+              <span class="ne-badge ne-badge-category-mono nb-cardtype">교재구매형</span>
+              <div class="nb-badges"><span class="ne-badge ne-badge-category-mono">NEW</span></div>
+              <div class="nb-ph nb-thumb">표지</div>
+              <div class="nb-meta">Bricks · ELT · Reading · 초등 · Lexile® 400L</div>
+              <div class="nb-title">Bricks Reading 150 · L1</div>
+              <div class="nb-copy">읽기 자신감을 키우는 단계별 리딩 (대표카피)</div>
+              <div class="nb-fnote">#리딩 #초등 #파닉스 (주요 키워드 · 노출 개수 정책 필요)</div>
+              <div class="nb-price"><span class="nb-list">15,000원</span> <span class="nb-sale">13,500원</span> <span class="nb-rate">10%</span></div>
+              <div class="nb-point">적립 150P (정가 기준)</div>
+              <div class="nb-card-btns">
+                <button class="ne-btn ne-btn-sm ne-btn-neutral cart-add">장바구니</button>
+                <button class="ne-btn ne-btn-sm ne-btn-neutral-subtle member-only">바로구매</button>
+              </div>
+              <div class="nb-fnote nb-inline"><span class="nb-ico" data-ic="external-link" aria-hidden="true"></span> E-Book · 학습자료 연결</div>
+            </div>
+            <div class="ne-card nb-book-card">
+              <span class="ne-badge ne-badge-category-mono nb-cardtype">교재구매형</span>
+              <div class="nb-badges"><span class="ne-badge ne-badge-category-mono">HOT</span></div>
+              <div class="nb-ph nb-thumb">표지</div>
+              <div class="nb-meta">NE능률 · 중등 · Lexile® 650L</div>
+              <div class="nb-title">능률 중학영어 독해 LEVEL 2</div>
+              <div class="nb-copy">내신·서술형 대비 독해 (대표카피)</div>
+              <div class="nb-price"><span class="nb-list">13,000원</span> <span class="nb-sale">11,700원</span> <span class="nb-rate">10%</span></div>
+              <div class="nb-point">적립 130P</div>
+              <div class="nb-card-btns"><button class="ne-btn ne-btn-sm ne-btn-neutral cart-add">장바구니</button><button class="ne-btn ne-btn-sm ne-btn-neutral-subtle member-only">바로구매</button></div>
+            </div>
+            <div class="ne-card nb-book-card">
+              <span class="ne-badge ne-badge-category-mono nb-cardtype">교재구매형</span>
+              <div class="nb-badges"></div>
+              <div class="nb-ph nb-thumb">표지</div>
+              <div class="nb-meta">NE능률 · 고등</div>
+              <div class="nb-title">빠른독해 바른독해 기초</div>
+              <div class="nb-copy">구문 + 독해 동시 완성 (대표카피)</div>
+              <div class="nb-price"><span class="nb-sale">14,000원</span></div>
+              <div class="nb-point">적립 140P</div>
+              <div class="nb-card-btns"><button class="ne-btn ne-btn-sm ne-btn-neutral cart-add">장바구니</button><button class="ne-btn ne-btn-sm ne-btn-neutral-subtle member-only">바로구매</button></div>
+            </div>
+            <div class="ne-card nb-book-card">
+              <span class="ne-badge ne-badge-category-mono nb-cardtype">교재구매형</span>
+              <div class="nb-badges"><span class="ne-badge ne-badge-status-danger">품절</span></div>
+              <div class="nb-ph nb-thumb">표지</div>
+              <div class="nb-meta">NE능률 · 수험</div>
+              <div class="nb-title">수능 빈칸백서 실전편</div>
+              <div class="nb-copy">고난도 빈칸 집중 훈련 (대표카피)</div>
+              <div class="nb-price"><span class="nb-sale">16,000원</span></div>
+              <div class="nb-point">적립 160P</div>
+              <div class="nb-card-btns"><button class="ne-btn ne-btn-sm ne-btn-neutral" disabled>품절</button><button class="ne-btn ne-btn-sm ne-btn-neutral-subtle" disabled>바로구매</button></div>
+              <div class="nb-fnote">※ 판매중 상품만 담기/구매 가능</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- E-Book·자료형 카드 (Sheet06 R25~R31) -->
+        <div id="cards-data" style="display:none">
+          <div class="ne-grid ne-grid--auto">
+            <div class="ne-card nb-book-card">
+              <span class="ne-badge ne-badge-category-mono nb-cardtype">E-Book·자료형</span>
+              <div class="nb-ph nb-thumb">표지</div>
+              <div class="nb-meta">Bricks · ELT · 초등</div>
+              <div class="nb-title">Bricks Reading 150 · L1</div>
+              <div class="nb-fnote">자료유형 : 정답지 1 · 워크시트 2 · MP3 1</div>
+              <div class="nb-inline"><span class="ne-badge ne-badge-status-success">학생용</span><span class="ne-badge ne-badge-status-warning">선생님용</span></div>
+              <div class="nb-btn-row nb-mt">
+                <button class="ne-btn ne-btn-sm ne-btn-neutral-subtle">E-Book</button><button class="ne-btn ne-btn-sm ne-btn-neutral-subtle">MP3 듣기</button>
+                <button class="ne-btn ne-btn-sm ne-btn-neutral-subtle">모바일 학습</button>
+              </div>
+              <button class="ne-btn ne-btn-sm ne-btn-neutral nb-mt" data-goto="data"><span class="nb-ico" data-ic="download" aria-hidden="true"></span> 학습자료 다운로드</button>
+              <div class="nb-fnote">학생용=회원 누구나 / 선생님용=교사·강사만 다운로드</div>
+            </div>
+            <div class="ne-card nb-book-card">
+              <span class="ne-badge ne-badge-category-mono nb-cardtype">E-Book·자료형</span>
+              <div class="nb-ph nb-thumb">표지</div>
+              <div class="nb-meta">NE능률 · 중등</div>
+              <div class="nb-title">능률 중학영어 독해 LEVEL 2</div>
+              <div class="nb-fnote">자료유형 : 정답지 1 · 단어시험지 3</div>
+              <div class="nb-inline"><span class="ne-badge ne-badge-status-success">학생용</span></div>
+              <div class="nb-btn-row nb-mt"><button class="ne-btn ne-btn-sm ne-btn-neutral-subtle">E-Book</button><button class="ne-btn ne-btn-sm ne-btn-neutral-subtle">MP3 듣기</button></div>
+              <button class="ne-btn ne-btn-sm ne-btn-neutral nb-mt" data-goto="data"><span class="nb-ico" data-ic="download" aria-hidden="true"></span> 학습자료 다운로드</button>
+            </div>
+            <div class="ne-card nb-book-card">
+              <span class="ne-badge ne-badge-category-mono nb-cardtype">E-Book·자료형</span>
+              <div class="nb-ph nb-thumb">표지</div>
+              <div class="nb-meta">NE능률 · 고등</div>
+              <div class="nb-title">빠른독해 바른독해 기초</div>
+              <div class="nb-fnote">자료유형 : 정답지 1</div>
+              <div class="nb-inline"><span class="ne-badge ne-badge-category-mono">전체</span></div>
+              <button class="ne-btn ne-btn-sm ne-btn-neutral nb-mt" data-goto="data"><span class="nb-ico" data-ic="download" aria-hidden="true"></span> 학습자료 다운로드</button>
+            </div>
+            <div class="ne-card nb-book-card">
+              <span class="ne-badge ne-badge-category-mono nb-cardtype">E-Book·자료형</span>
+              <div class="nb-ph nb-thumb">표지</div>
+              <div class="nb-title">자료 없는 교재 예시</div>
+              <div class="nb-empty" style="padding:var(--space-md)">등록된 학습자료 없음</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 페이징 (Sheet06 R13) -->
+        <div class="nb-center nb-mt nb-inline" style="justify-content:center">
+          <button class="ne-btn ne-btn-sm ne-btn-neutral-subtle" aria-label="이전"><span class="nb-ico" data-ic="chevron-left" aria-hidden="true"></span></button>
+          <button class="ne-btn ne-btn-sm ne-btn-neutral">1</button><button class="ne-btn ne-btn-sm ne-btn-neutral-subtle">2</button><button class="ne-btn ne-btn-sm ne-btn-neutral-subtle">3</button><button class="ne-btn ne-btn-sm ne-btn-neutral-subtle">4</button><button class="ne-btn ne-btn-sm ne-btn-neutral-subtle">5</button>
+          <button class="ne-btn ne-btn-sm ne-btn-neutral-subtle" aria-label="다음"><span class="nb-ico" data-ic="chevron-right" aria-hidden="true"></span></button>
+        </div>
+
+        <!-- 예외처리 (Sheet06 R32~R33) -->
+        <div class="ne-card nb-card nb-mt">
+          <div class="nb-card-title">예외 처리 (참고) <span class="nb-ref">Sheet06 R32~R33</span></div>
+          <div class="nb-empty">조건에 맞는 교재가 없습니다. (Empty 화면 · 문구 확정 필요)</div>
+          <div class="nb-notice nb-notice--warn">학습자료 접근 권한이 없을 경우 안내 메시지 노출 후 로그인 또는 회원구분(교사/강사) 안내</div>
+        </div>
+
+      </div>
+
+      <aside class="nb-aside">
+        <div class="ne-card ne-card--muted nb-policy">
+          <h4><span class="nb-ico" data-ic="info" aria-hidden="true"></span> 정책 메모 · 교재목록</h4>
+          <ul>
+            <li><b>필터</b> : 레벨/제품유형=다중, 시리즈/브랜드=단일, <b>조건 변경 시 자동 조회</b></li>
+            <li><b>정렬</b> : 최신/인기/과거/별점/가나다/역가나다 — Books 기존 기준 유지</li>
+            <li><b>좌측 보조영역 제거</b>, 최근 본 도서는 <b>하단 플로팅</b> 유지</li>
+            <li><b>보기유형</b> : 교재구매형(기본) ↔ E-Book·자료형 / 목록형·앨범형 제거</li>
+            <li><b>장바구니</b>=판매중·비회원 / <b>바로구매</b>=회원만</li>
+            <li><b>학생용</b>=회원 누구나 / <b>선생님용</b>=교사·강사만</li>
+            <li>가격 : 정가/판매가/할인율/적립P · <b>추가 할인·적립 우선</b></li>
+            <li><span class="nb-need">확인</span> 레벨 체계·제품유형 매핑·브랜드 정책·노출 개수·NEW/HOT 기간·키워드 개수·Empty 문구</li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       3) 교재상세  (BOOK-VIEW-001 / Sheet 07) — surface_intent: base-only
+       ================================================================ -->
+  <section class="nb-screen" id="screen-view">
+    <div class="nb-topbar">
+      <div class="nb-titlerow">
+        <span class="nb-sid-badge">BOOK-VIEW-001</span>
+        <h2>교재상세</h2>
+        <span class="ne-badge ne-badge-status-neutral">개선</span>
+      </div>
+      <div class="nb-purpose">화면 목적 : 교재 상세정보 + 판매/구매 정보 + 학습자료/부가서비스 제공.</div>
+      <div class="nb-chips">
+        <span class="ne-badge ne-badge-category-mono">정가/판매가/할인율/적립P (추가 할인·적립 우선)</span>
+        <span class="ne-badge ne-badge-category-mono">수량 최소 1권</span>
+        <span class="ne-badge ne-badge-category-mono">장바구니=비회원OK · 바로구매=회원만</span>
+        <span class="ne-badge ne-badge-category-mono">자료대상 플래그 : 전체/학생/선생님</span>
+        <span class="ne-badge ne-badge-category-mono">전체·멀티(2개↑ 팝업)·개별 다운로드</span>
+        <span class="ne-badge ne-badge-status-warning">SAP CODE 자동 품절(매일 9시)</span>
+      </div>
+    </div>
+
+    <div class="nb-content">
+      <div class="nb-main-col">
+
+        <!-- 상단: 기본정보 + 구매영역 (Sheet07 R3~R13) -->
+        <div class="ne-card nb-card">
+          <div class="nb-inline nb-inline-top" style="gap:var(--space-lg)">
+            <div style="flex:0 0 200px">
+              <div class="nb-ph nb-thumb">교재 표지</div>
+              <div class="nb-btn-row nb-mt">
+                <button class="ne-btn ne-btn-sm ne-btn-neutral-subtle">공유하기</button>
+                <button class="ne-btn ne-btn-sm ne-btn-neutral-subtle member-only" aria-label="찜"><span class="nb-ico" data-ic="heart" aria-hidden="true"></span> 찜</button>
+              </div>
+              <div class="nb-fnote">공유=전체 / 찜=회원만(비회원 로그인 유도)</div>
+            </div>
+            <div class="nb-grow" style="min-width:240px">
+              <div class="nb-badges" style="margin-bottom:var(--space-xs)"><span class="ne-badge ne-badge-category-mono">NEW</span><span class="ne-badge ne-badge-category-mono">HOT</span></div>
+              <h3 style="font-size:20px;font-weight:800;color:var(--ne-text-heading)">Bricks Reading 150 · L1</h3>
+              <div class="nb-meta nb-mt">Bricks · ELT · Reading · 학습대상 초등 · Lexile® 400L</div>
+              <div class="nb-copy">읽기 자신감을 키우는 단계별 리딩 프로그램 (대표카피)</div>
+              <div class="nb-fnote">#리딩 #초등 #파닉스 (주요 키워드)</div>
+              <hr class="nb-hr">
+
+              <!-- 가격정보 (Sheet07 R7) -->
+              <div class="nb-sum">
+                <div class="nb-sum-line"><span>정가</span><span class="nb-list" style="text-decoration:line-through;color:var(--ne-text-tertiary)">15,000원</span></div>
+                <div class="nb-sum-line"><span>판매가 <span class="ne-badge ne-badge-category-mono">추가할인 우선</span></span><span><b style="font-size:17px;color:var(--ne-text-heading)">13,500원</b> <span class="nb-rate">10%</span></span></div>
+                <div class="nb-sum-line"><span>적립 예정</span><span>150 P <span class="nb-dim">(정가 기준 · NE Point)</span></span></div>
+                <div class="nb-sum-line"><span>쿠폰 혜택</span><span>적용 가능 쿠폰 2종 <span class="nb-dim">(로그인 회원)</span></span></div>
+              </div>
+
+              <!-- 수량 + 구매 (Sheet07 R8~R10) -->
+              <div class="nb-inline nb-mt">
+                <div class="nb-stepper" id="view-stepper">
+                  <button class="ne-btn ne-btn-sm ne-btn-neutral-subtle qty-minus" aria-label="수량 감소"><span class="nb-ico" data-ic="minus" aria-hidden="true"></span></button>
+                  <input class="nb-input nb-qty qty-input" type="number" value="1" min="1" id="view-qty">
+                  <button class="ne-btn ne-btn-sm ne-btn-neutral-subtle qty-plus" aria-label="수량 증가"><span class="nb-ico" data-ic="plus" aria-hidden="true"></span></button>
+                </div>
+                <span class="nb-dim" style="font-size:11px">최소 1권 · 판매상태/재고상태 기준 제어</span>
+              </div>
+              <div class="nb-btn-row nb-mt">
+                <button class="ne-btn ne-btn-lg ne-btn-neutral cart-add nb-grow">장바구니 담기 (비회원 허용)</button>
+                <button class="ne-btn ne-btn-lg ne-btn-primary member-only nb-grow" data-goto="order">바로구매 (회원만)</button>
+              </div>
+              <div class="nb-notice nb-notice--warn nb-mt">판매상태 처리 : <b>판매중 / 품절 / 구매제한</b>에 따라 버튼·수량 제어. SAP CODE 기준 재고 &lt; 예비수량 시 <b>자동 품절</b> (매일 오전 9시).</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 상세 콘텐츠 탭 (Sheet07 R14~R29) -->
+        <div class="nb-tabs" data-tabgroup="viewdetail">
+          <div class="nb-tab active">교재소개</div><div class="nb-tab">목차</div><div class="nb-tab">상품 정보고시</div>
+          <div class="nb-tab">학습자료</div><div class="nb-tab">부가서비스</div><div class="nb-tab">교재후기</div>
+        </div>
+
+        <div data-tabpanelgroup="viewdetail">
+          <div class="ne-card nb-card nb-tabpanel active">
+            <div class="nb-card-title">교재 소개 <span class="nb-ref">Sheet07 R14</span></div>
+            <div class="nb-ph nb-h-block">교재 상세 설명 · 특징 · 구성 (등록 정보 기준)</div>
+          </div>
+          <div class="ne-card nb-card nb-tabpanel">
+            <div class="nb-card-title">목차 <span class="nb-ref">Sheet07 R15</span></div>
+            <div class="nb-ph nb-h-block-sm">교재 목차 정보 (등록 정보 기준)</div>
+          </div>
+          <div class="ne-card nb-card nb-tabpanel">
+            <div class="nb-card-title">상품 정보고시 <span class="nb-ref">Sheet07 R16 · 커머스 필수정보 검토</span></div>
+            <div class="nb-table-wrap"><table class="nb-table">
+              <tr><th style="width:120px">저자</th><td>NE능률 편집부</td><th style="width:120px">출판사</th><td>NE능률</td></tr>
+              <tr><th>ISBN</th><td>9788812345678</td><th>쪽수</th><td>120p</td></tr>
+              <tr><th>출간일</th><td>2026-03-02</td><th>비고</th><td><span class="ne-badge ne-badge-status-warning">커머스 필수 정보 항목 확정 필요</span></td></tr>
+            </table></div>
+          </div>
+          <div class="ne-card nb-card nb-tabpanel">
+            <div class="nb-card-title">학습자료 <span class="nb-ref">Sheet07 R17~R21 · 자료대상 플래그 · 전체/멀티/개별</span></div>
+            <div class="nb-row" style="margin-bottom:var(--space-xs)">
+              <div><label class="nb-check-label"><input type="checkbox" id="data-all"> 전체 선택</label></div>
+              <div class="nb-btn-row">
+                <button class="ne-btn ne-btn-sm ne-btn-neutral-subtle" id="btn-download-all">전체 다운로드</button>
+                <button class="ne-btn ne-btn-sm ne-btn-neutral" id="btn-download-multi" data-modal="modal-multidownload">선택 다운로드(멀티)</button>
+              </div>
+            </div>
+            <div class="nb-table-wrap"><table class="nb-table">
+              <thead><tr><th style="width:36px"></th><th>자료유형</th><th>자료명</th><th style="width:110px">자료대상</th><th style="width:90px">다운로드</th></tr></thead>
+              <tbody>
+                <tr><td class="center"><input type="checkbox" class="dl-check"></td><td>정답지</td><td>L1 정답 및 해설</td><td><span class="ne-badge ne-badge-category-mono">전체</span></td><td class="center"><button class="ne-btn ne-btn-sm ne-btn-neutral-subtle">개별</button></td></tr>
+                <tr><td class="center"><input type="checkbox" class="dl-check"></td><td>워크시트</td><td>Unit 1~5 워크시트</td><td><span class="ne-badge ne-badge-status-success">학생용</span></td><td class="center"><button class="ne-btn ne-btn-sm ne-btn-neutral-subtle">개별</button></td></tr>
+                <tr><td class="center"><input type="checkbox" class="dl-check"></td><td>단어시험지</td><td>Word Test 세트</td><td><span class="ne-badge ne-badge-status-success">학생용</span></td><td class="center"><button class="ne-btn ne-btn-sm ne-btn-neutral-subtle">개별</button></td></tr>
+                <tr><td class="center"><input type="checkbox" class="dl-check"></td><td>지도안</td><td>Teacher's Guide</td><td><span class="ne-badge ne-badge-status-warning">선생님용</span></td><td class="center"><button class="ne-btn ne-btn-sm ne-btn-neutral-subtle">개별</button></td></tr>
+              </tbody>
+            </table></div>
+            <div class="nb-notice">1개 선택 시 <b>개별 다운로드</b>, 2개 이상 선택 시 <b>멀티다운로드 팝업</b> 연결. 학생용=회원 누구나 / 선생님용=교사·강사만.</div>
+          </div>
+          <div class="ne-card nb-card nb-tabpanel">
+            <div class="nb-card-title">부가서비스 / 연계 <span class="nb-ref">Sheet07 R22~R26 · URL 등록 시 노출</span></div>
+            <div class="nb-btn-row">
+              <button class="ne-btn ne-btn-sm ne-btn-neutral-subtle"><span class="nb-ico" data-ic="external-link" aria-hidden="true"></span> 본교재 E-Book</button>
+              <button class="ne-btn ne-btn-sm ne-btn-neutral-subtle"><span class="nb-ico" data-ic="external-link" aria-hidden="true"></span> 워크북 E-Book</button>
+              <button class="ne-btn ne-btn-sm ne-btn-neutral-subtle"><span class="nb-ico" data-ic="external-link" aria-hidden="true"></span> MP3 듣기(Waffle)</button>
+              <button class="ne-btn ne-btn-sm ne-btn-neutral-subtle"><span class="nb-ico" data-ic="external-link" aria-hidden="true"></span> 모바일 학습지원</button>
+              <button class="ne-btn ne-btn-sm ne-btn-neutral-subtle"><span class="nb-ico" data-ic="external-link" aria-hidden="true"></span> NE Tutor 연결</button>
+            </div>
+            <div class="nb-fnote">※ 기존 Books Admin 데이터 활용 · 연결 기준값 확인 필요</div>
+          </div>
+          <div class="ne-card nb-card nb-tabpanel">
+            <div class="nb-card-title">교재 후기 <span class="nb-ref">Sheet07 R29 · 기존 정책 유지</span></div>
+            <div class="nb-empty">교재 후기 목록 (구매자 후기 정책 확인 필요)</div>
+          </div>
+        </div>
+
+        <!-- 추천교재 (Sheet07 R27~R28) -->
+        <div class="nb-section-title">같은 시리즈 / 다음단계 교재 <span class="nb-ref">Sheet07 R27~R28 · 구매형 카드</span></div>
+        <div class="ne-grid ne-grid--auto">
+          <div class="ne-card nb-book-card"><div class="nb-ph nb-thumb">표지</div><div class="nb-title">Bricks Reading 150 · L2</div><div class="nb-price"><span class="nb-sale">13,500원</span></div><div class="nb-card-btns"><button class="ne-btn ne-btn-sm ne-btn-neutral cart-add">장바구니</button></div></div>
+          <div class="ne-card nb-book-card"><div class="nb-ph nb-thumb">표지</div><div class="nb-title">Bricks Reading 200 · L1</div><div class="nb-price"><span class="nb-sale">14,000원</span></div><div class="nb-card-btns"><button class="ne-btn ne-btn-sm ne-btn-neutral cart-add">장바구니</button></div></div>
+          <div class="ne-card nb-book-card"><div class="nb-ph nb-thumb">표지</div><div class="nb-title">Bricks Reading 150 · L3</div><div class="nb-price"><span class="nb-sale">13,500원</span></div><div class="nb-card-btns"><button class="ne-btn ne-btn-sm ne-btn-neutral cart-add">장바구니</button></div></div>
+          <div class="ne-card nb-book-card"><div class="nb-ph nb-thumb">표지</div><div class="nb-title">다음단계 추천 교재</div><div class="nb-price"><span class="nb-sale">15,000원</span></div><div class="nb-card-btns"><button class="ne-btn ne-btn-sm ne-btn-neutral cart-add">장바구니</button></div></div>
+        </div>
+
+      </div>
+
+      <aside class="nb-aside">
+        <div class="ne-card ne-card--muted nb-policy">
+          <h4><span class="nb-ico" data-ic="info" aria-hidden="true"></span> 정책 메모 · 교재상세</h4>
+          <ul>
+            <li><b>가격</b> : 정가/판매가/할인율/적립P · <b>추가 할인·적립 우선</b> · 적립은 정가 기준</li>
+            <li><b>수량</b> 최소 1권 · 판매상태/재고상태로 제어</li>
+            <li><b>장바구니</b>=비회원 / <b>바로구매</b>=회원만</li>
+            <li><b>자료대상</b> : 전체/학생/선생님 · 선생님용=교사·강사만</li>
+            <li><b>다운로드</b> : 전체 / 2개↑ 멀티(팝업) / 1개 개별</li>
+            <li><b>자동 품절</b> : SAP 재고 &lt; 예비수량 (매일 09시)</li>
+            <li><span class="nb-need">확인</span> 쿠폰 정책 · 정보고시 필수항목 · 후기 정책 · NEW/HOT 기간 · 키워드 개수</li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       4) 학습자료실  (DATA-001 / Sheet 02 R19~R21) — surface_intent: base-only
+       ================================================================ -->
+  <section class="nb-screen" id="screen-data">
+    <div class="nb-topbar">
+      <div class="nb-titlerow">
+        <span class="nb-sid-badge">DATA-001</span>
+        <h2>학습자료실</h2>
+        <span class="ne-badge ne-badge-status-neutral">개선</span>
+      </div>
+      <div class="nb-purpose">화면 목적 : 교재/자료유형/권한 기준 학습자료 검색 및 다운로드. (자료 상세는 교재상세로 이동)</div>
+      <div class="nb-chips">
+        <span class="ne-badge ne-badge-category-mono">검색 : 교재 · book_id · 자료유형 · 권한</span>
+        <span class="ne-badge ne-badge-category-mono">전체/선택 멀티 다운로드</span>
+        <span class="ne-badge ne-badge-category-mono">학생용=회원 누구나 / 선생님용=교사·강사만</span>
+        <span class="ne-badge ne-badge-status-warning">교사 인증 기준 · 다운로드 로그 여부 확인</span>
+      </div>
+    </div>
+
+    <div class="nb-content">
+      <div class="nb-main-col">
+        <div class="ne-card nb-card">
+          <div class="nb-card-title">자료 검색 <span class="nb-ref">Sheet02 R19 · 교재/book_id/자료유형/권한</span></div>
+          <div class="nb-inline">
+            <input class="nb-input nb-grow" type="text" placeholder="교재명 / book_id 검색">
+            <select class="nb-input" style="width:auto"><option>자료유형 전체</option><option>정답지</option><option>워크시트</option><option>단어시험지</option><option>MP3</option><option>지도안</option></select>
+            <select class="nb-input" style="width:auto"><option>대상 전체</option><option>학생용</option><option>선생님용</option></select>
+            <button class="ne-btn ne-btn-neutral" aria-label="검색"><span class="nb-ico" data-ic="search" aria-hidden="true"></span> 검색</button>
+          </div>
+        </div>
+
+        <div class="nb-row" style="margin-bottom:var(--space-xs)">
+          <div>총 <b>42</b>건 · <label class="nb-check-label"><input type="checkbox" id="data-list-all"> 전체 선택</label></div>
+          <div class="nb-btn-row">
+            <button class="ne-btn ne-btn-sm ne-btn-neutral-subtle">전체 다운로드</button>
+            <button class="ne-btn ne-btn-sm ne-btn-neutral" data-modal="modal-multidownload">선택 다운로드(멀티)</button>
+          </div>
+        </div>
+
+        <div class="nb-table-wrap"><table class="nb-table">
+          <thead><tr><th style="width:36px"></th><th>교재명</th><th style="width:110px">자료유형</th><th style="width:100px">대상</th><th style="width:120px">다운로드</th></tr></thead>
+          <tbody>
+            <tr><td class="center"><input type="checkbox" class="dl-check"></td><td>Bricks Reading 150 · L1</td><td>정답지</td><td><span class="ne-badge ne-badge-category-mono">전체</span></td><td class="center"><button class="ne-btn ne-btn-sm ne-btn-neutral-subtle">개별</button></td></tr>
+            <tr><td class="center"><input type="checkbox" class="dl-check"></td><td>Bricks Reading 150 · L1</td><td>워크시트</td><td><span class="ne-badge ne-badge-status-success">학생용</span></td><td class="center"><button class="ne-btn ne-btn-sm ne-btn-neutral-subtle">개별</button></td></tr>
+            <tr><td class="center"><input type="checkbox" class="dl-check"></td><td>능률 중학영어 독해 L2</td><td>단어시험지</td><td><span class="ne-badge ne-badge-status-success">학생용</span></td><td class="center"><button class="ne-btn ne-btn-sm ne-btn-neutral-subtle">개별</button></td></tr>
+            <tr><td class="center"><input type="checkbox" class="dl-check"></td><td>능률 중학영어 독해 L2</td><td>지도안</td><td><span class="ne-badge ne-badge-status-warning">선생님용</span></td><td class="center"><button class="ne-btn ne-btn-sm ne-btn-neutral-subtle">개별</button></td></tr>
+            <tr><td class="center"><input type="checkbox" class="dl-check"></td><td>빠른독해 바른독해 기초</td><td>MP3</td><td><span class="ne-badge ne-badge-category-mono">전체</span></td><td class="center"><button class="ne-btn ne-btn-sm ne-btn-neutral-subtle">개별</button></td></tr>
+          </tbody>
+        </table></div>
+
+        <div class="nb-notice nb-notice--warn">선생님용 자료는 통합회원 회원구분이 <b>교사/강사</b>인 경우만 다운로드 가능. 권한 미충족 시 로그인/회원구분 안내 노출.</div>
+      </div>
+
+      <aside class="nb-aside">
+        <div class="ne-card ne-card--muted nb-policy">
+          <h4><span class="nb-ico" data-ic="info" aria-hidden="true"></span> 정책 메모 · 학습자료실</h4>
+          <ul>
+            <li>자료 상세는 별도 구성 없이 <b>교재상세로 이동</b></li>
+            <li><b>다운로드</b> : 1개=개별 / 2개↑=멀티 팝업</li>
+            <li><b>권한</b> : 학생용=회원 누구나 / 선생님용=교사·강사만</li>
+            <li><span class="nb-need">확인</span> 교사 인증 기준 · 다운로드 로그 · 검색 조건 정의</li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       5) 장바구니  (CART-001 / Sheet 09) — surface_intent: muted-band(요약)
+       ================================================================ -->
+  <section class="nb-screen" id="screen-cart">
+    <div class="nb-topbar">
+      <div class="nb-titlerow">
+        <span class="nb-sid-badge">CART-001</span>
+        <h2>장바구니</h2>
+        <span class="ne-badge ne-badge-status-success">신규</span>
+      </div>
+      <div class="nb-purpose">화면 목적 : 구매 예정 상품 관리(조회·선택·수량변경·삭제) 및 주문 진입.</div>
+      <div class="nb-chips">
+        <span class="ne-badge ne-badge-category-mono">수량 최소 1 · 최대 999 (실제 판매가능 재고 기준)</span>
+        <span class="ne-badge ne-badge-category-mono">배송비 : 3만 미만 2,500 / 3만↑ 무료 / 도서산간 +2,500</span>
+        <span class="ne-badge ne-badge-category-mono">무료상품 포함 시 전체 무료배송</span>
+        <span class="ne-badge ne-badge-category-mono">추가 할인·적립 우선(상품할인 중복 불가)</span>
+        <span class="ne-badge ne-badge-category-mono">비회원 장바구니 허용 · 주문은 회원만</span>
+      </div>
+    </div>
+
+    <div class="nb-content">
+      <div class="nb-main-col">
+        <!-- 일괄 제어 (Sheet09 R4, R6) -->
+        <div class="nb-row" style="margin-bottom:var(--space-xs)">
+          <div><label class="nb-check-label"><input type="checkbox" id="cart-all" checked> 전체선택</label></div>
+          <div class="nb-btn-row">
+            <button class="ne-btn ne-btn-sm ne-btn-neutral-subtle" id="cart-del-selected">선택 삭제</button>
+            <button class="ne-btn ne-btn-sm ne-btn-neutral-subtle" id="cart-del-all">전체 삭제</button>
+          </div>
+        </div>
+
+        <!-- 상품 목록 (Sheet09 R3~R7) -->
+        <div class="nb-table-wrap"><table class="nb-table" id="cart-table">
+          <thead>
+            <tr><th style="width:36px"></th><th>상품정보</th><th style="width:130px">수량</th><th style="width:110px">판매가</th><th style="width:90px">적립예정</th><th style="width:48px"></th></tr>
+          </thead>
+          <tbody>
+            <tr data-price="13500" data-list="15000" data-point="150" data-free="0">
+              <td class="center"><input type="checkbox" class="cart-check" checked></td>
+              <td><div class="nb-inline"><div class="nb-ph nb-w-thumb-sm">표지</div><div><b>Bricks Reading 150 · L1</b><div class="nb-fnote">Bricks · ELT · 초등</div><span class="ne-badge ne-badge-status-success">판매중</span></div></div></td>
+              <td><div class="nb-stepper" style="justify-content:center"><button class="ne-btn ne-btn-sm ne-btn-neutral-subtle qty-minus" aria-label="감소"><span class="nb-ico" data-ic="minus" aria-hidden="true"></span></button><input class="nb-input nb-qty qty-input" type="number" value="1" min="1" max="999"><button class="ne-btn ne-btn-sm ne-btn-neutral-subtle qty-plus" aria-label="증가"><span class="nb-ico" data-ic="plus" aria-hidden="true"></span></button></div></td>
+              <td class="num cart-amount">13,500원</td>
+              <td class="num">150P</td>
+              <td class="center"><button class="ne-btn ne-btn-sm ne-btn-neutral-subtle row-del" aria-label="삭제"><span class="nb-ico" data-ic="x" aria-hidden="true"></span></button></td>
+            </tr>
+            <tr data-price="11700" data-list="13000" data-point="130" data-free="0">
+              <td class="center"><input type="checkbox" class="cart-check" checked></td>
+              <td><div class="nb-inline"><div class="nb-ph nb-w-thumb-sm">표지</div><div><b>능률 중학영어 독해 LEVEL 2</b><div class="nb-fnote">NE능률 · 중등</div><span class="ne-badge ne-badge-status-success">판매중</span></div></div></td>
+              <td><div class="nb-stepper" style="justify-content:center"><button class="ne-btn ne-btn-sm ne-btn-neutral-subtle qty-minus" aria-label="감소"><span class="nb-ico" data-ic="minus" aria-hidden="true"></span></button><input class="nb-input nb-qty qty-input" type="number" value="2" min="1" max="999"><button class="ne-btn ne-btn-sm ne-btn-neutral-subtle qty-plus" aria-label="증가"><span class="nb-ico" data-ic="plus" aria-hidden="true"></span></button></div></td>
+              <td class="num cart-amount">23,400원</td>
+              <td class="num">260P</td>
+              <td class="center"><button class="ne-btn ne-btn-sm ne-btn-neutral-subtle row-del" aria-label="삭제"><span class="nb-ico" data-ic="x" aria-hidden="true"></span></button></td>
+            </tr>
+            <!-- 품절 상품: 노출하되 구매 제한 (Sheet09 R7, R15) -->
+            <tr data-price="16000" data-list="16000" data-point="160" data-free="0" data-soldout="1">
+              <td class="center"><input type="checkbox" class="cart-check" disabled></td>
+              <td><div class="nb-inline"><div class="nb-ph nb-w-thumb-sm">표지</div><div><b>수능 빈칸백서 실전편</b><div class="nb-fnote">NE능률 · 수험</div><span class="ne-badge ne-badge-status-danger">품절</span></div></div></td>
+              <td class="center"><span class="nb-dim" style="font-size:11px">주문 불가</span></td>
+              <td class="num cart-amount">16,000원</td>
+              <td class="num">-</td>
+              <td class="center"><button class="ne-btn ne-btn-sm ne-btn-neutral-subtle row-del" aria-label="삭제"><span class="nb-ico" data-ic="x" aria-hidden="true"></span></button></td>
+            </tr>
+          </tbody>
+        </table></div>
+        <div class="nb-notice nb-notice--warn">SAP CODE 기준 자동 품절 정책 적용 : 매일 오전 9시 SAP 재고 수량이 예비수량보다 적을 경우 자동 품절(주문 진행 불가).</div>
+
+        <div class="ne-card nb-card">
+          <div class="nb-card-title">Empty 상태 (참고) <span class="nb-ref">Sheet09 R16</span></div>
+          <div class="nb-empty">장바구니에 담긴 상품이 없습니다. (추천 교재 노출 검토)</div>
+        </div>
+      </div>
+
+      <!-- 주문 예상 금액 (Sheet09 R8~R13) -->
+      <aside class="nb-aside">
+        <div class="ne-card ne-card--muted">
+          <div class="nb-card-title">주문 예상 금액</div>
+          <div class="nb-sum">
+            <div class="nb-sum-line"><span>총 상품금액</span><span id="cart-sum-product">37,300원</span></div>
+            <div class="nb-sum-line"><span class="nb-minus">상품 할인</span><span class="nb-minus" id="cart-sum-discount">- 2,800원</span></div>
+            <div class="nb-sum-line"><span>배송비</span><span id="cart-sum-delivery">2,500원</span></div>
+            <div class="nb-sum-line total"><span>결제 예상금액</span><span id="cart-sum-total">37,000원</span></div>
+            <div class="nb-sum-line" style="border:none"><span>적립 예정</span><span id="cart-sum-point">+ 410P</span></div>
+          </div>
+          <div class="nb-fnote">※ 적립은 결제 완료(구매확정) 후 처리</div>
+          <div class="nb-fnote">※ 3만원 이상 무료 / 도서산간 +2,500 / 무료상품 포함 시 전체 무료</div>
+          <div class="nb-stack-col nb-mt">
+            <button class="ne-btn ne-btn-primary member-only" id="cart-order-selected" data-goto="order">선택상품 주문</button>
+            <button class="ne-btn ne-btn-neutral member-only" data-goto="order">전체상품 주문</button>
+          </div>
+          <div class="nb-fnote">※ 주문은 회원만 가능(비회원 로그인 유도)</div>
+        </div>
+
+        <div class="ne-card ne-card--muted nb-policy nb-mt">
+          <h4><span class="nb-ico" data-ic="info" aria-hidden="true"></span> 정책 메모 · 장바구니</h4>
+          <ul>
+            <li><b>수량</b> 1~999 · 실제 판매가능 재고 기준</li>
+            <li><b>할인</b> 추가할인 우선, 상품할인과 중복 불가</li>
+            <li><b>적립</b> 정가 기준, 추가적립 우선</li>
+            <li><span class="nb-need">확인</span> 비회원 장바구니 <b>저장 방식</b> 개발 검토</li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       6) 주문/결제  (ORDER-001 / Sheet 10) ★상세 — surface_intent: base-only
+       ================================================================ -->
+  <section class="nb-screen" id="screen-order">
+    <div class="nb-topbar">
+      <div class="nb-titlerow">
+        <span class="nb-sid-badge">ORDER-001</span>
+        <h2>주문 / 결제</h2>
+        <span class="ne-badge ne-badge-status-success">신규</span>
+      </div>
+      <div class="nb-purpose">화면 목적 : 주문상품·주문자·배송지·금액 확인 후 결제 진행.</div>
+      <div class="nb-chips">
+        <span class="ne-badge ne-badge-category-mono">배송지 : 회원정보와 동일 / 새로입력 / 최근배송지</span>
+        <span class="ne-badge ne-badge-category-mono">주문서 수량 변경 불가</span>
+        <span class="ne-badge ne-badge-category-mono">포인트 100P 단위 · 본인 포인트만</span>
+        <span class="ne-badge ne-badge-category-mono">쿠폰 1개 · 포인트와 동시 사용</span>
+        <span class="ne-badge ne-badge-category-mono">결제수단 : 카드/무통장/계좌이체/간편결제</span>
+        <span class="ne-badge ne-badge-category-mono">PG : 토스페이먼츠 · 공통 Gateway</span>
+        <span class="ne-badge ne-badge-status-warning">PG 도메인/MID · 포인트 사용단위 확인</span>
+      </div>
+    </div>
+
+    <div class="nb-pay-layout">
+      <div>
+        <!-- 주문 상품 (Sheet10 R3~R4) -->
+        <div class="ne-card nb-card">
+          <div class="nb-card-title">주문 상품 <span class="nb-ref">Sheet10 R3~R4 · 주문서 수량변경 불가</span></div>
+          <div class="nb-table-wrap"><table class="nb-table">
+            <thead><tr><th>상품정보</th><th style="width:70px">수량</th><th style="width:110px">판매가</th></tr></thead>
+            <tbody>
+              <tr><td><b>Bricks Reading 150 · L1</b><div class="nb-fnote">Bricks · ELT · 초등</div></td><td class="center">1</td><td class="num">13,500원</td></tr>
+              <tr><td><b>능률 중학영어 독해 LEVEL 2</b><div class="nb-fnote">NE능률 · 중등</div></td><td class="center">2</td><td class="num">23,400원</td></tr>
+            </tbody>
+          </table></div>
+        </div>
+
+        <!-- 주문자 정보 (Sheet10 R5) -->
+        <div class="ne-card nb-card">
+          <div class="nb-card-title">주문자 정보 <span class="nb-ref">Sheet10 R5 · 로그인 회원정보 기준</span></div>
+          <div class="ne-grid ne-grid--3">
+            <div class="nb-field"><label>이름</label><input class="nb-input" type="text" value="홍길동"></div>
+            <div class="nb-field"><label>연락처</label><input class="nb-input" type="tel" value="010-1234-5678"></div>
+            <div class="nb-field"><label>이메일</label><input class="nb-input" type="email" value="user@nebooks.com"></div>
+          </div>
+        </div>
+
+        <!-- 배송지 정보 (Sheet10 R6~R7) -->
+        <div class="ne-card nb-card">
+          <div class="nb-card-title">배송지 정보 <span class="nb-ref">Sheet10 R6~R7 · 기본/최근 배송지 제공 여부 확인 필요</span></div>
+          <div class="nb-tabs" id="addr-tabs" data-tabgroup="addr">
+            <div class="nb-tab active" data-addr="same">회원정보와 동일</div>
+            <div class="nb-tab" data-addr="new">새로입력</div>
+            <div class="nb-tab" data-addr="recent" data-modal="modal-recentaddr">최근배송지</div>
+          </div>
+          <div id="addr-form">
+            <div class="ne-grid ne-grid--2">
+              <div class="nb-field"><label>수령인 <span class="nb-req">*</span></label><input class="nb-input" type="text" id="addr-name" value="홍길동"></div>
+              <div class="nb-field"><label>연락처 <span class="nb-req">*</span></label><input class="nb-input" type="tel" id="addr-tel" value="010-1234-5678"></div>
+            </div>
+            <div class="nb-field"><label>주소 <span class="nb-req">*</span></label>
+              <div class="nb-inline"><input class="nb-input" type="text" id="addr-zip" value="06234" style="width:120px" placeholder="우편번호"><button class="ne-btn ne-btn-neutral-subtle">우편번호 검색</button></div>
+              <input class="nb-input nb-mt" type="text" id="addr-addr1" value="서울특별시 강남구 테헤란로 …">
+              <input class="nb-input nb-mt" type="text" id="addr-addr2" value="OO빌딩 5층" placeholder="상세주소">
+            </div>
+            <div class="nb-field"><label>배송메시지</label>
+              <select class="nb-input" id="addr-msg"><option>배송 메시지를 선택하세요</option><option>문 앞에 놓아주세요</option><option>경비실에 맡겨주세요</option><option>부재 시 연락주세요</option><option>직접 입력</option></select>
+            </div>
+            <label class="nb-check-label"><input type="checkbox"> 기본 배송지로 저장</label>
+          </div>
+          <div class="nb-notice">‘회원정보와 동일’=통합회원 주소 자동 / ‘새로입력’=빈값 신규 / ‘최근배송지’=<b>결제완료 이력 배송지</b>에서 선택(팝업).</div>
+        </div>
+
+        <!-- 혜택: 쿠폰 / 포인트 (Sheet10 R14~R17) -->
+        <div class="ne-card nb-card">
+          <div class="nb-card-title">할인 혜택 <span class="nb-ref">Sheet10 R14~R17 · 쿠폰 1개 + 포인트 동시</span></div>
+          <div class="nb-field">
+            <label>쿠폰 <span class="nb-dim">(적용 가능 쿠폰만 노출 · 1개만 사용)</span></label>
+            <div class="nb-inline">
+              <input class="nb-input nb-grow" type="text" id="coupon-applied" value="" placeholder="선택된 쿠폰 없음" readonly>
+              <button class="ne-btn ne-btn-neutral-subtle" data-modal="modal-coupon">쿠폰 선택</button>
+            </div>
+          </div>
+          <div class="nb-field">
+            <label>포인트 사용 <span class="nb-dim">(보유 <b id="point-have">3,200</b> P · 100P 단위 · 본인 포인트만)</span></label>
+            <div class="nb-inline">
+              <input class="nb-input nb-grow" type="number" id="point-use" value="0" step="100" min="0">
+              <button class="ne-btn ne-btn-neutral-subtle" id="point-all">전액 사용</button>
+            </div>
+            <div class="nb-fnote" id="point-warn">※ 100P 단위 / 유효기간이 가까운 포인트부터 차감</div>
+          </div>
+          <div class="nb-notice nb-notice--warn">포인트 사용 단위 및 최소/최대 사용 가능 금액 <b>확인 필요</b>.</div>
+        </div>
+
+        <!-- 결제수단 (Sheet10 R11~R12) -->
+        <div class="ne-card nb-card">
+          <div class="nb-card-title">결제수단 <span class="nb-ref">Sheet10 R11~R12 · PG 설정값 기준 · 토스페이먼츠</span></div>
+          <div class="nb-pay-methods" id="pay-methods">
+            <label class="nb-opt selected"><input type="radio" name="pay" checked><div><div class="nb-opt-title">신용카드</div><div class="nb-opt-desc">간편/일반 카드 결제</div></div></label>
+            <label class="nb-opt"><input type="radio" name="pay"><div><div class="nb-opt-title">무통장입금</div><div class="nb-opt-desc">가상계좌 발급</div></div></label>
+            <label class="nb-opt"><input type="radio" name="pay"><div><div class="nb-opt-title">실시간 계좌이체</div><div class="nb-opt-desc">계좌 즉시 이체</div></div></label>
+            <label class="nb-opt"><input type="radio" name="pay"><div><div class="nb-opt-title">간편결제</div><div class="nb-opt-desc">PG 설정 여부에 따라 노출</div></div></label>
+          </div>
+          <div class="nb-notice">공통 PG Gateway 결제 : <b>pg.neungyule.co.kr</b> 또는 <b>order.neungyule.co.kr</b>. 토스페이먼츠 계정/MID·도메인 설정 필요.</div>
+        </div>
+      </div>
+
+      <!-- 우측: 최종 결제금액 (Sheet10 R8~R10, R18~R19) -->
+      <aside class="nb-pay-aside">
+        <div class="ne-card ne-card--muted">
+          <div class="nb-card-title">최종 결제금액</div>
+          <div class="nb-sum">
+            <div class="nb-sum-line"><span>총 상품금액</span><span id="ord-product">36,900원</span></div>
+            <div class="nb-sum-line"><span class="nb-minus">상품/추가 할인</span><span class="nb-minus" id="ord-discount">- 2,800원</span></div>
+            <div class="nb-sum-line"><span class="nb-minus">쿠폰 할인</span><span class="nb-minus" id="ord-coupon">- 0원</span></div>
+            <div class="nb-sum-line"><span class="nb-minus">포인트 사용</span><span class="nb-minus" id="ord-point">- 0원</span></div>
+            <div class="nb-sum-line"><span>배송비</span><span id="ord-delivery">2,500원</span></div>
+            <div class="nb-sum-line total"><span>최종 결제금액</span><span id="ord-total">36,600원</span></div>
+            <div class="nb-sum-line" style="border:none"><span>적립 예정</span><span id="ord-save">+ 410P</span></div>
+          </div>
+          <div class="nb-fnote">※ 실시간 재계산 · 적립은 구매확정 후(유효기간 1년)</div>
+          <button class="ne-btn ne-btn-lg ne-btn-primary" id="btn-pay" style="width:100%;margin-top:var(--space-sm)" data-goto="complete">결제하기</button>
+          <button class="ne-btn ne-btn-neutral-subtle" id="btn-pay-fail" style="width:100%;margin-top:var(--space-xs)">결제 실패 시나리오 보기</button>
+          <div class="nb-notice nb-notice--warn" id="pay-fail-box" style="display:none">PG 결제 실패 : 오류 메시지 노출, 주문 미완료 처리, 실패 사유 저장. (Sheet10 R22)</div>
+        </div>
+
+        <div class="ne-card ne-card--muted nb-policy nb-mt">
+          <h4><span class="nb-ico" data-ic="info" aria-hidden="true"></span> 정책 메모 · 주문/결제</h4>
+          <ul>
+            <li><b>주문서 수량 변경 불가</b></li>
+            <li><b>배송지</b> 3탭 : 동일/새로입력/최근(결제완료 이력)</li>
+            <li><b>포인트</b> 100P 단위·본인만·임박분부터 차감</li>
+            <li><b>쿠폰</b> 1개만(회원/이벤트/상품 중 1종) + 포인트 동시</li>
+            <li><b>성공</b> 시 주문 생성·결제완료 이동 / <b>실패</b> 시 미완료·사유 저장</li>
+            <li><b>주문취소</b> : 배송 준비 전까지 / 이후 반품·교환</li>
+            <li><span class="nb-need">확인</span> PG 도메인·MID · 포인트 단위/한도 · 기본·최근배송지 제공 · 간편결제 노출</li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       7) 결제완료  (ORDER-002 / Sheet 10 R13, Sheet 02 R27) — base-only
+       ================================================================ -->
+  <section class="nb-screen" id="screen-complete">
+    <div class="nb-topbar">
+      <div class="nb-titlerow">
+        <span class="nb-sid-badge">ORDER-002</span>
+        <h2>결제완료</h2>
+        <span class="ne-badge ne-badge-status-success">신규</span>
+      </div>
+      <div class="nb-purpose">화면 목적 : PG 승인 성공 후 주문 생성 결과(주문번호·결제금액·배송정보) 안내.</div>
+      <div class="nb-chips">
+        <span class="ne-badge ne-badge-category-mono">주문번호 / 결제금액 / 배송정보</span>
+        <span class="ne-badge ne-badge-category-mono">주문내역 이동</span>
+        <span class="ne-badge ne-badge-category-mono">PG 승인 성공 기준</span>
+      </div>
+    </div>
+
+    <div class="nb-content">
+      <div class="nb-main-col">
+        <div class="ne-card nb-card nb-center" style="padding:var(--space-xl)">
+          <div class="nb-inline" style="justify-content:center;gap:var(--space-xs)"><span class="nb-ico nb-ico--lg" data-ic="circle-check" aria-hidden="true" style="color:var(--ne-status-success-strong)"></span><span style="font-size:22px;font-weight:800;color:var(--ne-text-heading)">결제가 완료되었습니다</span></div>
+          <div class="nb-mt nb-dim">주문번호 <b style="color:var(--ne-text-heading)">NB20260617-000123</b></div>
+        </div>
+
+        <div class="ne-card nb-card">
+          <div class="nb-card-title">주문 정보 <span class="nb-ref">Sheet02 R27 · 주문번호/결제금액/배송정보/주문내역 이동</span></div>
+          <div class="nb-table-wrap"><table class="nb-table">
+            <tr><th style="width:140px">주문번호</th><td>NB20260617-000123</td></tr>
+            <tr><th>결제금액</th><td>36,600원 (신용카드)</td></tr>
+            <tr><th>적립 예정</th><td>410P <span class="nb-dim">(구매확정 후 적립 · 유효기간 1년)</span></td></tr>
+            <tr><th>받는 사람</th><td>홍길동 / 010-1234-5678</td></tr>
+            <tr><th>배송지</th><td>(06234) 서울특별시 강남구 테헤란로 … OO빌딩 5층</td></tr>
+            <tr><th>배송메시지</th><td>문 앞에 놓아주세요</td></tr>
+          </table></div>
+        </div>
+
+        <div class="ne-card nb-card">
+          <div class="nb-card-title">주문 상품</div>
+          <div class="nb-table-wrap"><table class="nb-table">
+            <tr><td><b>Bricks Reading 150 · L1</b></td><td class="center" style="width:70px">1개</td><td class="num" style="width:110px">13,500원</td></tr>
+            <tr><td><b>능률 중학영어 독해 LEVEL 2</b></td><td class="center">2개</td><td class="num">23,400원</td></tr>
+          </table></div>
+        </div>
+
+        <div class="nb-btn-row" style="justify-content:center">
+          <button class="ne-btn ne-btn-lg ne-btn-primary" data-goto="myorder">주문내역 보기</button>
+          <button class="ne-btn ne-btn-lg ne-btn-neutral-subtle" data-goto="main">쇼핑 계속하기</button>
+        </div>
+      </div>
+
+      <aside class="nb-aside">
+        <div class="ne-card ne-card--muted nb-policy">
+          <h4><span class="nb-ico" data-ic="info" aria-hidden="true"></span> 정책 메모 · 결제완료</h4>
+          <ul>
+            <li>PG 승인 <b>성공 시</b>에만 주문 생성 + 본 화면 이동</li>
+            <li>적립은 <b>구매확정 후</b> 처리(유효기간 1년)</li>
+            <li><span class="nb-need">확인</span> PG 결과 연동 방식</li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       8) 마이페이지 - 주문내역  (MY-001 / Sheet 02 R28) — base-only
+       ================================================================ -->
+  <section class="nb-screen" id="screen-myorder">
+    <div class="nb-topbar">
+      <div class="nb-titlerow">
+        <span class="nb-sid-badge">MY-001</span>
+        <h2>마이페이지 · 주문내역</h2>
+        <span class="ne-badge ne-badge-status-success">신규</span>
+      </div>
+      <div class="nb-purpose">화면 목적 : 주문/배송/취소/환불 내역 조회 (주문번호 기준).</div>
+      <div class="nb-chips">
+        <span class="ne-badge ne-badge-category-mono">주문/배송/취소/환불 통합 조회</span>
+        <span class="ne-badge ne-badge-category-mono">주문취소 : 배송 준비 전까지</span>
+        <span class="ne-badge ne-badge-category-mono">이후 : 교환/반품 접수</span>
+      </div>
+    </div>
+
+    <div class="nb-content">
+      <div class="nb-main-col">
+        <div class="nb-tabs">
+          <div class="nb-tab active">주문내역</div>
+          <div class="nb-tab" data-goto="point">포인트</div>
+          <div class="nb-tab" data-goto="coupon">쿠폰</div>
+        </div>
+
+        <div class="nb-inline" style="margin-bottom:var(--space-sm)">
+          <select class="nb-input" style="width:auto"><option>최근 3개월</option><option>6개월</option><option>1년</option></select>
+          <select class="nb-input" style="width:auto"><option>전체 상태</option><option>결제완료</option><option>배송준비</option><option>배송중</option><option>배송완료</option><option>취소</option><option>환불</option></select>
+          <button class="ne-btn ne-btn-neutral-subtle">조회</button>
+        </div>
+
+        <div class="nb-table-wrap"><table class="nb-table">
+          <thead><tr><th style="width:150px">주문번호/일자</th><th>상품</th><th style="width:100px">결제금액</th><th style="width:90px">상태</th><th style="width:170px">관리</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>NB20260617-000123<div class="nb-fnote">2026-06-17</div></td>
+              <td>Bricks Reading 150 · L1 외 1건</td>
+              <td class="num">36,600원</td>
+              <td class="center"><span class="ne-badge ne-badge-status-neutral">결제완료</span></td>
+              <td><div class="nb-btn-row"><button class="ne-btn ne-btn-sm ne-btn-neutral-subtle">상세</button><button class="ne-btn ne-btn-sm ne-btn-neutral-subtle">주문취소</button></div></td>
+            </tr>
+            <tr>
+              <td>NB20260610-000077<div class="nb-fnote">2026-06-10</div></td>
+              <td>빠른독해 바른독해 기초</td>
+              <td class="num">14,000원</td>
+              <td class="center"><span class="ne-badge ne-badge-status-neutral">배송중</span></td>
+              <td><div class="nb-btn-row"><button class="ne-btn ne-btn-sm ne-btn-neutral-subtle">상세</button><button class="ne-btn ne-btn-sm ne-btn-neutral-subtle">배송조회</button><button class="ne-btn ne-btn-sm ne-btn-neutral-subtle">교환/반품</button></div></td>
+            </tr>
+            <tr>
+              <td>NB20260601-000041<div class="nb-fnote">2026-06-01</div></td>
+              <td>능률 중학영어 독해 LEVEL 2</td>
+              <td class="num">11,700원</td>
+              <td class="center"><span class="ne-badge ne-badge-status-success">배송완료</span></td>
+              <td><div class="nb-btn-row"><button class="ne-btn ne-btn-sm ne-btn-neutral-subtle">상세</button><button class="ne-btn ne-btn-sm ne-btn-neutral-subtle">교환/반품</button><button class="ne-btn ne-btn-sm ne-btn-neutral">재주문</button></div></td>
+            </tr>
+            <tr>
+              <td>NB20260520-000012<div class="nb-fnote">2026-05-20</div></td>
+              <td>수능 빈칸백서 실전편</td>
+              <td class="num">16,000원</td>
+              <td class="center"><span class="ne-badge ne-badge-status-danger">환불완료</span></td>
+              <td><div class="nb-btn-row"><button class="ne-btn ne-btn-sm ne-btn-neutral-subtle">상세</button></div></td>
+            </tr>
+          </tbody>
+        </table></div>
+        <div class="nb-notice nb-notice--warn">주문취소는 <b>배송 준비 전</b>까지 가능. 이후에는 <b>교환/반품 접수</b>로 처리. 취소/환불 시 사용 포인트 복원 및 적립 예정 포인트 회수. (Sheet10 R20~R21)</div>
+      </div>
+
+      <aside class="nb-aside">
+        <div class="ne-card ne-card--muted nb-policy">
+          <h4><span class="nb-ico" data-ic="info" aria-hidden="true"></span> 정책 메모 · 주문내역</h4>
+          <ul>
+            <li>조회 단위 : <b>주문번호 기준</b></li>
+            <li>상태 : 결제완료/배송준비/배송중/배송완료/취소/환불</li>
+            <li><b>취소</b>=배송준비 전 / <b>교환·반품</b>=이후</li>
+            <li><b>재주문</b> 제공</li>
+            <li><span class="nb-need">확인</span> 배송조회 연동 · 교환/반품 플로우(별도 정의)</li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       9) 마이페이지 - 포인트  (MY-003 / Sheet 02 R29) — muted-band
+       ================================================================ -->
+  <section class="nb-screen" id="screen-point">
+    <div class="nb-topbar">
+      <div class="nb-titlerow">
+        <span class="nb-sid-badge">MY-003</span>
+        <h2>마이페이지 · 포인트</h2>
+        <span class="ne-badge ne-badge-status-neutral">개선</span>
+      </div>
+      <div class="nb-purpose">화면 목적 : NE Point 적립/사용/소멸 내역 및 사용 가능 포인트 조회.</div>
+      <div class="nb-chips">
+        <span class="ne-badge ne-badge-category-mono">NE Point 통합 정책</span>
+        <span class="ne-badge ne-badge-category-mono">B&amp;G 포인트 이전/승계</span>
+        <span class="ne-badge ne-badge-category-mono">구매확정 후 적립 · 유효기간 1년</span>
+      </div>
+    </div>
+
+    <div class="nb-content">
+      <div class="nb-main-col">
+        <div class="nb-tabs">
+          <div class="nb-tab" data-goto="myorder">주문내역</div>
+          <div class="nb-tab active">포인트</div>
+          <div class="nb-tab" data-goto="coupon">쿠폰</div>
+        </div>
+
+        <div class="ne-card ne-card--muted nb-card nb-center">
+          <div class="nb-dim">사용 가능 NE Point</div>
+          <div style="font-size:26px;font-weight:800;color:var(--ne-text-heading)">3,200 P</div>
+          <div class="nb-fnote">곧 소멸 예정 200P (2026-06-30) · 유효기간 임박분부터 차감</div>
+        </div>
+
+        <div class="nb-tabs">
+          <div class="nb-tab active">전체</div><div class="nb-tab">적립</div><div class="nb-tab">사용</div><div class="nb-tab">소멸</div>
+        </div>
+        <div class="nb-table-wrap"><table class="nb-table">
+          <thead><tr><th style="width:110px">일자</th><th>내용</th><th style="width:90px">구분</th><th style="width:90px">포인트</th><th style="width:90px">잔액</th></tr></thead>
+          <tbody>
+            <tr><td>2026-06-10</td><td>B&amp;G 포인트 승계 이전</td><td class="center"><span class="ne-badge ne-badge-status-neutral">이전/승계</span></td><td class="num">+1,000</td><td class="num">3,200</td></tr>
+            <tr><td>2026-06-05</td><td>NB20260601-000041 구매확정 적립</td><td class="center"><span class="ne-badge ne-badge-status-success">적립</span></td><td class="num">+117</td><td class="num">2,200</td></tr>
+            <tr><td>2026-06-01</td><td>주문 NB20260601-000041 사용</td><td class="center"><span class="ne-badge ne-badge-status-neutral">사용</span></td><td class="num nb-minus">-500</td><td class="num">2,083</td></tr>
+            <tr><td>2026-05-31</td><td>유효기간 만료 소멸</td><td class="center"><span class="ne-badge ne-badge-status-danger">소멸</span></td><td class="num nb-minus">-300</td><td class="num">2,583</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
+      <aside class="nb-aside">
+        <div class="ne-card ne-card--muted nb-policy">
+          <h4><span class="nb-ico" data-ic="info" aria-hidden="true"></span> 정책 메모 · 포인트</h4>
+          <ul>
+            <li><b>NE Point 통합</b> : B&amp;G 포인트 이전/승계</li>
+            <li>적립 : 정가 기준, <b>구매확정 후</b>, 유효기간 1년</li>
+            <li>사용 : 100P 단위, 본인만, 임박분부터 차감</li>
+            <li>취소/환불 시 사용분 복원 + 적립예정 회수</li>
+            <li><span class="nb-need">확인</span> 포인트 사용 단위/최소·최대 한도</li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       10) 마이페이지 - 쿠폰  (MY-004 / Sheet 02 R30) — base-only
+       ================================================================ -->
+  <section class="nb-screen" id="screen-coupon">
+    <div class="nb-topbar">
+      <div class="nb-titlerow">
+        <span class="nb-sid-badge">MY-004</span>
+        <h2>마이페이지 · 쿠폰</h2>
+        <span class="ne-badge ne-badge-status-success">신규</span>
+      </div>
+      <div class="nb-purpose">화면 목적 : 보유 쿠폰 및 사용 가능/만료/사용내역 조회.</div>
+      <div class="nb-chips">
+        <span class="ne-badge ne-badge-category-mono">회원/이벤트/상품 쿠폰</span>
+        <span class="ne-badge ne-badge-category-mono">주문 시 1개만 사용</span>
+        <span class="ne-badge ne-badge-category-mono">포인트와 동시 사용 가능</span>
+      </div>
+    </div>
+
+    <div class="nb-content">
+      <div class="nb-main-col">
+        <div class="nb-tabs">
+          <div class="nb-tab" data-goto="myorder">주문내역</div>
+          <div class="nb-tab" data-goto="point">포인트</div>
+          <div class="nb-tab active">쿠폰</div>
+        </div>
+
+        <div class="nb-tabs">
+          <div class="nb-tab active">사용 가능 (2)</div><div class="nb-tab">사용 완료</div><div class="nb-tab">만료</div>
+        </div>
+        <div class="nb-table-wrap"><table class="nb-table">
+          <thead><tr><th>쿠폰명</th><th style="width:110px">유형</th><th style="width:120px">할인</th><th style="width:120px">유효기간</th><th style="width:120px">조건</th></tr></thead>
+          <tbody>
+            <tr><td>신규가입 환영 쿠폰</td><td class="center"><span class="ne-badge ne-badge-category-mono">회원</span></td><td class="center">2,000원</td><td class="center">~2026-07-31</td><td class="center">1만원 이상</td></tr>
+            <tr><td>신학기 교재전 10%</td><td class="center"><span class="ne-badge ne-badge-category-mono">이벤트</span></td><td class="center">10% (최대 5천)</td><td class="center">~2026-06-30</td><td class="center">ELT 카테고리</td></tr>
+            <tr><td>Bricks 시리즈 전용</td><td class="center"><span class="ne-badge ne-badge-category-mono">상품</span></td><td class="center">1,500원</td><td class="center">~2026-08-15</td><td class="center">Bricks 시리즈</td></tr>
+          </tbody>
+        </table></div>
+        <div class="nb-notice">주문/결제 시 쿠폰은 <b>1개만</b> 적용되며 회원/이벤트/상품 쿠폰 중 적용 가능한 1종을 사용. 포인트와 <b>동시 사용 가능</b>.</div>
+      </div>
+
+      <aside class="nb-aside">
+        <div class="ne-card ne-card--muted nb-policy">
+          <h4><span class="nb-ico" data-ic="info" aria-hidden="true"></span> 정책 메모 · 쿠폰</h4>
+          <ul>
+            <li>쿠폰관리는 Admin <b>신규</b>(생성/발급/사용내역)</li>
+            <li>주문 시 <b>1개만</b> · 포인트와 동시</li>
+            <li><span class="nb-need">확인</span> 중복/적용 조건 · 발급 정책</li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       11) 고객센터 - 1:1 문의  (CS-005 / Sheet 02 R31~R32) — narrow 느낌, base-only
+       ================================================================ -->
+  <section class="nb-screen" id="screen-cs">
+    <div class="nb-topbar">
+      <div class="nb-titlerow">
+        <span class="nb-sid-badge">CS-005</span>
+        <h2>고객센터 · 1:1 문의</h2>
+        <span class="ne-badge ne-badge-status-neutral">개선</span>
+      </div>
+      <div class="nb-purpose">화면 목적 : 기존 1:1 문의에 커머스(주문/배송/취소·환불) 문의 유형 추가.</div>
+      <div class="nb-chips">
+        <span class="ne-badge ne-badge-category-mono">커머스 문의 유형 추가</span>
+        <span class="ne-badge ne-badge-category-mono">주문/배송/취소·환불 문의</span>
+      </div>
+    </div>
+
+    <div class="nb-content">
+      <div class="nb-main-col">
+        <div class="ne-card nb-card">
+          <div class="nb-card-title">1:1 문의 등록 <span class="nb-ref">Sheet02 R31~R32 · 커머스 문의 유형 추가</span></div>
+          <div class="nb-field"><label>문의 유형 <span class="nb-req">*</span></label>
+            <select class="nb-input">
+              <option>일반 문의</option><option>교재 문의</option>
+              <option>주문 문의 (신규)</option><option>배송 문의 (신규)</option><option>취소/환불 문의 (신규)</option>
+            </select>
+          </div>
+          <div class="nb-field"><label>관련 주문번호 <span class="nb-dim">(주문/배송/취소·환불 문의 시)</span></label><input class="nb-input" type="text" placeholder="NB20260617-000123"></div>
+          <div class="nb-field"><label>제목 <span class="nb-req">*</span></label><input class="nb-input" type="text"></div>
+          <div class="nb-field"><label>내용 <span class="nb-req">*</span></label><textarea class="nb-input" placeholder="문의 내용을 입력하세요"></textarea></div>
+          <div class="nb-field"><label>첨부파일</label><input class="nb-input" type="text" placeholder="파일 선택"></div>
+          <div class="nb-btn-row" style="justify-content:flex-end"><button class="ne-btn ne-btn-neutral-subtle">취소</button><button class="ne-btn ne-btn-primary">문의 등록</button></div>
+        </div>
+
+        <div class="ne-card nb-card">
+          <div class="nb-card-title">고객센터 안내 <span class="nb-ref">Sheet08 R50~R51</span></div>
+          <div class="nb-fnote">NE능률 고객센터 1833-8368 (평일 9~16시, 점심 12~13시) · 1:1문의/FAQ/문자상담<br>AI 디지털 교육자료 공동 CS센터 1661-0777 (평일 9~18시)</div>
+        </div>
+      </div>
+
+      <aside class="nb-aside">
+        <div class="ne-card ne-card--muted nb-policy">
+          <h4><span class="nb-ico" data-ic="info" aria-hidden="true"></span> 정책 메모 · 1:1문의</h4>
+          <ul>
+            <li>기존 분류 + <b>주문/배송/취소·환불</b> 유형 확장</li>
+            <li>커머스 문의 시 <b>주문번호</b> 연계 입력</li>
+            <li><span class="nb-need">확인</span> 문의 유형별 처리 담당/SLA</li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  </main>
+</div>
+
+<!-- 플로팅: 최근 본 도서 (교재목록/상세에서 노출 · Sheet06 R10) -->
+<div class="nb-floating" id="floating-recent">
+  <div class="nb-fr-head">최근 본 도서</div>
+  <div class="nb-fr-item"><div class="nb-ph">표지</div>Bricks L1</div>
+  <div class="nb-fr-item"><div class="nb-ph">표지</div>중학독해 L2</div>
+</div>
+
+<!-- ============ 모달: 멀티 다운로드 (Sheet06 R28 / Sheet07 R20) ============ -->
+<div class="nb-modal-overlay" id="modal-multidownload">
+  <div class="nb-modal">
+    <div class="nb-modal-head"><h3>멀티 다운로드</h3><button class="ne-btn ne-btn-sm ne-btn-neutral-subtle nb-x" data-close aria-label="닫기"><span class="nb-ico" data-ic="x" aria-hidden="true"></span></button></div>
+    <div class="nb-modal-body">
+      <div class="nb-notice">자료 2개 이상 선택 시 멀티 다운로드 팝업으로 연결됩니다. (권한별 제공)</div>
+      <div class="nb-table-wrap"><table class="nb-table">
+        <thead><tr><th style="width:36px"></th><th>자료명</th><th style="width:90px">대상</th></tr></thead>
+        <tbody>
+          <tr><td class="center"><input type="checkbox" checked></td><td>L1 정답 및 해설</td><td><span class="ne-badge ne-badge-category-mono">전체</span></td></tr>
+          <tr><td class="center"><input type="checkbox" checked></td><td>Unit 1~5 워크시트</td><td><span class="ne-badge ne-badge-status-success">학생용</span></td></tr>
+        </tbody>
+      </table></div>
+      <div class="nb-fnote">※ 멀티다운로드 연결 작업 필요(개발 검토)</div>
+    </div>
+    <div class="nb-modal-foot"><button class="ne-btn ne-btn-neutral-subtle" data-close>닫기</button><button class="ne-btn ne-btn-primary" data-close><span class="nb-ico" data-ic="download" aria-hidden="true"></span> 선택 자료 다운로드</button></div>
+  </div>
+</div>
+
+<!-- ============ 모달: 쿠폰 선택 (Sheet10 R16~R17) ============ -->
+<div class="nb-modal-overlay" id="modal-coupon">
+  <div class="nb-modal">
+    <div class="nb-modal-head"><h3>쿠폰 선택</h3><button class="ne-btn ne-btn-sm ne-btn-neutral-subtle nb-x" data-close aria-label="닫기"><span class="nb-ico" data-ic="x" aria-hidden="true"></span></button></div>
+    <div class="nb-modal-body">
+      <div class="nb-notice">적용 가능한 쿠폰만 노출됩니다. <b>1개만</b> 선택 가능하며 포인트와 동시 사용할 수 있습니다.</div>
+      <div class="nb-opt-list" id="coupon-list">
+        <label class="nb-opt"><input type="radio" name="coupon" data-name="신규가입 환영 쿠폰" data-amt="2000"><div><div class="nb-opt-title">신규가입 환영 쿠폰 · 2,000원</div><div class="nb-opt-desc">회원 쿠폰 · 1만원 이상 · ~2026-07-31</div></div></label>
+        <label class="nb-opt"><input type="radio" name="coupon" data-name="신학기 교재전 10%" data-amt="3690"><div><div class="nb-opt-title">신학기 교재전 10% (최대 5천)</div><div class="nb-opt-desc">이벤트 쿠폰 · ELT · ~2026-06-30</div></div></label>
+        <label class="nb-opt"><input type="radio" name="coupon" data-name="" data-amt="0"><div><div class="nb-opt-title">쿠폰 사용 안 함</div><div class="nb-opt-desc">선택한 쿠폰을 적용하지 않습니다</div></div></label>
+      </div>
+    </div>
+    <div class="nb-modal-foot"><button class="ne-btn ne-btn-neutral-subtle" data-close>닫기</button><button class="ne-btn ne-btn-primary" id="coupon-apply">적용</button></div>
+  </div>
+</div>
+
+<!-- ============ 모달: 최근 배송지 선택 (Sheet10 R7) ============ -->
+<div class="nb-modal-overlay" id="modal-recentaddr">
+  <div class="nb-modal">
+    <div class="nb-modal-head"><h3>최근 배송지 선택</h3><button class="ne-btn ne-btn-sm ne-btn-neutral-subtle nb-x" data-close aria-label="닫기"><span class="nb-ico" data-ic="x" aria-hidden="true"></span></button></div>
+    <div class="nb-modal-body">
+      <div class="nb-notice">결제완료 이력이 있는 배송지에서 선택합니다. (기본/최근 배송지 제공 여부 확인 필요)</div>
+      <div class="nb-opt-list" id="recentaddr-list">
+        <label class="nb-opt"><input type="radio" name="raddr" data-name="홍길동" data-tel="010-1234-5678" data-zip="06234" data-a1="서울특별시 강남구 테헤란로 …" data-a2="OO빌딩 5층"><div><div class="nb-opt-title">홍길동 (기본배송지)</div><div class="nb-opt-desc">(06234) 서울특별시 강남구 테헤란로 … OO빌딩 5층</div></div></label>
+        <label class="nb-opt"><input type="radio" name="raddr" data-name="홍길동(자택)" data-tel="010-1234-5678" data-zip="03187" data-a1="서울특별시 종로구 …" data-a2="101동 1001호"><div><div class="nb-opt-title">홍길동 (자택)</div><div class="nb-opt-desc">(03187) 서울특별시 종로구 … 101동 1001호</div></div></label>
+        <label class="nb-opt"><input type="radio" name="raddr" data-name="OO초등학교" data-tel="02-000-0000" data-zip="07654" data-a1="서울특별시 영등포구 …" data-a2="교무실"><div><div class="nb-opt-title">OO초등학교 (학교)</div><div class="nb-opt-desc">(07654) 서울특별시 영등포구 … 교무실</div></div></label>
+      </div>
+    </div>
+    <div class="nb-modal-foot"><button class="ne-btn ne-btn-neutral-subtle" data-close>닫기</button><button class="ne-btn ne-btn-primary" id="recentaddr-apply">선택 배송지 적용</button></div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
