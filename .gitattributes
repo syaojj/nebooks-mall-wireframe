@@ -1,0 +1,6 @@
+# 바이너리 파일 — 줄바꿈(EOL) 변환 금지 (CRLF 손상 방지)
+*.pen binary
+*.webp binary
+*.png binary
+*.jpg binary
+*.pdf binary

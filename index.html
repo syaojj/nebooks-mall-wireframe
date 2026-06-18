@@ -8,11 +8,12 @@
   :root { color-scheme: light; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: "Pretendard Variable", "맑은 고딕", system-ui, sans-serif; background: #f4f4f4; color: #222; line-height: 1.5; }
-  .wrap { max-width: 880px; margin: 0 auto; padding: 48px 24px 64px; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 48px 24px 64px; }
   header h1 { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; }
   header p { margin-top: 8px; color: #555; font-size: 14px; }
-  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 28px; }
-  @media (max-width: 640px) { .grid { grid-template-columns: 1fr; } }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 28px; }
+  @media (max-width: 900px) { .grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
   .card { background: #fff; border: 1px solid #ccc; border-radius: 12px; padding: 22px; display: flex; flex-direction: column; }
   .card h2 { font-size: 17px; font-weight: 800; }
   .tag { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 9999px; border: 1px solid #bbb; color: #555; margin-top: 6px; align-self: flex-start; }
@@ -57,12 +58,25 @@
         </ul>
         <a class="btn primary" href="wireframe_v2.0/index.html">디자인.md 적용 와이어프레임 v2.0 열기 &rarr;</a>
       </div>
+
+      <!-- Pencil 와이어프레임 -->
+      <div class="card">
+        <h2>Pencil 와이어프레임 v1.0</h2>
+        <span class="tag">Pencil(.pen) 디자인 export · 이미지 뷰어</span>
+        <ul>
+          <li>Pencil로 디자인한 화면(A안 7종 + B안 5종)</li>
+          <li>좌측 메뉴로 화면 전환 (디자인 검토용·정적 이미지)</li>
+          <li>메인·교재목록·교재상세·장바구니·주문결제·마이페이지·찜 등</li>
+        </ul>
+        <a class="btn primary" href="wireframe_pencil/index.html">Pencil 와이어프레임 v1.0 열기 &rarr;</a>
+      </div>
     </div>
 
     <div class="note">
-      <b>안내</b> — 두 버전은 동일한 기능정의서(v2.0_260618)를 기준으로 합니다.
+      <b>안내</b> — 모두 동일한 기능정의서(v2.0_260618)를 기준으로 합니다.
       <b>기획 검토용 와이어프레임 v2.0</b>은 구조 검토용 흑백 버전,
-      <b>디자인.md 적용 와이어프레임 v2.0</b>은 NE Design.md(v0.11.5-alpha)를 입힌 버전입니다.
+      <b>디자인.md 적용 와이어프레임 v2.0</b>은 NE Design.md(v0.11.5-alpha)를 입힌 버전,
+      <b>Pencil 와이어프레임 v1.0</b>은 Pencil(.pen)로 디자인해 내보낸 화면 뷰어입니다.
       각 카드의 버튼으로 별도 접근할 수 있습니다.
     </div>
   </div>
