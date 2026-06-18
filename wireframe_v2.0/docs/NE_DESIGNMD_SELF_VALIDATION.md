@@ -6,15 +6,15 @@
 - overall_status: partial
 - can_continue_vibe_coding: yes
 - needs_owner_decision: yes
-- one_line: NE Books Front 와이어프레임(11화면)을 NE Design.md v0.11.5-alpha로 retrofit. P0/P1 = 0으로 교정 완료, brand-red 도입 1건과 미승인 cart/share 아이콘 2건은 owner 확인 대상, tokenized inline-style 88건은 P2 debt(정리계획 있음).
+- one_line: NE Books Front 와이어프레임(12화면, 기능정의서 v2.0_260618 반영)을 NE Design.md v0.11.5-alpha로 retrofit. P0/P1 = 0으로 교정 완료, brand-red 도입 1건과 미승인 cart/share 아이콘 2건은 owner 확인 대상, tokenized inline-style은 P2 debt(정리계획 있음).
 
 ## Meta
 - baseline_version: v0.11.5-alpha
 - scenario: C(non-React/static HTML)
 - precheck_shown: yes
-- poc_name: nebooks-mall-v2.0 / wireframe_v2.0 (Front 와이어프레임)
-- screens_count: 11 (메인·교재목록·교재상세·학습자료실·장바구니·주문결제·결제완료·주문내역·포인트·쿠폰·1:1문의)
-- date: 2026-06-17
+- poc_name: nebooks-mall-v2.0 / wireframe_v2.0 (디자인.md 적용 와이어프레임 v2.0)
+- screens_count: 12 (메인·교재목록·교재상세·학습자료실·장바구니·주문결제·주문완료·마이페이지 홈·주문내역·찜·포인트/쿠폰·1:1문의) — 기능정의서 v2.0_260618(Sheet 01~17) 반영
+- date: 2026-06-18
 - tool/agent: Claude Code (Opus 4.8)
 
 ## Compliance

@@ -71,15 +71,19 @@
       $('#cards-data').style.display = buy ? 'none' : '';
     }
 
-    // 교재상세 상세 탭 패널 전환
-    if (group.getAttribute('data-tabgroup') === 'viewdetail') {
-      var panels = $$('[data-tabpanelgroup="viewdetail"] .nb-tabpanel');
-      var idx = $$('.nb-tab', group).indexOf(tab);
-      panels.forEach(function (p, i) {
-        var on = i === idx;
-        p.classList.toggle('active', on);
-        p.style.display = on ? '' : 'none';
-      });
+    // data-tabgroup ↔ data-tabpanelgroup 패널 전환 (교재상세·포인트/쿠폰 등 공통)
+    var tg = group.getAttribute('data-tabgroup');
+    if (tg) {
+      var pg = document.querySelector('[data-tabpanelgroup="' + tg + '"]');
+      if (pg) {
+        var panels = $$('.nb-tabpanel', pg);
+        var idx = $$('.nb-tab', group).indexOf(tab);
+        panels.forEach(function (p, i) {
+          var on = i === idx;
+          p.classList.toggle('active', on);
+          p.style.display = on ? '' : 'none';
+        });
+      }
     }
 
     // 주문/결제 배송지 탭 (Sheet10 R6~R7)
