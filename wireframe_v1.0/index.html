@@ -77,20 +77,22 @@
         <!-- 상단 유틸리티 바: 패밀리 사이트 / 통합회원가입 (Sheet08 R3~R4) -->
         <div class="main-utility">
           <span>NE능률</span><span>교과서</span><span>영어</span><span>수학교재</span><span>ELT교재</span><span>영자신문</span><span>영어레벨테스트</span>
-          <span style="margin-left:auto">통합회원가입</span><span>로그인</span>
+          <span style="margin-left:auto">패밀리/그룹 사이트</span><span>통합회원가입</span>
         </div>
 
-        <!-- 헤더: 로고 / 통합검색 / 장바구니 / MY / 고객센터 (Sheet08 R5~R11) -->
+        <!-- v4.0 헤더: 로고 / 통합검색 / 우측 유틸(로그인·장바구니·마이페이지·고객센터, 아이콘 형태) -->
         <div class="main-header">
           <div class="logo">NE_Books</div>
           <div class="search">
             <input type="text" placeholder="교재명 / 검색어 입력 (클릭 시 인기검색어 · 입력 시 실시간 미리보기)">
             <button class="btn dark">검색</button>
           </div>
-          <button class="btn" data-goto="cart">🛒 장바구니<span class="badge member" style="margin-left:4px">비회원OK</span></button>
-          <button class="btn" data-goto="myhome">MY</button>
-          <button class="btn">고객센터</button>
+          <button class="btn">[로그인]</button>
+          <button class="btn" data-goto="cart">[장바구니]<span class="badge member" style="margin-left:4px">비회원OK</span></button>
+          <button class="btn" data-goto="myhome">[마이페이지]</button>
+          <button class="btn">[고객센터]</button>
         </div>
+        <div class="fnote">※ v4.0 : 우측 상단 유틸을 로그인·장바구니·마이페이지·고객센터(아이콘)로 구성 / NE Books ↔ NE Tutor SSO 로그인·정보 연동</div>
 
         <!-- GNB (Sheet08 R15~R21) : 수학+국어 통합 / 학습자료실 -->
         <nav class="main-gnb">
@@ -100,6 +102,13 @@
           <a href="#" data-goto="data">학습자료실</a>
         </nav>
 
+        <!-- v4.0 : 상단 퀵 메뉴 (선생님 자료 / MP3·단어장) -->
+        <div class="inline" style="margin-top:10px">
+          <button class="btn sm">선생님 자료</button>
+          <button class="btn sm">MP3 / 단어장</button>
+          <small class="dim">상단 퀵 메뉴 (기존 nebooks.co.kr 참고)</small>
+        </div>
+
         <!-- 메인 비주얼 배너 : 최상단 와이드형 자동롤링 (Sheet08 R23) / 과목탭·화살표 제거 -->
         <div class="wf-box" style="margin-top:14px">
           <div class="box-title">메인 비주얼 배너 <span class="ref">Sheet08 R22~R26 · 와이드 프로모션, 도트 페이지네이션 / 과목탭·화살표 제거</span></div>
@@ -108,7 +117,7 @@
         </div>
 
         <!-- 교재 큐레이션 : 베스트셀러 (Sheet08 R27~R28) -->
-        <div class="section-title">베스트셀러 <span class="ref">Sheet08 R27 · 학년군 탭(전체/ELT/초/중/고/수험·일반) · 주별 판매량 상위 5 · 판매중만</span></div>
+        <div class="section-title">베스트셀러 <span class="ref">v4.0 · 학년군 탭 · 학년군별 지정 교재 5건 · Admin&gt;사이트관리&gt;베스트셀러 관리</span></div>
         <div class="tabs" data-tabgroup="best">
           <div class="tab active">전체</div><div class="tab">ELT</div><div class="tab">초등</div><div class="tab">중등</div><div class="tab">고등</div><div class="tab">수험/일반</div>
         </div>
@@ -150,6 +159,15 @@
             <div class="point">적립 160P</div>
             <div class="card-btns"><button class="btn sm" data-goto="view">상세</button><button class="btn sm" disabled>품절</button></div>
           </div>
+          <div class="book-card">
+            <div class="badges"><span class="badge new">NEW</span></div>
+            <div class="ph thumb">표지</div>
+            <div class="meta">능률 · 초등 · 초등코어</div>
+            <div class="title">초등영어 리딩 클리어 1</div>
+            <div class="price"><span class="list">12,000원</span> <span class="sale">10,800원</span> <span class="rate">10%</span></div>
+            <div class="point">적립 120P</div>
+            <div class="card-btns"><button class="btn sm" data-goto="view">상세</button><button class="btn sm primary">장바구니</button></div>
+          </div>
         </div>
 
         <!-- 추천 교재 (Sheet08 R29~R30) -->
@@ -171,33 +189,53 @@
           <div class="wf-box" style="margin:0"><div class="inline"><div class="ph" style="width:90px;height:64px">썸네일</div><div><span class="badge">신간</span><div class="title" style="margin-top:4px">2026 신간 큐레이션</div><div class="copy">한 줄 설명 영역</div></div></div></div>
         </div>
 
+        <!-- v4.0 : NE Tutor 영역 (개별 Row · 문제뱅크 3 / 평가 2) -->
+        <div class="wf-box" style="margin-top:14px">
+          <div class="box-title">선생님을 위한 티칭 플랫폼 NE Tutor <span class="ref">v4.0 · 개별 Row · 비로그인 시 로그인 안내</span></div>
+          <div class="grid cols-3">
+            <div><div class="fnote" style="font-weight:700">선생님 수업자료</div><div class="btn-row" style="margin-top:6px"><button class="btn sm">교재/수업자료</button></div></div>
+            <div><div class="fnote" style="font-weight:700">온라인 문제뱅크</div><div class="btn-row" style="margin-top:6px"><button class="btn sm">어휘 문제 마법사</button><button class="btn sm">문법 문제뱅크</button><button class="btn sm">문법 예문 검색</button></div></div>
+            <div><div class="fnote" style="font-weight:700">평가 서비스</div><div class="btn-row" style="margin-top:6px"><button class="btn sm">NELT</button><button class="btn sm">성취 TEST</button></div></div>
+          </div>
+        </div>
+
+        <!-- v4.0 : 교재 200% 활용하기 (개별 Row) -->
+        <div class="wf-box" style="margin-top:14px">
+          <div class="box-title">교재 200% 활용하기 <span class="ref">(구)학습자료 바로가기 · 개별 Row</span></div>
+          <div class="btn-row">
+            <button class="btn" data-goto="data">학습 자료실</button>
+            <button class="btn">정답 및 해설(팝업)</button>
+            <button class="btn">MP3 다운(팝업)</button>
+            <button class="btn">NE Waffle</button>
+            <button class="btn">맞춤형 교재추천(NE Pick)</button>
+          </div>
+        </div>
+
+        <!-- v4.0 : 공지사항(좌) + SNS(우) -->
         <div class="grid cols-2" style="margin-top:14px">
           <div class="wf-box" style="margin:0">
-            <div class="box-title">선생님을 위한 티칭 플랫폼 NE Tutor <span class="ref">Sheet08 R34~R38</span></div>
-            <div class="btn-row">
-              <button class="btn">선생님 수업자료</button>
-              <button class="btn">온라인 문제뱅크<small class="dim"> (비로그인 시 로그인 안내 alert)</small></button>
-              <button class="btn">평가 서비스(NELT/성취테스트)</button>
-            </div>
+            <div class="box-title">공지사항 <span class="ref">라벨(필독/중요/안내)+제목+등록일</span></div>
+            <table class="wf">
+              <tr><td style="width:70px"><span class="badge">필독</span></td><td>[안내] NE Books 자사몰 개편 및 구매 서비스 오픈 안내</td><td style="width:90px" class="center">2026-06-17</td></tr>
+              <tr><td><span class="badge">중요</span></td><td>NE Point 통합 및 B&amp;G 포인트 승계 안내</td><td class="center">2026-06-10</td></tr>
+            </table>
           </div>
           <div class="wf-box" style="margin:0">
-            <div class="box-title">교재 200% 활용하기 <span class="ref">Sheet08 R39~R44 · (구)학습자료 바로가기</span></div>
-            <div class="btn-row">
-              <button class="btn" data-goto="data">학습 자료실</button>
-              <button class="btn">정답 및 해설(팝업)</button>
-              <button class="btn">MP3 다운(팝업)</button>
-              <button class="btn">NE Waffle</button>
-              <button class="btn">맞춤형 교재추천(NE Pick)</button>
+            <div class="box-title">SNS</div>
+            <div class="stack-col" style="display:flex;flex-direction:column;gap:6px">
+              <button class="btn sm">NE능률 Lounge</button>
+              <button class="btn sm">NE능률 Instagram</button>
             </div>
           </div>
         </div>
 
+        <!-- v4.0 : 고객센터 영역 -->
         <div class="wf-box" style="margin-top:14px">
-          <div class="box-title">공지사항 <span class="ref">Sheet08 R45~R46 · (구)뉴스/공지 → 공지사항 · 라벨(필독/중요/안내)+제목+등록일</span></div>
-          <table class="wf">
-            <tr><td style="width:70px"><span class="badge">필독</span></td><td>[안내] NE Books 자사몰 개편 및 구매 서비스 오픈 안내</td><td style="width:90px" class="center">2026-06-17</td></tr>
-            <tr><td><span class="badge">중요</span></td><td>NE Point 통합 및 B&amp;G 포인트 승계 안내</td><td class="center">2026-06-10</td></tr>
-          </table>
+          <div class="box-title">고객센터</div>
+          <div class="grid cols-2">
+            <div><b>NE능률 고객센터</b><div class="fnote">1833-8368 · 평일 9~16시(점심 12~13시) · 1:1문의/FAQ/문자상담</div></div>
+            <div><b>AI 디지털 교육자료 공동 CS센터</b><div class="fnote">1661-0777 · 평일 9~18시 · 1:1문의</div></div>
+          </div>
         </div>
 
         <!-- 푸터: 통신판매신고번호 신규(R53), 회사정보 등 -->
@@ -355,8 +393,9 @@
           </div>
         </div>
 
-        <!-- 교재카드 목록: E-Book·자료형 (Sheet06 R25~R31) — 기본 숨김 -->
+        <!-- v4.0 : E-Book·자료형 = 리스트형 · 부가서비스/학습자료 영역 · 권한 3단계 -->
         <div id="cards-data" style="display:none">
+          <div class="notice">v4.0 : E-Book·자료형은 앨범형 → <b>리스트형</b>(B&amp;G Mall list_ebook 참조) · 상품별 <b>부가서비스</b>(학습지원/MP3/E-Book 본책·워크북) + <b>학습자료</b>(Teaching Materials/수업용 PPT/Word Lists, 멀티다운로드) · 권한 <b>전체/회원/교·강사</b></div>
           <div class="grid cols-4">
             <div class="book-card">
               <span class="card-type-label data">E-Book·자료형</span>
@@ -365,14 +404,14 @@
               <div class="title">Bricks Reading 150 · L1</div>
               <div class="fnote">자료유형 : 정답지 1 · 워크시트 2 · MP3 1 (자료 개수 표시)</div>
               <div class="inline" style="gap:4px">
-                <span class="tag-flag stu">학생용</span><span class="tag-flag tea">선생님용</span>
+                <span class="tag-flag stu">회원</span><span class="tag-flag tea">교·강사</span>
               </div>
               <div class="btn-row" style="margin-top:6px">
                 <button class="btn sm">E-Book</button><button class="btn sm">MP3 듣기</button>
                 <button class="btn sm">모바일 학습</button>
               </div>
               <button class="btn sm block" data-goto="data" style="margin-top:6px">학습자료 다운로드 ▸</button>
-              <div class="fnote">학생용=회원 누구나 / 선생님용=교사·강사만 다운로드</div>
+              <div class="fnote">회원=회원 누구나 / 교·강사=교사·강사만 다운로드</div>
             </div>
             <div class="book-card">
               <span class="card-type-label data">E-Book·자료형</span>
@@ -380,7 +419,7 @@
               <div class="meta">NE능률 · 중등</div>
               <div class="title">능률 중학영어 독해 LEVEL 2</div>
               <div class="fnote">자료유형 : 정답지 1 · 단어시험지 3</div>
-              <div class="inline" style="gap:4px"><span class="tag-flag stu">학생용</span></div>
+              <div class="inline" style="gap:4px"><span class="tag-flag stu">회원</span></div>
               <div class="btn-row" style="margin-top:6px"><button class="btn sm">E-Book</button><button class="btn sm">MP3 듣기</button></div>
               <button class="btn sm block" data-goto="data" style="margin-top:6px">학습자료 다운로드 ▸</button>
             </div>
@@ -426,7 +465,7 @@
           <li><b>좌측 보조영역 제거</b>, 최근 본 도서는 <b>하단 플로팅</b>으로 유지</li>
           <li><b>보기유형</b> : 교재구매형(기본) ↔ E-Book·자료형 / 목록형·앨범형 제거</li>
           <li><b>장바구니</b>=판매중·비회원 허용 / <b>바로구매</b>=회원만(비회원 로그인 유도)</li>
-          <li><b>학생용 자료</b>=회원 누구나 / <b>선생님용</b>=통합회원 구분 교사·강사만</li>
+          <li><b>회원 자료</b>=회원 누구나 / <b>교·강사</b>=통합회원 구분 교사·강사만</li>
           <li>가격 : 정가/판매가/할인율/적립P · <b>추가 할인·적립 우선 적용</b></li>
           <li><span class="need">확인</span> B&amp;G 레벨 체계 · 제품유형 매핑 · 브랜드 정책 · 페이지당 노출 개수 · NEW/HOT 노출기간 · 키워드 개수 · Empty 문구</li>
         </ul>
@@ -497,15 +536,21 @@
                 <button class="btn lg primary cart-add" style="flex:1">장바구니 담기 <small>(비회원 허용)</small></button>
                 <button class="btn lg dark member-only" style="flex:1" data-goto="order">바로구매 <small>(회원만)</small></button>
               </div>
+              <!-- v4.0 : 판매영역 내 부가서비스 (탭 제거 → 판매정보 하단) -->
+              <div class="fnote" style="font-weight:700;margin-top:10px">부가서비스 <small class="dim">(아이콘+서비스명 · 권한)</small></div>
+              <div class="inline" style="gap:6px">
+                <span class="tag-flag all">학습지원(모바일) · 전체</span><span class="tag-flag all">MP3 · 전체</span><span class="tag-flag stu">E-Book(본책) · 회원</span><span class="tag-flag stu">E-Book(워크북) · 회원</span>
+              </div>
               <div class="notice warn" style="margin-top:10px">판매상태 처리 : <b>판매중 / 품절 / 구매제한</b>에 따라 버튼·수량 제어. SAP CODE 기준 재고 수량 &lt; 예비수량 시 <b>자동 품절</b> (매일 오전 9시 처리).</div>
             </div>
           </div>
         </div>
 
         <!-- 상세 콘텐츠 탭 (Sheet07 R14~R29) -->
+        <!-- v4.0 : 부가서비스 Tab 제거 → 판매정보 하단 -->
         <div class="tabs" data-tabgroup="viewdetail">
           <div class="tab active">교재소개</div><div class="tab">목차</div><div class="tab">상품 정보고시</div>
-          <div class="tab">학습자료</div><div class="tab">부가서비스</div><div class="tab">교재후기</div>
+          <div class="tab">학습자료</div><div class="tab">교재후기</div>
         </div>
 
         <div data-tabpanelgroup="viewdetail">
@@ -530,7 +575,14 @@
           </div>
           <!-- 학습자료 (권한/다운로드) -->
           <div class="wf-box tabpanel">
-            <div class="box-title">학습자료 <span class="ref">Sheet07 R17~R21 · 자료대상 플래그 · 전체/멀티/개별 다운로드</span></div>
+            <div class="box-title">학습자료 <span class="ref">v4.0 · 자료유형 선택 → 파일목록 → 멀티다운로드</span></div>
+            <div class="inline" style="margin-bottom:8px">
+              <button class="btn sm">Teaching Materials · 교·강사</button>
+              <button class="btn sm">수업용 PPT · 교·강사</button>
+              <button class="btn sm">Word Lists · 회원</button>
+              <button class="btn sm">정답지 · 전체</button>
+            </div>
+            <div class="fnote" style="margin-bottom:8px">자료유형 선택 시 아래 파일목록 노출 → 선택 후 멀티다운로드 / 권한 : 전체·회원·교·강사</div>
             <div class="inline" style="justify-content:space-between;margin-bottom:8px">
               <div><label><input type="checkbox" id="data-all"> 전체 선택</label></div>
               <div class="btn-row">
@@ -542,25 +594,14 @@
               <thead><tr><th style="width:36px"></th><th>자료유형</th><th>자료명</th><th style="width:110px">자료대상</th><th style="width:90px">다운로드</th></tr></thead>
               <tbody>
                 <tr><td class="center"><input type="checkbox" class="dl-check"></td><td>정답지</td><td>L1 정답 및 해설</td><td><span class="tag-flag all">전체</span></td><td class="center"><button class="btn sm">개별</button></td></tr>
-                <tr><td class="center"><input type="checkbox" class="dl-check"></td><td>워크시트</td><td>Unit 1~5 워크시트</td><td><span class="tag-flag stu">학생용</span></td><td class="center"><button class="btn sm">개별</button></td></tr>
-                <tr><td class="center"><input type="checkbox" class="dl-check"></td><td>단어시험지</td><td>Word Test 세트</td><td><span class="tag-flag stu">학생용</span></td><td class="center"><button class="btn sm">개별</button></td></tr>
-                <tr><td class="center"><input type="checkbox" class="dl-check"></td><td>지도안</td><td>Teacher's Guide</td><td><span class="tag-flag tea">선생님용</span></td><td class="center"><button class="btn sm" title="교사/강사만">개별</button></td></tr>
+                <tr><td class="center"><input type="checkbox" class="dl-check"></td><td>워크시트</td><td>Unit 1~5 워크시트</td><td><span class="tag-flag stu">회원</span></td><td class="center"><button class="btn sm">개별</button></td></tr>
+                <tr><td class="center"><input type="checkbox" class="dl-check"></td><td>단어시험지</td><td>Word Test 세트</td><td><span class="tag-flag stu">회원</span></td><td class="center"><button class="btn sm">개별</button></td></tr>
+                <tr><td class="center"><input type="checkbox" class="dl-check"></td><td>지도안</td><td>Teacher's Guide</td><td><span class="tag-flag tea">교·강사</span></td><td class="center"><button class="btn sm" title="교사/강사만">개별</button></td></tr>
               </tbody>
             </table>
-            <div class="notice">1개 선택 시 <b>개별 다운로드</b>, 2개 이상 선택 시 <b>멀티다운로드 팝업</b> 연결. 학생용=회원 누구나 / 선생님용=통합회원 구분 교사·강사만.</div>
+            <div class="notice">1개 선택 시 <b>개별 다운로드</b>, 2개 이상 선택 시 <b>멀티다운로드 팝업</b> 연결. 회원=회원 누구나 / 교·강사=통합회원 구분 교사·강사만.</div>
           </div>
-          <!-- 부가서비스 -->
-          <div class="wf-box tabpanel">
-            <div class="box-title">부가서비스 / 연계 <span class="ref">Sheet07 R22~R26 · URL 등록 시 노출</span></div>
-            <div class="btn-row">
-              <button class="btn">본교재 E-Book ↗</button>
-              <button class="btn">워크북 E-Book ↗</button>
-              <button class="btn">MP3 듣기(Waffle) ↗</button>
-              <button class="btn">모바일 학습지원 ↗</button>
-              <button class="btn">NE Tutor 연결 ↗</button>
-            </div>
-            <div class="fnote">※ 기존 Books Admin 데이터 활용 · 연결 기준값 확인 필요</div>
-          </div>
+          <!-- v4.0 : 부가서비스 Tab 제거 (판매영역 하단으로 이동) -->
           <!-- 교재후기 -->
           <div class="wf-box tabpanel">
             <div class="box-title">교재 후기 <span class="ref">Sheet07 R29 · 기존 정책 유지</span></div>
@@ -568,13 +609,22 @@
           </div>
         </div>
 
-        <!-- 추천교재 (Sheet07 R27~R28) -->
-        <div class="section-title">같은 시리즈 / 다음단계 교재 <span class="ref">Sheet07 R27~R28 · 구매형 카드 적용</span></div>
+        <!-- v4.0 : 시리즈 영역 (분리) -->
+        <div class="section-title">시리즈 <span class="ref">v4.0 · 동일 시리즈 교재 (NE Tutor 시리즈 참조)</span></div>
         <div class="grid cols-4">
+          <div class="book-card"><div class="ph thumb">표지</div><div class="title">Bricks Reading 150 · L1</div><div class="price"><span class="sale">13,500원</span></div><div class="card-btns"><button class="btn sm primary cart-add">장바구니</button></div></div>
           <div class="book-card"><div class="ph thumb">표지</div><div class="title">Bricks Reading 150 · L2</div><div class="price"><span class="sale">13,500원</span></div><div class="card-btns"><button class="btn sm primary cart-add">장바구니</button></div></div>
-          <div class="book-card"><div class="ph thumb">표지</div><div class="title">Bricks Reading 200 · L1</div><div class="price"><span class="sale">14,000원</span></div><div class="card-btns"><button class="btn sm primary cart-add">장바구니</button></div></div>
           <div class="book-card"><div class="ph thumb">표지</div><div class="title">Bricks Reading 150 · L3</div><div class="price"><span class="sale">13,500원</span></div><div class="card-btns"><button class="btn sm primary cart-add">장바구니</button></div></div>
-          <div class="book-card"><div class="ph thumb">표지</div><div class="title">다음단계 추천 교재</div><div class="price"><span class="sale">15,000원</span></div><div class="card-btns"><button class="btn sm primary cart-add">장바구니</button></div></div>
+          <div class="book-card"><div class="ph thumb">표지</div><div class="title">Bricks Reading 150 · L4</div><div class="price"><span class="sale">13,500원</span></div><div class="card-btns"><button class="btn sm primary cart-add">장바구니</button></div></div>
+        </div>
+
+        <!-- v4.0 : 추천교재 영역 (분리) -->
+        <div class="section-title">추천교재 <span class="ref">v4.0 · 다음단계/연관 추천 (Admin 등록 기준)</span></div>
+        <div class="grid cols-4">
+          <div class="book-card"><div class="ph thumb">표지</div><div class="title">Bricks Reading 200 · L1</div><div class="price"><span class="sale">14,000원</span></div><div class="card-btns"><button class="btn sm primary cart-add">장바구니</button></div></div>
+          <div class="book-card"><div class="ph thumb">표지</div><div class="title">능률 중학영어 독해 L1</div><div class="price"><span class="sale">11,700원</span></div><div class="card-btns"><button class="btn sm primary cart-add">장바구니</button></div></div>
+          <div class="book-card"><div class="ph thumb">표지</div><div class="title">빠른독해 바른독해 기초</div><div class="price"><span class="sale">14,000원</span></div><div class="card-btns"><button class="btn sm primary cart-add">장바구니</button></div></div>
+          <div class="book-card"><div class="ph thumb">표지</div><div class="title">초등영어 리딩 클리어 1</div><div class="price"><span class="sale">10,800원</span></div><div class="card-btns"><button class="btn sm primary cart-add">장바구니</button></div></div>
         </div>
 
       </div><!-- /content-main -->
@@ -585,7 +635,7 @@
           <li><b>가격</b> : 정가/판매가/할인율/적립P · <b>추가 할인·적립 우선</b> · 적립은 정가 기준(NE Point)</li>
           <li><b>수량</b> 최소 1권 · 판매상태/재고상태로 제어</li>
           <li><b>장바구니</b>=비회원 허용 / <b>바로구매</b>=회원만</li>
-          <li><b>자료대상</b> : 전체/학생/선생님 플래그 · 선생님용=교사·강사만</li>
+          <li><b>자료대상</b> : 전체/학생/선생님 플래그 · 교·강사=교사·강사만</li>
           <li><b>다운로드</b> : 전체 / 2개↑ 멀티(팝업) / 1개 개별</li>
           <li><b>자동 품절</b> : SAP CODE 재고 &lt; 예비수량 시 (매일 09시) → 버튼·수량 제어</li>
           <li><span class="need">확인</span> 쿠폰 정책 · 상품 정보고시 필수항목 · 구매자 후기 정책 · NEW/HOT 노출기간 · 키워드 개수</li>
@@ -610,7 +660,7 @@
         <span class="chip">카테고리(ELT/초·중등 …) · 자료대상 선택</span>
         <span class="chip">자료정보 : 자료명·유형·파일형식·용량</span>
         <span class="chip">개별 / 멀티(2개↑) / 전체 다운로드</span>
-        <span class="chip">학생용=회원 누구나 / 선생님용=교사·강사만</span>
+        <span class="chip">회원=회원 누구나 / 교·강사=교사·강사만</span>
         <span class="chip">교재상세 이동 · E-Book/MP3 연결</span>
       </div>
     </div>
@@ -624,7 +674,7 @@
             <input type="text" placeholder="교재명 / 시리즈 검색" style="flex:1">
             <select style="width:auto"><option>카테고리 전체</option><option>ELT</option><option>초/중등교재</option><option>고등</option><option>수험/일반</option></select>
             <select style="width:auto"><option>자료유형 전체</option><option>MP3</option><option>Answer Keys</option><option>Test Sheet</option><option>Lesson Plans</option></select>
-            <select style="width:auto"><option>대상 전체</option><option>학생용</option><option>선생님용</option></select>
+            <select style="width:auto"><option>대상 전체</option><option>회원</option><option>교·강사</option></select>
             <button class="btn dark">검색</button>
           </div>
         </div>
@@ -641,15 +691,15 @@
           <thead><tr><th style="width:36px"></th><th>교재 / 자료명</th><th style="width:110px">자료유형</th><th style="width:120px">파일형식 · 용량</th><th style="width:90px">대상</th><th style="width:120px">다운로드</th></tr></thead>
           <tbody>
             <tr><td class="center"><input type="checkbox" class="dl-check"></td><td data-goto="view" style="cursor:pointer"><b>Bricks Reading 150 · L1</b><div class="fnote">L1 Answer Keys</div></td><td>Answer Keys</td><td>PDF · 1.2MB</td><td><span class="tag-flag all">전체</span></td><td class="center"><button class="btn sm">개별</button></td></tr>
-            <tr><td class="center"><input type="checkbox" class="dl-check"></td><td data-goto="view" style="cursor:pointer"><b>Bricks Reading 150 · L1</b><div class="fnote">Unit 1~5 Test Sheet</div></td><td>Test Sheet</td><td>PDF · 0.8MB</td><td><span class="tag-flag stu">학생용</span></td><td class="center"><button class="btn sm">개별</button></td></tr>
+            <tr><td class="center"><input type="checkbox" class="dl-check"></td><td data-goto="view" style="cursor:pointer"><b>Bricks Reading 150 · L1</b><div class="fnote">Unit 1~5 Test Sheet</div></td><td>Test Sheet</td><td>PDF · 0.8MB</td><td><span class="tag-flag stu">회원</span></td><td class="center"><button class="btn sm">개별</button></td></tr>
             <tr><td class="center"><input type="checkbox" class="dl-check"></td><td data-goto="view" style="cursor:pointer"><b>능률 중학영어 독해 L2</b><div class="fnote">교재 MP3 전체</div></td><td>MP3</td><td>ZIP · 45MB</td><td><span class="tag-flag all">전체</span></td><td class="center"><button class="btn sm">개별</button></td></tr>
-            <tr><td class="center"><input type="checkbox" class="dl-check"></td><td data-goto="view" style="cursor:pointer"><b>능률 중학영어 독해 L2</b><div class="fnote">Lesson Plans</div></td><td>Lesson Plans</td><td>PDF · 2.1MB</td><td><span class="tag-flag tea">선생님용</span></td><td class="center"><button class="btn sm">개별</button></td></tr>
+            <tr><td class="center"><input type="checkbox" class="dl-check"></td><td data-goto="view" style="cursor:pointer"><b>능률 중학영어 독해 L2</b><div class="fnote">Lesson Plans</div></td><td>Lesson Plans</td><td>PDF · 2.1MB</td><td><span class="tag-flag tea">교·강사</span></td><td class="center"><button class="btn sm">개별</button></td></tr>
             <tr><td class="center"><input type="checkbox" class="dl-check"></td><td data-goto="view" style="cursor:pointer"><b>빠른독해 바른독해 기초</b><div class="fnote">Answer Keys</div></td><td>Answer Keys</td><td>PDF · 0.6MB</td><td><span class="tag-flag all">전체</span></td><td class="center"><button class="btn sm">개별</button></td></tr>
           </tbody>
         </table>
 
         <div class="notice">교재명 클릭 시 <b>교재상세로 이동</b>. 1개=개별 / 2개 이상=멀티 / 전체=멀티 다운로드. E-Book·MP3(Waffle)는 URL 등록 시 연결. (Sheet16 R11~R18)</div>
-        <div class="notice warn">선생님용 자료는 통합회원 회원구분이 <b>교사/강사</b>인 경우만 다운로드 가능(학생용은 구분 표시일 뿐 회원 누구나 가능). 권한 미충족 시 안내 노출.</div>
+        <div class="notice warn">교·강사 자료는 통합회원 회원구분이 <b>교사/강사</b>인 경우만 다운로드 가능(회원은 구분 표시일 뿐 회원 누구나 가능). 권한 미충족 시 안내 노출.</div>
 
       </div><!-- /content-main -->
 
@@ -660,7 +710,7 @@
           <li>자료유형 : MP3 / Answer Keys / Test Sheet / Lesson Plans</li>
           <li>자료정보 : 자료명·유형·<b>파일형식·용량</b> 표시</li>
           <li><b>다운로드</b> : 1개=개별 / 2개↑=멀티 / 전체=멀티</li>
-          <li>학생용=회원 누구나(구분 표시) / 선생님용=교사·강사만</li>
+          <li>회원=회원 누구나(구분 표시) / 교·강사=교사·강사만</li>
           <li>자료 상세 없이 <b>교재상세로 이동</b></li>
           <li><span class="need">확인</span> 멀티다운로드 연결 작업 · 교사 인증 기준</li>
         </ul>
@@ -711,7 +761,7 @@
               <td class="center"><input type="checkbox" class="cart-check" checked></td>
               <td><div class="inline" style="gap:10px"><div class="ph" style="width:46px;height:60px">표지</div><div><b>Bricks Reading 150 · L1</b><div class="fnote">Bricks · ELT · 초등</div><span class="badge">판매중</span></div></div></td>
               <td><div class="inline" style="gap:0;justify-content:center"><button class="btn sm qty-minus">−</button><input type="number" value="1" min="1" max="999" class="qty-input" style="width:50px;text-align:center"><button class="btn sm qty-plus">+</button></div></td>
-              <td class="num cart-amount">13,500원</td>
+              <td class="num"><span class="cart-amount">13,500원</span><div class="fnote">정가 <span style="text-decoration:line-through">15,000</span> · <span class="rate">10%</span> · 150P</div></td>
               <td class="num">150P</td>
               <td class="center"><button class="btn sm row-del">×</button></td>
             </tr>
@@ -719,7 +769,7 @@
               <td class="center"><input type="checkbox" class="cart-check" checked></td>
               <td><div class="inline" style="gap:10px"><div class="ph" style="width:46px;height:60px">표지</div><div><b>능률 중학영어 독해 LEVEL 2</b><div class="fnote">NE능률 · 중등</div><span class="badge">판매중</span></div></div></td>
               <td><div class="inline" style="gap:0;justify-content:center"><button class="btn sm qty-minus">−</button><input type="number" value="2" min="1" max="999" class="qty-input" style="width:50px;text-align:center"><button class="btn sm qty-plus">+</button></div></td>
-              <td class="num cart-amount">23,400원</td>
+              <td class="num"><span class="cart-amount">23,400원</span><div class="fnote">정가 <span style="text-decoration:line-through">13,000</span> · <span class="rate">10%</span> · 130P/권</div></td>
               <td class="num">260P</td>
               <td class="center"><button class="btn sm row-del">×</button></td>
             </tr>
@@ -801,10 +851,10 @@
         <div class="wf-box">
           <div class="box-title">주문 상품 <span class="ref">Sheet10 R3~R4 · 장바구니/바로구매 진입 · 주문서 수량변경 불가</span></div>
           <table class="wf">
-            <thead><tr><th>상품정보</th><th style="width:70px">수량</th><th style="width:110px">판매가</th></tr></thead>
+            <thead><tr><th>상품정보</th><th style="width:70px">수량</th><th style="width:150px">가격</th></tr></thead>
             <tbody>
-              <tr><td><b>Bricks Reading 150 · L1</b><div class="fnote">Bricks · ELT · 초등</div></td><td class="center">1</td><td class="num">13,500원</td></tr>
-              <tr><td><b>능률 중학영어 독해 LEVEL 2</b><div class="fnote">NE능률 · 중등</div></td><td class="center">2</td><td class="num">23,400원</td></tr>
+              <tr><td><b>Bricks Reading 150 · L1</b><div class="fnote">Bricks · ELT · 초등</div></td><td class="center">1</td><td class="num"><b>13,500원</b><div class="fnote">정가 <span style="text-decoration:line-through">15,000</span> · <span class="rate">10%</span> · 적립 150P</div></td></tr>
+              <tr><td><b>능률 중학영어 독해 LEVEL 2</b><div class="fnote">NE능률 · 중등</div></td><td class="center">2</td><td class="num"><b>23,400원</b><div class="fnote">정가 <span style="text-decoration:line-through">13,000</span> · <span class="rate">10%</span> · 적립 130P/권</div></td></tr>
             </tbody>
           </table>
         </div>
@@ -896,7 +946,14 @@
             <div class="line" style="border:none"><span>적립 예정</span><span id="ord-save">+ 410P</span></div>
           </div>
           <div class="fnote">※ 실시간 재계산 · 적립은 구매확정 후(유효기간 1년)</div>
-          <button class="btn lg primary block" id="btn-pay" style="margin-top:12px" data-goto="complete">결제하기</button>
+          <!-- v4.0 : 이용규정 및 환불안내 -->
+          <div class="notice" style="max-height:96px;overflow:auto;margin-top:12px">
+            <b>이용규정 및 환불 안내</b><br>· 무료배송 : 유료상품만 3만원 이상 무료(미만 2,500) · 도서산간 +2,500 · 무료상품 포함 시 전체 무료<br>· 환불 : 배송 준비 전 취소 / 이후 반품·교환(1:1문의) · 취소/환불 시 포인트·쿠폰 복원<br>· 포인트 100P 단위·구매확정 후 적립(1년) / 쿠폰 주문당 1개
+          </div>
+          <!-- v4.0 : 주문동의 필수 체크 → 체크 시 결제 가능 -->
+          <label style="display:flex;gap:6px;align-items:flex-start;margin-top:8px;font-size:11.5px"><input type="checkbox" id="order-agree"> <span>주문 할 상품의 상품명, 가격, 배송정보 등을 최종 확인하였으며, 구매에 동의합니다. (전자상거래법 제8조 제2항)</span></label>
+          <button class="btn lg primary block" id="btn-pay" style="margin-top:8px" data-goto="complete" disabled>결제하기</button>
+          <div class="fnote" id="pay-agree-hint">※ 주문 동의 체크 시 결제가 가능합니다.</div>
           <button class="btn block" id="btn-pay-fail" style="margin-top:6px">결제 실패 시나리오 보기</button>
           <div class="notice warn" id="pay-fail-box" style="display:none">PG 결제 실패 : 오류 메시지 노출, 주문 미완료 처리, 실패 사유 저장. (Sheet10 R22)</div>
         </div>
@@ -1035,6 +1092,16 @@
           <div class="tab" data-goto="cs">문의/답변</div>
           <div class="tab">교재 후기</div>
           <div class="tab">이벤트/세미나</div>
+        </div>
+
+        <!-- v4.0 : 대시보드형 요약 카드 -->
+        <div class="grid cols-4" style="margin-bottom:14px">
+          <div class="wf-box center" data-goto="myorder" style="margin:0;text-align:center;cursor:pointer"><div class="dim">주문현황</div><div style="font-size:20px;font-weight:800">5건</div><div class="fnote">배송중1·완료2</div></div>
+          <div class="wf-box center" data-goto="pointcoupon" style="margin:0;text-align:center;cursor:pointer"><div class="dim">포인트</div><div style="font-size:20px;font-weight:800">3,200P</div><div class="fnote">소멸 200P(30일)</div></div>
+          <div class="wf-box center" data-goto="pointcoupon" style="margin:0;text-align:center;cursor:pointer"><div class="dim">쿠폰</div><div style="font-size:20px;font-weight:800">2장</div><div class="fnote">소멸 1장(7일)</div></div>
+          <div class="wf-box center" data-goto="wish" style="margin:0;text-align:center;cursor:pointer"><div class="dim">찜</div><div style="font-size:20px;font-weight:800">5/50</div><div class="fnote">BOOKS</div></div>
+          <div class="wf-box center" data-goto="cs" style="margin:0;text-align:center;cursor:pointer"><div class="dim">문의</div><div style="font-size:20px;font-weight:800">2건</div><div class="fnote">답변완료1</div></div>
+          <div class="wf-box center" data-goto="data" style="margin:0;text-align:center;cursor:pointer"><div class="dim">다운로드</div><div style="font-size:20px;font-weight:800">3건</div><div class="fnote">최근 자료</div></div>
         </div>
 
         <div class="wf-box">
@@ -1521,7 +1588,7 @@
         <thead><tr><th style="width:36px"></th><th>자료명</th><th style="width:90px">대상</th></tr></thead>
         <tbody>
           <tr><td class="center"><input type="checkbox" checked></td><td>L1 정답 및 해설</td><td><span class="tag-flag all">전체</span></td></tr>
-          <tr><td class="center"><input type="checkbox" checked></td><td>Unit 1~5 워크시트</td><td><span class="tag-flag stu">학생용</span></td></tr>
+          <tr><td class="center"><input type="checkbox" checked></td><td>Unit 1~5 워크시트</td><td><span class="tag-flag stu">회원</span></td></tr>
         </tbody>
       </table>
       <div class="fnote">※ 멀티다운로드 연결 작업 필요(개발 검토)</div>

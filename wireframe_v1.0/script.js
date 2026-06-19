@@ -206,6 +206,17 @@
     }
   });
 
+  /* ---------------- v4.0 : 주문동의 체크 시에만 결제 가능 ---------------- */
+  var agree = $('#order-agree');
+  var payBtn = $('#btn-pay');
+  if (agree && payBtn) {
+    agree.addEventListener('change', function () {
+      payBtn.disabled = !agree.checked;
+      var hint = $('#pay-agree-hint');
+      if (hint) hint.textContent = agree.checked ? '※ 결제 가능 상태입니다.' : '※ 주문 동의 체크 시 결제가 가능합니다.';
+    });
+  }
+
   /* ---------------- 결제 실패 시나리오 (Sheet10 R22) ---------------- */
   var failBtn = $('#btn-pay-fail');
   if (failBtn) {
