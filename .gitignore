@@ -1,5 +1,6 @@
-# 내부 기능정의서(엑셀) — 외부 공개 위험으로 기본 제외 (필요 시 별도 결정)
+# 내부 기능정의서(엑셀/CSV) — 외부 공개 위험으로 기본 제외 (필요 시 별도 결정)
 *.xlsx
+*.csv
 
 # NE Design.md 원본 패키지(내부 디자인 시스템) — wireframe_v2.0는 styles/ 복사본으로 자립
 /wireframe_v2.0/design-md_v0.11.5-alpha/

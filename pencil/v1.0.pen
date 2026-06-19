@@ -2855,7 +2855,8 @@
               "fill": "#666666",
               "content": "홈",
               "fontFamily": "Geist",
-              "fontSize": 13
+              "fontSize": 13,
+              "fontWeight": "normal"
             },
             {
               "type": "text",
@@ -2874,7 +2875,8 @@
               "fill": "#666666",
               "content": "교재탐색",
               "fontFamily": "Geist",
-              "fontSize": 13
+              "fontSize": 13,
+              "fontWeight": "normal"
             },
             {
               "type": "text",
@@ -6669,7 +6671,8 @@
                           "fill": "#666666",
                           "content": "2",
                           "fontFamily": "Geist",
-                          "fontSize": 13
+                          "fontSize": 13,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -6693,7 +6696,8 @@
                           "fill": "#666666",
                           "content": "3",
                           "fontFamily": "Geist",
-                          "fontSize": 13
+                          "fontSize": 13,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -6717,7 +6721,8 @@
                           "fill": "#666666",
                           "content": "4",
                           "fontFamily": "Geist",
-                          "fontSize": 13
+                          "fontSize": 13,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -6741,7 +6746,8 @@
                           "fill": "#666666",
                           "content": "5",
                           "fontFamily": "Geist",
-                          "fontSize": 13
+                          "fontSize": 13,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -6765,7 +6771,8 @@
                           "fill": "#666666",
                           "content": "6",
                           "fontFamily": "Geist",
-                          "fontSize": 13
+                          "fontSize": 13,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -6789,7 +6796,8 @@
                           "fill": "#666666",
                           "content": "7",
                           "fontFamily": "Geist",
-                          "fontSize": 13
+                          "fontSize": 13,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -7130,7 +7138,8 @@
                           "fill": "#6B7280",
                           "content": "포인트 내역",
                           "fontFamily": "Inter",
-                          "fontSize": 14
+                          "fontSize": 14,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -7155,7 +7164,8 @@
                           "fill": "#6B7280",
                           "content": "쿠폰함",
                           "fontFamily": "Inter",
-                          "fontSize": 14
+                          "fontSize": 14,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -7180,7 +7190,8 @@
                           "fill": "#6B7280",
                           "content": "찜 목록",
                           "fontFamily": "Inter",
-                          "fontSize": 14
+                          "fontSize": 14,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -7205,7 +7216,8 @@
                           "fill": "#6B7280",
                           "content": "배송지 관리",
                           "fontFamily": "Inter",
-                          "fontSize": 14
+                          "fontSize": 14,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -7230,7 +7242,8 @@
                           "fill": "#6B7280",
                           "content": "학습자료 내역",
                           "fontFamily": "Inter",
-                          "fontSize": 14
+                          "fontSize": 14,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -7255,7 +7268,8 @@
                           "fill": "#6B7280",
                           "content": "회원정보 수정",
                           "fontFamily": "Inter",
-                          "fontSize": 14
+                          "fontSize": 14,
+                          "fontWeight": "normal"
                         }
                       ]
                     }
@@ -8391,7 +8405,8 @@
               "fill": "#666666",
               "content": "홈",
               "fontFamily": "Geist",
-              "fontSize": 13
+              "fontSize": 13,
+              "fontWeight": "normal"
             },
             {
               "type": "text",
@@ -8410,7 +8425,8 @@
               "fill": "#666666",
               "content": "교재탐색",
               "fontFamily": "Geist",
-              "fontSize": 13
+              "fontSize": 13,
+              "fontWeight": "normal"
             },
             {
               "type": "text",
@@ -8429,7 +8445,8 @@
               "fill": "#666666",
               "content": "영어",
               "fontFamily": "Geist",
-              "fontSize": 13
+              "fontSize": 13,
+              "fontWeight": "normal"
             },
             {
               "type": "text",
@@ -9158,7 +9175,8 @@
                       "fill": "#666666",
                       "content": "목차",
                       "fontFamily": "Geist",
-                      "fontSize": 14
+                      "fontSize": 14,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -9183,7 +9201,8 @@
                       "fill": "#666666",
                       "content": "학습자료",
                       "fontFamily": "Geist",
-                      "fontSize": 14
+                      "fontSize": 14,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -9208,7 +9227,8 @@
                       "fill": "#666666",
                       "content": "리뷰(128)",
                       "fontFamily": "Geist",
-                      "fontSize": 14
+                      "fontSize": 14,
+                      "fontWeight": "normal"
                     }
                   ]
                 }
@@ -12419,7 +12439,8 @@
                   "fill": "#374151",
                   "content": "초/중등교재",
                   "fontFamily": "Geist",
-                  "fontSize": 14
+                  "fontSize": 14,
+                  "fontWeight": "normal"
                 }
               ]
             },
@@ -12442,7 +12463,8 @@
                   "fill": "#374151",
                   "content": "고등교재",
                   "fontFamily": "Geist",
-                  "fontSize": 14
+                  "fontSize": 14,
+                  "fontWeight": "normal"
                 }
               ]
             },
@@ -12465,7 +12487,8 @@
                   "fill": "#374151",
                   "content": "교과서 및 자습서",
                   "fontFamily": "Geist",
-                  "fontSize": 14
+                  "fontSize": 14,
+                  "fontWeight": "normal"
                 }
               ]
             },
@@ -12488,7 +12511,8 @@
                   "fill": "#374151",
                   "content": "수험/일반",
                   "fontFamily": "Geist",
-                  "fontSize": 14
+                  "fontSize": 14,
+                  "fontWeight": "normal"
                 }
               ]
             },
@@ -12511,7 +12535,8 @@
                   "fill": "#374151",
                   "content": "수학",
                   "fontFamily": "Geist",
-                  "fontSize": 14
+                  "fontSize": 14,
+                  "fontWeight": "normal"
                 }
               ]
             },
@@ -12534,7 +12559,8 @@
                   "fill": "#374151",
                   "content": "국어",
                   "fontFamily": "Geist",
-                  "fontSize": 14
+                  "fontSize": 14,
+                  "fontWeight": "normal"
                 }
               ]
             },
@@ -12557,7 +12583,8 @@
                   "fill": "#374151",
                   "content": "학습자료실",
                   "fontFamily": "Geist",
-                  "fontSize": 14
+                  "fontSize": 14,
+                  "fontWeight": "normal"
                 }
               ]
             }
@@ -21112,7 +21139,8 @@
               "fill": "#666666",
               "content": "홈",
               "fontFamily": "Geist",
-              "fontSize": 13
+              "fontSize": 13,
+              "fontWeight": "normal"
             },
             {
               "type": "text",
@@ -21131,7 +21159,8 @@
               "fill": "#666666",
               "content": " 교재탐색",
               "fontFamily": "Geist",
-              "fontSize": 13
+              "fontSize": 13,
+              "fontWeight": "normal"
             },
             {
               "type": "text",
@@ -21235,7 +21264,8 @@
                       "fill": "#374151",
                       "content": "학습자료",
                       "fontFamily": "Geist",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 }
