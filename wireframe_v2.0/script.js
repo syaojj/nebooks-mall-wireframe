@@ -24,7 +24,10 @@
     'download':      '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/>',
     'external-link': '<path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>',
     'info':          '<circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>',
-    'circle-check':  '<circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>'
+    'circle-check':  '<circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>',
+    'circle-user':   '<circle cx="12" cy="12" r="10"/><path d="M18 20a6 6 0 0 0-12 0"/><circle cx="12" cy="10" r="4"/>',
+    'message-circle':'<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>',
+    'bell':          '<path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/>'
   };
   function renderIcons() {
     $$('.nb-ico[data-ic]').forEach(function (el) {
@@ -220,6 +223,17 @@
       $$('.nb-opt', list).forEach(function (o) { o.classList.toggle('selected', !!$('input', o).checked); });
     }
   });
+
+  /* ---------------- v4.0 : 주문동의 체크 시에만 결제 가능 (gating) ---------------- */
+  var agree = $('#order-agree');
+  var payBtn = $('#btn-pay');
+  if (agree && payBtn) {
+    agree.addEventListener('change', function () {
+      payBtn.disabled = !agree.checked;
+      var hint = $('#pay-agree-hint');
+      if (hint) hint.textContent = agree.checked ? '※ 결제 가능 상태입니다.' : '※ 주문 동의 체크 시 결제가 가능합니다.';
+    });
+  }
 
   /* ---------------- 결제 실패 시나리오 (Sheet10 R22) ---------------- */
   var failBtn = $('#btn-pay-fail');

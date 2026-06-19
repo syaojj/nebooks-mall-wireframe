@@ -226,6 +226,34 @@ input[type=checkbox], input[type=radio] { accent-color: var(--ne-primary); width
 
 /* 자료대상 / 상태 플래그는 ne-badge 사용 (별도 스타일 없음) */
 
+/* v4.0 : 썸네일 Hover 액션 (Dim + 버튼) — 교재목록 */
+.nb-thumbwrap { position: relative; }
+.nb-thumb-actions {
+  position: absolute; inset: 0; display: flex; flex-direction: column; gap: var(--space-xxs);
+  align-items: center; justify-content: center; padding: var(--space-xs);
+  background: color-mix(in srgb, var(--ne-text-heading) 55%, transparent);
+  opacity: 0; transition: opacity .15s; border-radius: var(--rounded-sm);
+}
+.nb-thumbwrap:hover .nb-thumb-actions { opacity: 1; }
+.nb-thumb-actions .ne-btn { width: 90%; }
+
+/* v4.0 : 부가서비스 / 학습자료 아이콘+명칭 행 (교재목록·상세) */
+.nb-svc-row { display: flex; flex-wrap: wrap; gap: var(--space-xxs); }
+.nb-svc {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 11px; color: var(--ne-text-body);
+  border: 1px solid var(--ne-boundary); border-radius: var(--rounded-pill);
+  padding: 2px var(--space-xs); background: var(--ne-surface-base); cursor: pointer;
+}
+.nb-svc:hover { background: var(--ne-mono-overlay-hover); }
+.nb-svc .nb-ico { width: 13px; height: 13px; }
+
+/* v4.0 : E-Book·자료형 리스트형 행 */
+.nb-list-row { display: flex; gap: var(--space-md); align-items: flex-start; padding: var(--space-sm); border-bottom: 1px solid var(--ne-boundary); }
+.nb-list-row:last-child { border-bottom: none; }
+.nb-list-row .nb-ph { width: 64px; height: 84px; flex: 0 0 64px; }
+.nb-list-row .nb-list-main { flex: 1; min-width: 0; }
+
 /* ── 금액 요약 박스 ──────────────────────────────────────── */
 .nb-sum .nb-sum-line { display: flex; justify-content: space-between; padding: var(--space-xs) 0; font-size: 13px; border-bottom: 1px dotted var(--ne-boundary); }
 .nb-sum .nb-sum-line.total { border-bottom: none; border-top: 2px solid var(--ne-text-heading); margin-top: var(--space-xxs); padding-top: var(--space-sm); font-size: 16px; font-weight: 800; color: var(--ne-text-heading); }

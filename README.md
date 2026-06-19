@@ -1,13 +1,13 @@
 # NE Books 자사몰 개편 · Front 와이어프레임
 
-NE Books 개편_기능 정의서_v3.0_260618 (Sheet 01~17)을 기준으로 작성한 기획 검토용 Front 와이어프레임입니다.
+NE Books 개편_기능 정의서_v3.0_260618 + 정책정의서 v1.1 (Wireframe v4.0)을 기준으로 작성한 기획 검토용 Front 와이어프레임입니다.
 
 ## 버전 (별도 접근)
 
 | 버전 | 설명 | 진입 |
 |---|---|---|
-| **기획 검토용 와이어프레임 v3.0** | 흑백/회색톤 기본 와이어프레임 (구조 검토용) | [`wireframe_v1.0/index.html`](wireframe_v1.0/index.html) |
-| **디자인.md 적용 와이어프레임 v3.0** | NE Design.md v0.11.5-alpha 적용 retrofit | [`wireframe_v2.0/index.html`](wireframe_v2.0/index.html) |
+| **기획 검토용 와이어프레임 v4.0** | 흑백/회색톤 기본 와이어프레임 (구조 검토용) | [`wireframe_v1.0/index.html`](wireframe_v1.0/index.html) |
+| **디자인.md 적용 와이어프레임 v4.0** | NE Design.md v0.11.5-alpha 적용 retrofit | [`wireframe_v2.0/index.html`](wireframe_v2.0/index.html) |
 | **Pencil 와이어프레임 v2.0** | Pencil(.pen) 디자인을 HTML로 내보낸 와이어프레임 (단일 페이지·9화면) | [`wireframe_pencil/index.html`](wireframe_pencil/index.html) |
 
 > 루트 [`index.html`](index.html)에서 세 버전을 카드로 선택해 들어갈 수 있습니다.

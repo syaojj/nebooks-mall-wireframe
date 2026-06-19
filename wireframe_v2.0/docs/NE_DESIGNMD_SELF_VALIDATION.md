@@ -12,8 +12,8 @@
 - baseline_version: v0.11.5-alpha
 - scenario: C(non-React/static HTML)
 - precheck_shown: yes
-- poc_name: nebooks-mall-v2.0 / wireframe_v2.0 (디자인.md 적용 와이어프레임 v3.0)
-- screens_count: 12 (메인·교재목록·교재상세·학습자료실·장바구니·주문결제·주문완료·마이페이지 홈·주문내역·찜·포인트/쿠폰·1:1문의) — 기능정의서 v3.0_260618(Sheet 01~17) 반영
+- poc_name: nebooks-mall-v2.0 / wireframe_v2.0 (디자인.md 적용 와이어프레임 v4.0)
+- screens_count: 12 (메인·교재목록·교재상세·학습자료실·장바구니·주문결제·주문완료·마이페이지 홈·주문내역·찜·포인트/쿠폰·1:1문의) — 기능정의서 v3.0_260618 + 정책정의서 v1.1 (Wireframe v4.0) 반영
 - date: 2026-06-19
 - tool/agent: Claude Code (Opus 4.8)
 
