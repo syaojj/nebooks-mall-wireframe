@@ -33,34 +33,28 @@
 
 <!-- ============ 글로벌 헤더 (와이어프레임 도구바 · muted band chrome) ============ -->
 <header class="nb-header">
-  <h1>NE Books 자사몰 개편 · 디자인.md 적용 와이어프레임 v4.0</h1>
-  <span class="ne-badge ne-badge-category-color">디자인.md 적용 와이어프레임 v4.0</span>
-  <span class="nb-meta">기준: 기능정의서_v3.0_260618 + 정책정의서 v1.1 / NE Design.md v0.11.5-alpha</span>
+  <div class="nb-head-top">
+    <h1>NE Books 자사몰 개편 · 디자인.md 적용 와이어프레임 v5.0</h1>
+    <span class="nb-meta">기준: 기능정의서_v3.0_260618 + 정책정의서 v1.1 / NE Design.md v0.11.5-alpha</span>
+  </div>
+  <!-- v5.0 : 상단 가로 메뉴 (좌측 사이드바 → 타이틀 하단으로 이동) -->
+  <nav class="nb-topmenu" id="topmenu">
+    <a class="nb-nav-item active" data-screen="main">메인</a>
+    <a class="nb-nav-item" data-screen="list">교재목록</a>
+    <a class="nb-nav-item" data-screen="view">교재상세</a>
+    <a class="nb-nav-item" data-screen="data">학습자료실</a>
+    <a class="nb-nav-item" data-screen="cart">장바구니</a>
+    <a class="nb-nav-item" data-screen="order">주문/결제</a>
+    <a class="nb-nav-item" data-screen="complete">주문완료</a>
+    <a class="nb-nav-item" data-screen="myhome">마이페이지 홈</a>
+    <a class="nb-nav-item" data-screen="myorder">주문내역</a>
+    <a class="nb-nav-item" data-screen="wish">찜</a>
+    <a class="nb-nav-item" data-screen="pointcoupon">포인트/쿠폰</a>
+    <a class="nb-nav-item" data-screen="cs">1:1 문의</a>
+  </nav>
 </header>
 
 <div class="nb-body">
-
-  <!-- ============ 좌측 화면 네비게이션 (Front IA 기준) ============ -->
-  <nav class="nb-sidebar" id="sidebar">
-    <div class="nb-nav-group">메인</div>
-    <a class="nb-nav-item" data-screen="main"><span class="nb-sid">MAIN-001</span>메인</a>
-    <div class="nb-nav-group">교재</div>
-    <a class="nb-nav-item" data-screen="list"><span class="nb-sid">BOOK-LIST-001</span>교재목록</a>
-    <a class="nb-nav-item" data-screen="view"><span class="nb-sid">BOOK-VIEW-001</span>교재상세</a>
-    <div class="nb-nav-group">학습자료실</div>
-    <a class="nb-nav-item" data-screen="data"><span class="nb-sid">DATA-001</span>학습자료실</a>
-    <div class="nb-nav-group">주문/결제</div>
-    <a class="nb-nav-item" data-screen="cart"><span class="nb-sid">CART-001</span>장바구니</a>
-    <a class="nb-nav-item" data-screen="order"><span class="nb-sid">ORDER-001</span>주문/결제</a>
-    <a class="nb-nav-item" data-screen="complete"><span class="nb-sid">ORDER-002</span>결제완료</a>
-    <div class="nb-nav-group">마이페이지</div>
-    <a class="nb-nav-item" data-screen="myhome"><span class="nb-sid">MY-MAIN-001</span>마이페이지 홈</a>
-    <a class="nb-nav-item" data-screen="myorder"><span class="nb-sid">MY-001</span>주문내역</a>
-    <a class="nb-nav-item" data-screen="wish"><span class="nb-sid">MY-002</span>찜</a>
-    <a class="nb-nav-item" data-screen="pointcoupon"><span class="nb-sid">MY-003</span>포인트/쿠폰</a>
-    <div class="nb-nav-group">고객센터</div>
-    <a class="nb-nav-item" data-screen="cs"><span class="nb-sid">CS-001</span>1:1 문의</a>
-  </nav>
 
   <main class="nb-main ne-page ne-page--default">
 

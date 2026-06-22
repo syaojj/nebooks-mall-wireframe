@@ -20,34 +20,28 @@
 
 <!-- ============ 글로벌 헤더(와이어프레임 도구바) ============ -->
 <header class="app-header">
-  <h1>NE Books 자사몰 개편 · 기획 검토용 와이어프레임 v4.0</h1>
-  <span class="tag">기획 검토용 와이어프레임 v4.0</span>
-  <span class="meta">v1.0 / 기준: 기능정의서_260617 / Sheet 01·02·03·06·07·09·10</span>
+  <div class="head-top">
+    <h1>NE Books 자사몰 개편 · 기획 검토용 와이어프레임 v5.0</h1>
+    <span class="meta">기준: 기능정의서_v3.0_260618 + 정책정의서 v1.1 / 기획 검토용</span>
+  </div>
+  <!-- v5.0 : 상단 가로 메뉴 (좌측 사이드바 → 타이틀 하단으로 이동) -->
+  <nav class="topmenu" id="topmenu">
+    <a class="nav-item active" data-screen="main">메인</a>
+    <a class="nav-item" data-screen="list">교재목록</a>
+    <a class="nav-item" data-screen="view">교재상세</a>
+    <a class="nav-item" data-screen="data">학습자료실</a>
+    <a class="nav-item" data-screen="cart">장바구니</a>
+    <a class="nav-item" data-screen="order">주문/결제</a>
+    <a class="nav-item" data-screen="complete">주문완료</a>
+    <a class="nav-item" data-screen="myhome">마이페이지 홈</a>
+    <a class="nav-item" data-screen="myorder">주문내역</a>
+    <a class="nav-item" data-screen="wish">찜</a>
+    <a class="nav-item" data-screen="pointcoupon">포인트/쿠폰</a>
+    <a class="nav-item" data-screen="cs">1:1 문의</a>
+  </nav>
 </header>
 
 <div class="app-body">
-
-  <!-- ============ 좌측 화면 네비게이션 (Front IA 기준) ============ -->
-  <nav class="sidebar" id="sidebar">
-    <div class="nav-group">메인</div>
-    <a class="nav-item" data-screen="main"><span class="sid">MAIN-001</span>메인</a>
-    <div class="nav-group">교재</div>
-    <a class="nav-item" data-screen="list"><span class="sid">BOOK-LIST-001</span>교재목록</a>
-    <a class="nav-item" data-screen="view"><span class="sid">BOOK-VIEW-001</span>교재상세</a>
-    <div class="nav-group">학습자료실</div>
-    <a class="nav-item" data-screen="data"><span class="sid">DATA-001</span>학습자료실</a>
-    <div class="nav-group">주문/결제</div>
-    <a class="nav-item" data-screen="cart"><span class="sid">CART-001</span>장바구니</a>
-    <a class="nav-item" data-screen="order"><span class="sid">ORDER-001</span>주문/결제</a>
-    <a class="nav-item" data-screen="complete"><span class="sid">ORDER-002</span>결제완료</a>
-    <div class="nav-group">마이페이지</div>
-    <a class="nav-item" data-screen="myhome"><span class="sid">MY-MAIN-001</span>마이페이지 홈</a>
-    <a class="nav-item" data-screen="myorder"><span class="sid">MY-001</span>주문내역</a>
-    <a class="nav-item" data-screen="wish"><span class="sid">MY-002</span>찜</a>
-    <a class="nav-item" data-screen="pointcoupon"><span class="sid">MY-003</span>포인트/쿠폰</a>
-    <div class="nav-group">고객센터</div>
-    <a class="nav-item" data-screen="cs"><span class="sid">CS-001</span>1:1 문의</a>
-  </nav>
 
   <main class="screen-wrap">
 
@@ -795,8 +789,8 @@
       </div><!-- /content-main : 좌측 목록 -->
 
       <!-- 주문금액 요약 (Sheet09 R8~R13) -->
-      <aside class="policy-memo" style="border-style:solid;border-color:var(--line);background:#fff;width:300px;flex:0 0 300px">
-        <h4 style="color:#222;border-color:var(--line-soft)">주문 예상 금액</h4>
+      <aside class="order-summary" style="border:1px solid var(--line);background:#fff;width:300px;flex:0 0 300px;padding:14px">
+        <h4 style="color:#222;font-size:14px;margin-bottom:8px">주문 예상 금액</h4>
         <div class="sumbox" style="border:none;padding:0;background:#fff">
           <div class="line"><span>총 상품금액</span><span id="cart-sum-product">37,300원</span></div>
           <div class="line"><span class="minus">상품 할인</span><span class="minus" id="cart-sum-discount">- 2,800원</span></div>
@@ -811,14 +805,6 @@
           <button class="btn block dark member-only" data-goto="order">전체상품 주문</button>
         </div>
         <div class="fnote">※ 주문은 회원만 가능(비회원 로그인 유도)</div>
-
-        <h4 style="color:#8a5d00;border-color:#e7cf9a;margin-top:16px">📌 정책 메모</h4>
-        <ul>
-          <li><b>수량</b> 1~999 · 실제 판매가능 재고 기준 제한</li>
-          <li><b>할인</b> 추가할인 우선, 상품할인과 중복 불가</li>
-          <li><b>적립</b> 정가 기준, 추가적립 우선</li>
-          <li><span class="need">확인</span> 비회원 장바구니 <b>저장 방식</b> 개발 검토</li>
-        </ul>
       </aside>
     </div>
   </section>

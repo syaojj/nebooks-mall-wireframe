@@ -14,7 +14,7 @@
     $$('.screen').forEach(function (s) { s.classList.remove('active'); });
     var el = $('#screen-' + key);
     if (el) el.classList.add('active');
-    $$('.sidebar .nav-item').forEach(function (a) {
+    $$('.nav-item').forEach(function (a) {
       a.classList.toggle('active', a.getAttribute('data-screen') === key);
     });
     // 최근 본 도서 플로팅: 교재목록/상세에서만 노출 (Sheet06 R10)
@@ -22,7 +22,7 @@
     if (fr) fr.classList.toggle('show', key === 'list' || key === 'view');
     window.scrollTo(0, 0);
   }
-  $$('.sidebar .nav-item').forEach(function (a) {
+  $$('.nav-item').forEach(function (a) {
     a.addEventListener('click', function () { showScreen(a.getAttribute('data-screen')); });
   });
   // data-goto 로 화면 이동시키는 버튼/탭

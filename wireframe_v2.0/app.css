@@ -341,3 +341,29 @@ input[type=checkbox], input[type=radio] { accent-color: var(--ne-primary); width
 @media (max-width: 760px) {
   .nb-sidebar { display: none; }
 }
+
+/* =====================================================================
+   v5.0 : 실제 화면 모드 (디자이너 구현용)
+   - 좌측 사이드바 → 상단 가로 메뉴(타이틀 하단)로 이동
+   - 화면 상단 설명(목적/칩 topbar) · 우측 정책 메모 · 시트/버전 주석(ref) 제거
+   ===================================================================== */
+.nb-head-top { display: flex; align-items: baseline; gap: var(--space-md); flex-wrap: wrap; }
+.nb-topmenu { display: flex; flex-wrap: wrap; align-items: center; margin-top: var(--space-xs); }
+.nb-topmenu .nb-nav-item {
+  padding: 4px var(--space-sm); font-size: 13px; color: var(--ne-text-body);
+  text-decoration: none; cursor: pointer; border-right: 1px solid var(--ne-boundary);
+}
+.nb-topmenu .nb-nav-item:first-child { padding-left: 0; }
+.nb-topmenu .nb-nav-item:last-child { border-right: none; }
+.nb-topmenu .nb-nav-item:hover { color: var(--ne-text-heading); }
+.nb-topmenu .nb-nav-item.active { color: var(--ne-primary); font-weight: 700; }
+
+/* 와이어프레임 주석 숨김 */
+.nb-sidebar { display: none !important; }
+.nb-topbar { display: none !important; }
+.nb-policy { display: none !important; }
+.nb-ref { display: none !important; }
+/* 정책 메모만 있던 우측 aside는 통째 숨김 (장바구니 금액·결제금액 aside는 유지) */
+.nb-aside:not(:has(> *:not(.nb-policy))) { display: none !important; }
+/* 본문은 전체 폭 사용 */
+.nb-main { padding-top: var(--space-lg); }
