@@ -3,86 +3,628 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NE Books · Pencil 와이어프레임 v0.5</title>
-<!--
-  =====================================================================
-  NE Books 자사몰 개편 — Pencil 와이어프레임 v0.5 (뷰어)
-  - 출처: Pencil(.pen) pencil/v0.3.pen → export_nodes(webp)
-  - 본 페이지는 Pencil 디자인을 그대로 보여주는 정적 뷰어입니다.
-    (이미지 기반 — 폼/장바구니 등 실제 인터랙션은 동작하지 않으며 화면 전환만 제공)
-  =====================================================================
--->
+<title>NE Books 자사몰 · 와이어프레임 v4.0</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: "Pretendard Variable","맑은 고딕",system-ui,sans-serif; background: #dcdcdc; color: #222; }
-  .top { position: sticky; top: 0; z-index: 10; background: #222; color: #fff; border-bottom: 3px solid #000; padding: 10px 18px; }
-  .top .row1 { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
-  .top h1 { font-size: 15px; font-weight: 700; }
-  .top .tag { font-size: 11px; background: #555; padding: 2px 8px; border-radius: 2px; }
-  .top a.home { margin-left: auto; color: #ddd; font-size: 12px; text-decoration: none; border: 1px solid #555; padding: 4px 10px; border-radius: 3px; }
-  .top a.home:hover { background: #333; }
-  /* 상단 가로 메뉴 */
-  .topmenu { display: flex; flex-wrap: wrap; align-items: center; margin-top: 8px; }
-  .topmenu button { background: none; border: none; border-right: 1px solid #555; color: #ddd; font: inherit; font-size: 12.5px; padding: 3px 12px; cursor: pointer; }
-  .topmenu button:first-child { padding-left: 0; }
-  .topmenu button:last-child { border-right: none; }
-  .topmenu button:hover { color: #fff; }
-  .topmenu button.active { color: #fff; font-weight: 700; text-decoration: underline; }
-
-  .stage { padding: 20px 24px 60px; }
-  .info { background: #fff7e6; border: 1px dashed #d9a441; color: #8a5d00; font-size: 12px; padding: 8px 12px; border-radius: 4px; margin-bottom: 14px; }
-  .screen-title { font-size: 16px; font-weight: 800; margin-bottom: 4px; }
-  .screen-meta { font-size: 12px; color: #666; margin-bottom: 12px; }
-  .frame { background: #fff; border: 1px solid #999; padding: 8px; display: inline-block; max-width: 100%; }
-  .frame img { display: block; width: 1024px; max-width: 100%; height: auto; }
-  .note { margin-top: 16px; font-size: 11.5px; color: #777; }
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{--ink:#222732;--red:#e23b3b;--green:#1f9d72;--orange:#e8852b;--blue:#3a78f2;--fill:#eef0f3;--line:#d7dbe2;--muted:#8b909c;--bg:#f2f3f0;--white:#fff;--ink2:#3d4756;--ink3:#5a606c;}
+html,body{height:100%;font-family:'Inter',sans-serif;color:var(--ink);background:#ddd;font-size:13px;line-height:1.5;}
+.wf-bar{position:sticky;top:0;z-index:100;background:var(--ink);color:#fff;padding:8px 18px;display:flex;flex-wrap:wrap;align-items:center;gap:12px;border-bottom:3px solid #000;}
+.wf-bar h1{font-size:14px;font-weight:700;white-space:nowrap;}
+.wf-nav button{background:none;border:none;border-right:1px solid #555;color:#ccc;font:inherit;font-size:12px;padding:4px 11px;cursor:pointer;}
+.wf-nav button:hover{color:#fff;}.wf-nav button.active{color:#fff;font-weight:700;text-decoration:underline;}
+.wf-bar a.back{margin-left:auto;color:#aaa;font-size:11px;text-decoration:none;border:1px solid #555;padding:3px 10px;border-radius:3px;}
+.site-header{position:sticky;top:47px;z-index:90;background:#fff;border-bottom:2px solid var(--ink);}
+.utilbar{height:38px;background:#f4f5f7;border-bottom:1px solid #e6e9ee;padding:0 40px;display:flex;align-items:center;justify-content:space-between;font-size:11px;}
+.util-links{display:flex;align-items:center;}.util-links span{color:#5a606c;font-weight:600;padding:0 8px;}.util-links .sep{color:#cfd3da;font-weight:400;padding:0;}
+.util-join{color:#5a606c;font-size:11px;font-weight:600;cursor:pointer;}
+.header-row{height:88px;background:#fff;padding:0 40px;display:flex;align-items:center;gap:28px;}
+.logo{font-size:24px;font-weight:800;color:var(--red);white-space:nowrap;letter-spacing:-1px;}
+.search-box{flex:1;height:48px;border:2px solid var(--ink);border-radius:8px;display:flex;align-items:center;padding:0 18px;gap:8px;}
+.search-box input{flex:1;border:none;outline:none;font:inherit;font-size:14px;color:var(--ink);}
+.search-box input::placeholder{color:var(--muted);}
+.search-box .s-btn{color:var(--ink);font-size:18px;font-weight:700;background:none;border:none;cursor:pointer;}
+.icon-area{display:flex;align-items:center;gap:22px;}
+.icon-wrap{display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;}
+.icon-circle{width:34px;height:34px;background:var(--fill);border-radius:17px;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:17px;}
+.icon-label{font-size:11px;color:#5a606c;font-weight:700;}
+.gnb-row{height:54px;background:#fff;padding:0 40px;display:flex;align-items:center;justify-content:space-between;}
+.gnb-item{height:54px;padding:0 16px;display:flex;align-items:center;cursor:pointer;font-size:15px;font-weight:700;color:#444b57;border-bottom:2px solid transparent;}
+.gnb-item:first-child{color:var(--ink);border-bottom-color:var(--ink);}.gnb-item:hover{color:var(--ink);}
+.screens{background:#ddd;}.screen{display:none;max-width:1440px;margin:0 auto;background:var(--bg);}.screen.active{display:block;}
+.section{width:100%;background:#fff;border-bottom:1px solid #e6e9ee;}.section-pad{padding:38px 40px;}
+.hero-section{background:linear-gradient(225deg,#f7f4f0 0%,#eef1f6 100%);padding:34px 40px;display:flex;flex-direction:column;gap:20px;}
+.hero-card{background:#fff;border-radius:20px;box-shadow:0 16px 40px rgba(40,41,61,.16);display:flex;align-items:center;gap:36px;padding:54px 60px;}
+.hero-left{flex:1;display:flex;flex-direction:column;gap:16px;}
+.hero-badge{display:inline-flex;background:var(--red);color:#fff;border-radius:7px;padding:6px 14px;font-size:12px;font-weight:800;align-self:flex-start;}
+.hero-title{font-size:38px;font-weight:800;line-height:1.2;color:var(--ink);}
+.hero-desc{font-size:15px;line-height:1.6;color:#4e5969;}
+.hero-btn{display:inline-flex;background:var(--ink);color:#fff;border-radius:9px;padding:13px 30px;font-size:15px;font-weight:700;cursor:pointer;border:none;align-self:flex-start;}
+.hero-img{flex:1;height:248px;background:#eef1f5;border-radius:16px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px;font-weight:800;}
+.hero-pager{display:flex;gap:8px;justify-content:center;align-items:center;}
+.dot-active{width:26px;height:9px;background:var(--ink);border-radius:5px;}.dot{width:9px;height:9px;background:#c9ced8;border-radius:5px;}
+.quick-row{display:flex;gap:14px;}
+.quick-card{flex:1;background:#fff;border-radius:14px;border:1px solid var(--line);display:flex;flex-direction:column;align-items:center;gap:11px;padding:22px 8px;cursor:pointer;transition:box-shadow .15s;}
+.quick-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.1);}
+.quick-icon{width:56px;height:56px;background:var(--fill);border-radius:17px;display:flex;align-items:center;justify-content:center;font-size:24px;}
+.quick-label{font-size:13px;font-weight:700;color:var(--ink2);text-align:center;}
+.section-title{font-size:22px;font-weight:800;color:var(--ink);margin-bottom:16px;}
+.best-tabs{display:flex;gap:9px;flex-wrap:wrap;}
+.best-tab{padding:9px 18px;border-radius:22px;border:1px solid var(--line);background:var(--fill);font-size:13px;font-weight:700;color:#5a606c;cursor:pointer;transition:all .15s;}
+.best-tab.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+.best-content{display:flex;gap:22px;margin-top:20px;}
+.best-promo{width:320px;flex-shrink:0;background:#f7f8fa;border-radius:16px;border:1px solid var(--line);padding:32px 24px;display:flex;flex-direction:column;gap:16px;}
+.best-promo-tag{display:inline-flex;background:#fff;border:1px solid var(--line);border-radius:22px;padding:6px 14px;font-size:12px;color:var(--ink3);align-self:flex-start;}
+.best-promo-title{font-size:28px;font-weight:800;color:#3a4a8c;line-height:1.2;}
+.best-promo-sub{font-size:14px;color:var(--ink3);line-height:1.55;}
+.best-promo-btn{background:var(--blue);color:#fff;border:none;border-radius:10px;padding:14px 18px;font-size:14px;font-weight:700;cursor:pointer;}
+.best-books{flex:1;display:flex;gap:14px;}
+.book-card{flex:1;background:#fff;border-radius:12px;border:1px solid var(--line);padding:12px;display:flex;flex-direction:column;gap:10px;cursor:pointer;}
+.book-cover{background:#eef0f3;border-radius:8px;height:155px;position:relative;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:11px;}
+.book-badge{position:absolute;top:8px;right:8px;padding:2px 7px;border-radius:5px;font-size:10px;font-weight:800;color:#fff;}
+.badge-hot{background:var(--red);}.badge-new{background:var(--green);}
+.book-chk{position:absolute;top:8px;left:8px;width:22px;height:22px;background:#eaf1ff;border-radius:6px;border:1.5px solid var(--blue);display:flex;align-items:center;justify-content:center;color:var(--blue);font-size:13px;font-weight:800;}
+.book-genre{font-size:11px;color:var(--muted);background:var(--fill);border-radius:4px;padding:2px 7px;align-self:flex-start;}
+.book-title{font-size:12px;font-weight:700;color:var(--ink);line-height:1.4;}
+.book-author{font-size:11px;color:var(--muted);}
+.book-price{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.price-sale{font-size:14px;font-weight:800;color:var(--ink);}.price-list{font-size:11px;color:var(--muted);text-decoration:line-through;}.price-rate{font-size:11px;font-weight:700;color:var(--red);}
+.book-actions{display:flex;gap:6px;}
+.btn-cart{flex:1;background:var(--fill);border:1px solid var(--line);border-radius:7px;padding:7px;font-size:11px;font-weight:700;color:var(--ink);cursor:pointer;}
+.btn-buy{background:var(--ink);border:1px solid var(--ink);border-radius:7px;padding:7px 10px;font-size:11px;font-weight:700;color:#fff;cursor:pointer;}
+.cura-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
+.cura-title{font-size:22px;font-weight:800;color:var(--ink);}
+.cura-cards{display:flex;gap:20px;}
+.cura-card{flex:1;background:#fff;border-radius:14px;border:1px solid var(--line);display:flex;overflow:hidden;cursor:pointer;}
+.cura-img{width:200px;height:160px;background:var(--fill);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:12px;flex-shrink:0;}
+.cura-text{flex:1;padding:24px 26px;display:flex;flex-direction:column;gap:9px;}
+.cura-tag{font-size:11px;font-weight:700;color:var(--blue);background:#eff6ff;border-radius:4px;padding:3px 8px;align-self:flex-start;}
+.cura-name{font-size:18px;font-weight:800;color:var(--ink);}
+.cura-desc{font-size:13px;color:var(--ink3);line-height:1.6;}
+.cura-link{font-size:13px;color:var(--blue);font-weight:700;margin-top:auto;}
+.tutor-title{font-size:22px;font-weight:800;color:var(--ink);}
+.tutor-sub{font-size:14px;color:var(--ink3);margin-top:4px;margin-bottom:22px;}
+.tutor-label{font-size:14px;font-weight:800;color:var(--ink2);margin-bottom:11px;}
+.tutor-items{display:flex;gap:16px;}
+.tutor-item{flex:1;background:#fff;border-radius:12px;border:1px solid var(--line);padding:20px;display:flex;flex-direction:column;gap:10px;cursor:pointer;transition:box-shadow .15s;}
+.tutor-item:hover{box-shadow:0 4px 12px rgba(0,0,0,.1);}
+.tutor-icon{font-size:28px;}.tutor-item-title{font-size:14px;font-weight:800;color:var(--ink);}
+.tutor-item-desc{font-size:12px;color:var(--muted);line-height:1.5;}
+.bottom-cols{display:flex;gap:30px;}
+.bottom-left{flex:1;display:flex;flex-direction:column;}
+.notice-title{font-size:16px;font-weight:800;color:var(--ink);margin-bottom:8px;}
+.notice-row{display:flex;justify-content:space-between;align-items:center;padding:13px 2px;border-bottom:1px solid var(--line);cursor:pointer;}
+.notice-text{font-size:14px;color:var(--ink2);}.notice-date{font-size:13px;color:var(--muted);}
+.sns-title{font-size:16px;font-weight:800;color:var(--ink);margin:20px 0 8px;}
+.sns-row{display:flex;gap:10px;}
+.sns-btn{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:9px;padding:10px 15px;cursor:pointer;font-size:13px;font-weight:600;color:var(--ink2);}
+.bottom-right{width:420px;display:flex;flex-direction:column;gap:14px;}
+.cs-box{background:#fff;border-radius:12px;border:1px solid var(--line);padding:22px 24px;display:flex;justify-content:space-between;align-items:center;}
+.cs-info{display:flex;flex-direction:column;gap:5px;}
+.cs-name{font-size:15px;font-weight:800;color:var(--ink);}
+.cs-tel{font-size:22px;font-weight:800;color:var(--ink);}
+.cs-time{font-size:12px;color:var(--muted);}
+.cs-btns{display:flex;gap:8px;}
+.cs-btn{background:var(--fill);border:1px solid var(--line);border-radius:8px;padding:10px 14px;font-size:13px;font-weight:700;cursor:pointer;color:var(--ink);}
+.site-footer{background:#2a2f3a;padding:26px 40px 30px;display:flex;flex-direction:column;gap:14px;}
+.footer-nav{display:flex;justify-content:space-between;align-items:center;}
+.fnav-links{display:flex;align-items:center;gap:0;}
+.fnav-links a{color:#cdd2db;font-size:13px;font-weight:600;text-decoration:none;padding:0 10px;border-right:1px solid #444;}
+.fnav-links a:first-child{padding-left:0;}.fnav-links a:last-child{border-right:none;color:#fff;font-weight:800;}.fnav-links a:hover{color:#fff;}
+.family-btn{border:1px solid #555c69;border-radius:22px;padding:9px 20px;color:#cdd2db;font-size:13px;background:none;cursor:pointer;}
+.footer-info{display:flex;justify-content:space-between;align-items:flex-end;}
+.footer-text p{color:#8b909c;font-size:13px;line-height:2;}
+.footer-logo{color:#7d8390;font-size:17px;font-weight:800;}
+.wf-page{padding:32px 40px;background:var(--bg);min-height:600px;}
+.wf-topbar{background:#fff;border-radius:12px;padding:20px;margin-bottom:24px;border:1px solid var(--line);}
+.wf-topbar h2{font-size:20px;font-weight:800;margin-bottom:8px;}
+.wf-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
+.wf-chip{background:var(--fill);border:1px solid var(--line);border-radius:20px;padding:4px 12px;font-size:12px;color:var(--ink3);}
+.wf-chip.warn{background:#fff7e6;border-color:#d9a441;color:#8a5d00;}
+.wf-box{background:#fff;border-radius:12px;border:1px solid var(--line);padding:20px;margin-bottom:16px;}
+.wf-box h3{font-size:14px;font-weight:800;margin-bottom:12px;color:var(--ink);}
+.wf-grid{display:grid;gap:16px;}.wf-grid.cols2{grid-template-columns:1fr 1fr;}.wf-grid.cols3{grid-template-columns:1fr 1fr 1fr;}
+.ph{background:var(--fill);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:12px;text-align:center;}
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:9px 18px;border-radius:8px;border:1px solid var(--line);background:#fff;font-size:13px;font-weight:700;cursor:pointer;color:var(--ink);gap:6px;}
+.btn.primary{background:var(--ink);color:#fff;border-color:var(--ink);}.btn.sm{padding:6px 12px;font-size:12px;}.btn.blue{background:var(--blue);color:#fff;border-color:var(--blue);}
+.tabs-bar{display:flex;gap:0;border-bottom:2px solid var(--line);margin-bottom:16px;}
+.tab{padding:10px 20px;font-size:14px;font-weight:700;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab.active{color:var(--ink);border-bottom-color:var(--ink);}
+.filter-bar{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;padding:16px;background:var(--fill);border-radius:8px;margin-bottom:16px;}
+.filter-group{display:flex;flex-direction:column;gap:4px;}.filter-group label{font-size:11px;color:var(--muted);}
+.chk-row{display:flex;flex-wrap:wrap;gap:8px;}.chk-row label{display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer;}
+select,input[type=text],input[type=number]{padding:7px 12px;border:1px solid var(--line);border-radius:6px;font:inherit;font-size:13px;}
+.book-list-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;}
+.book-list-card{background:#fff;border-radius:12px;border:1px solid var(--line);padding:14px;display:flex;flex-direction:column;gap:8px;}
+.book-list-card .cover{height:130px;background:var(--fill);border-radius:6px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:11px;}
+.book-list-card .title{font-size:13px;font-weight:700;color:var(--ink);line-height:1.4;}
+.book-list-card .price{font-size:13px;font-weight:800;color:var(--ink);}
+.book-list-card .btns{display:flex;gap:6px;margin-top:4px;}
+table.wf{width:100%;border-collapse:collapse;font-size:13px;}
+table.wf th{background:var(--fill);padding:10px 12px;font-weight:700;text-align:left;border:1px solid var(--line);}
+table.wf td{padding:10px 12px;border:1px solid var(--line);vertical-align:top;}
+.step-bar{display:flex;justify-content:center;align-items:center;gap:0;padding:20px 0;}
+.step{padding:10px 24px;font-size:13px;font-weight:700;color:var(--muted);}.step.active{color:var(--ink);}
+.step-sep{color:var(--line);font-size:18px;}
+.badge{display:inline-flex;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;}
+.badge.hot{background:var(--red);color:#fff;}.badge.new{background:var(--green);color:#fff;}
+.two-col{display:flex;gap:24px;}.two-col .main{flex:1;}.two-col .side{width:320px;}
+.form-row{display:flex;gap:12px;margin-bottom:12px;align-items:flex-start;}
+.form-row label{width:120px;padding-top:8px;font-size:13px;font-weight:700;color:var(--ink3);flex-shrink:0;}
+.form-row .field{flex:1;}.form-row input[type=text]{width:100%;}
+.order-sum{background:var(--fill);border-radius:12px;padding:20px;}
+.order-sum-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px;}
+.order-sum-row:last-child{border-bottom:none;font-weight:800;font-size:16px;color:var(--red);}
+.opt{border:1px solid var(--line);border-radius:8px;padding:12px 16px;margin-bottom:8px;cursor:pointer;}
+.opt.selected{border-color:var(--blue);background:#eff6ff;}
+.mypage-aside{width:240px;flex-shrink:0;}
+.aside-menu a{display:block;padding:10px 16px;color:var(--ink2);text-decoration:none;border-radius:8px;font-size:14px;font-weight:600;}
+.aside-menu a.active{background:var(--fill);color:var(--ink);font-weight:800;}.aside-menu a:hover{background:var(--fill);}
+.aside-user{background:var(--fill);border-radius:12px;padding:20px;margin-bottom:16px;text-align:center;}
+.aside-user .avatar{width:56px;height:56px;background:var(--line);border-radius:28px;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 10px;}
+.aside-user .name{font-size:16px;font-weight:800;color:var(--ink);}
+.aside-user .grade{font-size:12px;color:var(--muted);margin-top:2px;}
+.qty-ctrl{display:flex;align-items:center;border:1px solid var(--line);border-radius:6px;overflow:hidden;}
+.qty-ctrl button{background:var(--fill);border:none;padding:6px 12px;cursor:pointer;font-size:16px;font-weight:700;}
+.qty-ctrl input{width:60px;text-align:center;border:none;border-left:1px solid var(--line);border-right:1px solid var(--line);padding:6px;font:inherit;}
 </style>
 </head>
 <body>
-  <div class="top">
-    <div class="row1">
-      <h1>NE Books 자사몰 개편 · Pencil 와이어프레임 v0.5</h1>
-      <span class="tag">Pencil(.pen) v0.3 시안</span>
-      <a class="home" href="../index.html">← 버전 선택으로</a>
-    </div>
-    <nav class="topmenu" id="topmenu">
-      <button data-img="01-main"     class="active" data-title="1. 메인 화면">메인</button>
-      <button data-img="02-list"     data-title="2. 교재목록 화면">교재목록</button>
-      <button data-img="03-ebook"    data-title="2-2. E-Book / 자료">E-Book/자료</button>
-      <button data-img="04-detail"   data-title="3. 교재상세 화면">교재상세</button>
-      <button data-img="05-cart"     data-title="4. 장바구니 화면">장바구니</button>
-      <button data-img="06-order"    data-title="5. 주문 / 결제">주문/결제</button>
-      <button data-img="07-complete" data-title="주문 / 결제완료">주문완료</button>
-      <button data-img="08-mypage"   data-title="6. 마이페이지">마이페이지</button>
-      <button data-img="09-wish"     data-title="7. 찜 (책갈피)">찜</button>
-      <button data-img="10-data"     data-title="8. 학습자료실">학습자료실</button>
-      <button data-img="11-cs"       data-title="9. 고객센터">고객센터</button>
-    </nav>
+<div class="wf-bar">
+  <h1>NE Books 자사몰 개편 · 와이어프레임 v4.0</h1>
+  <div class="wf-nav">
+    <button class="active" data-screen="main">메인</button>
+    <button data-screen="list">교재목록</button>
+    <button data-screen="ebook">E-Book/자료</button>
+    <button data-screen="detail">교재상세</button>
+    <button data-screen="cart">장바구니</button>
+    <button data-screen="order">주문/결제</button>
+    <button data-screen="complete">주문완료</button>
+    <button data-screen="mypage">마이페이지</button>
+    <button data-screen="wish">찜</button>
+    <button data-screen="data">학습자료실</button>
+    <button data-screen="cs">고객센터</button>
   </div>
+  <a class="back" href="../index.html">← 버전 선택</a>
+</div>
+<div class="site-header">
+  <div class="utilbar">
+    <div class="util-links">
+      <span>NE능률</span><span class="sep">|</span><span>교과서</span><span class="sep">|</span><span>영어·수학교재</span><span class="sep">|</span><span>ELT교재</span><span class="sep">|</span><span>영자신문</span><span class="sep">|</span><span>아이챌린지</span><span class="sep">|</span><span>유아교육</span><span class="sep">|</span><span>영어레벨테스트</span><span class="sep">|</span><span>초중등영어학원</span>
+    </div>
+    <span class="util-join">👤 통합회원가입</span>
+  </div>
+  <div class="header-row">
+    <div class="logo">NE_Books</div>
+    <div class="search-box">
+      <span>🔍</span>
+      <input type="text" id="search-input" placeholder="교재명 또는 검색어를 입력해 주세요." autocomplete="off">
+      <button class="s-btn" onclick="doSearch()">🔍</button>
+    </div>
+    <div class="icon-area">
+      <div class="icon-wrap" data-goto="mypage"><div class="icon-circle">👤</div><div class="icon-label">로그인</div></div>
+      <div class="icon-wrap" data-goto="cart"><div class="icon-circle">🛒</div><div class="icon-label">장바구니</div></div>
+      <div class="icon-wrap" data-goto="mypage"><div class="icon-circle">📋</div><div class="icon-label">마이페이지</div></div>
+      <div class="icon-wrap" data-goto="cs"><div class="icon-circle">🎧</div><div class="icon-label">고객센터</div></div>
+    </div>
+  </div>
+  <div class="gnb-row">
+    <div class="gnb-item" data-goto="list">ELT</div>
+    <div class="gnb-item" data-goto="list">초·중등</div>
+    <div class="gnb-item" data-goto="list">고등</div>
+    <div class="gnb-item" data-goto="list">교과서·자습서</div>
+    <div class="gnb-item" data-goto="list">수험·일반</div>
+    <div class="gnb-item" data-goto="list">수학·국어</div>
+    <div class="gnb-item" data-goto="data">학습자료실</div>
+    <div class="gnb-item" data-goto="list">도서몰</div>
+  </div>
+</div>
+<div class="screens">
 
-  <main class="stage">
-    <div class="info">Pencil(.pen) v0.3 디자인을 이미지로 내보낸 뷰어입니다. 상단 메뉴로 화면을 전환하며, 폼·장바구니 등 실제 기능 동작은 포함하지 않습니다(디자인 검토용).</div>
-    <div class="screen-title" id="title">1. 메인 화면</div>
-    <div class="screen-meta">NE Books 개편 Front 와이어프레임 · Pencil v0.5 (v0.3.pen 시안)</div>
-    <div class="frame"><img id="shot" src="img/01-main.webp" alt="Pencil 와이어프레임 화면"></div>
-    <div class="note">※ 원본은 Pencil(.pen) 파일이며, 본 페이지는 해당 디자인을 캡처한 정적 이미지입니다.</div>
-  </main>
+<!-- 1. 메인 -->
+<section class="screen active" id="s-main">
+  <div class="hero-section">
+    <div class="hero-card">
+      <div class="hero-left">
+        <span class="hero-badge">PROMOTION</span>
+        <div class="hero-title">성적이 달라지는<br>방학 특강 조합</div>
+        <div class="hero-desc">문법 개념 정리 + 리스닝 훈련으로 방학 대비 끝!<br>지금 기획전에서 만나보세요.</div>
+        <button class="hero-btn" data-goto="list">기획전 보러가기 →</button>
+      </div>
+      <div class="hero-img">홍보 이미지 영역</div>
+    </div>
+    <div class="hero-pager"><div class="dot-active"></div><div class="dot"></div><div class="dot"></div></div>
+  </div>
+  <div class="section" style="padding:32px 40px;">
+    <div class="quick-row">
+      <div class="quick-card" data-goto="list"><div class="quick-icon">📚</div><div class="quick-label">교재 구매</div></div>
+      <div class="quick-card" data-goto="list"><div class="quick-icon">🎯</div><div class="quick-label">맞춤형 교재추천</div></div>
+      <div class="quick-card" data-goto="data"><div class="quick-icon">📂</div><div class="quick-label">학습자료실</div></div>
+      <div class="quick-card"><div class="quick-icon">🎵</div><div class="quick-label">MP3 듣기·단어장</div></div>
+      <div class="quick-card"><div class="quick-icon">👨‍🏫</div><div class="quick-label">영어 선생님 바로가기</div></div>
+      <div class="quick-card"><div class="quick-icon">📐</div><div class="quick-label">수학 선생님 바로가기</div></div>
+    </div>
+  </div>
+  <div class="section section-pad">
+    <div class="section-title">베스트셀러</div>
+    <div class="best-tabs" id="best-tabs">
+      <div class="best-tab active">중등 여름방학 추천 코스</div>
+      <div class="best-tab">쉬운 암기 중등 필수 VOCA</div>
+      <div class="best-tab">스스로 읽는 파닉스</div>
+      <div class="best-tab">빠른이해 초등문법서</div>
+      <div class="best-tab">고등 독해 완성</div>
+    </div>
+    <div class="best-content">
+      <div class="best-promo">
+        <span class="best-promo-tag">🏆 기획 특집</span>
+        <div class="best-promo-title">성적이 달라지는<br>방학 특강 조합</div>
+        <div class="best-promo-sub">문법 개념 정리 + 리스닝 훈련으로 방학 대비 끝!</div>
+        <button class="best-promo-btn" data-goto="cart">🛒 장바구니 담기</button>
+      </div>
+      <div class="best-books">
+        <div class="book-card"><div class="book-cover">표지<div class="book-chk">✓</div><div class="book-badge badge-hot">HOT</div></div><div class="book-genre">중등·문법</div><div class="book-title">중학 영문법 3800제 1학년</div><div class="book-author">NE능률 영어교육연구소</div><div class="book-price"><span class="price-sale">13,500원</span><span class="price-list">15,000원</span><span class="price-rate">10%</span></div><div class="book-actions"><button class="btn-cart cart-add">장바구니</button><button class="btn-buy" data-goto="detail">상세</button></div></div>
+        <div class="book-card"><div class="book-cover">표지<div class="book-chk">✓</div><div class="book-badge badge-new">NEW</div></div><div class="book-genre">중등·듣기</div><div class="book-title">중학 영어듣기 모의고사 2학년</div><div class="book-author">NE능률 영어교육연구소</div><div class="book-price"><span class="price-sale">13,500원</span><span class="price-list">15,000원</span><span class="price-rate">10%</span></div><div class="book-actions"><button class="btn-cart cart-add">장바구니</button><button class="btn-buy" data-goto="detail">상세</button></div></div>
+        <div class="book-card"><div class="book-cover">표지<div class="book-chk">✓</div></div><div class="book-genre">중등·독해</div><div class="book-title">능률 중학영어 독해 LEVEL 3</div><div class="book-author">NE능률 영어교육연구소</div><div class="book-price"><span class="price-sale">13,500원</span><span class="price-list">15,000원</span><span class="price-rate">10%</span></div><div class="book-actions"><button class="btn-cart cart-add">장바구니</button><button class="btn-buy" data-goto="detail">상세</button></div></div>
+        <div class="book-card"><div class="book-cover">표지<div class="book-chk">✓</div></div><div class="book-genre">중등·어휘</div><div class="book-title">중등 필수 VOCA Master 1</div><div class="book-author">NE능률 영어교육연구소</div><div class="book-price"><span class="price-sale">13,500원</span><span class="price-list">15,000원</span><span class="price-rate">10%</span></div><div class="book-actions"><button class="btn-cart cart-add">장바구니</button><button class="btn-buy" data-goto="detail">상세</button></div></div>
+        <div class="book-card"><div class="book-cover">표지<div class="book-chk">✓</div></div><div class="book-genre">중등·문법</div><div class="book-title">그래머존 중학 기초편</div><div class="book-author">NE능률 영어교육연구소</div><div class="book-price"><span class="price-sale">13,500원</span><span class="price-list">15,000원</span><span class="price-rate">10%</span></div><div class="book-actions"><button class="btn-cart cart-add">장바구니</button><button class="btn-buy" data-goto="detail">상세</button></div></div>
+        <div class="book-card"><div class="book-cover">표지<div class="book-chk">✓</div></div><div class="book-genre">중등·문법</div><div class="book-title">그래머존 중학 기본편</div><div class="book-author">NE능률 영어교육연구소</div><div class="book-price"><span class="price-sale">13,500원</span><span class="price-list">15,000원</span><span class="price-rate">10%</span></div><div class="book-actions"><button class="btn-cart cart-add">장바구니</button><button class="btn-buy" data-goto="detail">상세</button></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="section section-pad">
+    <div class="cura-head"><div class="cura-title">큐레이션 &amp; 이벤트</div><div style="color:var(--muted);font-size:18px;letter-spacing:5px;cursor:pointer;">‹  ● ● ○  ›</div></div>
+    <div class="cura-cards">
+      <div class="cura-card" data-goto="detail"><div class="cura-img">이미지</div><div class="cura-text"><span class="cura-tag">신간</span><div class="cura-name">2026 신간 큐레이션</div><div class="cura-desc">올해 새롭게 출간된 교재를 한눈에 확인하세요. ELT부터 고등까지 다양한 신간을 소개합니다.</div><div class="cura-link">더 보기 →</div></div></div>
+      <div class="cura-card" data-goto="detail"><div class="cura-img">이미지</div><div class="cura-text"><span class="cura-tag">이벤트</span><div class="cura-name">신학기 교재전 최대 20%</div><div class="cura-desc">신학기를 맞아 인기 교재를 최대 20% 할인 판매합니다. 지금 바로 만나보세요!</div><div class="cura-link">더 보기 →</div></div></div>
+    </div>
+  </div>
+  <div class="section" style="background:#f1f3f6;padding:38px 40px;">
+    <div class="tutor-title">선생님을 위한 티칭 플랫폼 NE Tutor</div>
+    <div class="tutor-sub">수업자료부터 평가, 디지털 문제뱅크까지 한 곳에서</div>
+    <div style="display:flex;gap:22px;margin-bottom:18px;">
+      <div style="flex:0 0 441px;"><div class="tutor-label">수업자료</div><div class="tutor-items"><div class="tutor-item"><div class="tutor-icon">📖</div><div class="tutor-item-title">E/book 교육자료</div><div class="tutor-item-desc">교재별 수업 자료 및 E-Book 다운로드</div></div></div></div>
+      <div style="flex:1;"><div class="tutor-label">평가서비스</div><div class="tutor-items"><div class="tutor-item"><div class="tutor-icon">📝</div><div class="tutor-item-title">NELT</div><div class="tutor-item-desc">NE 영어 레벨 테스트</div></div><div class="tutor-item"><div class="tutor-icon">✅</div><div class="tutor-item-title">성취 TEST</div><div class="tutor-item-desc">단원별 성취도 평가</div></div></div></div>
+    </div>
+    <div><div class="tutor-label">디지털 문제뱅크</div><div class="tutor-items"><div class="tutor-item"><div class="tutor-icon">🔤</div><div class="tutor-item-title">어휘 문제 마법사</div><div class="tutor-item-desc">교재별 어휘 문제 자동 생성</div></div><div class="tutor-item"><div class="tutor-icon">📊</div><div class="tutor-item-title">온라인 문제뱅크</div><div class="tutor-item-desc">교재별 문제 추출 및 시험지 제작</div></div><div class="tutor-item"><div class="tutor-icon">🔍</div><div class="tutor-item-title">문법 예문 검색</div><div class="tutor-item-desc">교재별 문법 예문 검색</div></div></div></div>
+  </div>
+  <div class="section" style="padding:40px;">
+    <div class="bottom-cols">
+      <div class="bottom-left">
+        <div class="notice-title">공지사항</div>
+        <div class="notice-row"><span class="notice-text">[안내] 절판(예정포함) 국어교재 (1/7 기준)</span><span class="notice-date">2025.12.29</span></div>
+        <div class="notice-row"><span class="notice-text">[안내] 2026학년도 교과서·자습서·문제집 구매 안내</span><span class="notice-date">2025.12.29</span></div>
+        <div class="notice-row"><span class="notice-text">[자료] 2026년 NE능률 영어 교재 카달로그 및 가이드북</span><span class="notice-date">2025.12.22</span></div>
+        <div class="sns-title">공식 SNS</div>
+        <div class="sns-row"><div class="sns-btn">☕ NE능률 Lounge 카페</div><div class="sns-btn">📸 인스타그램</div><div class="sns-btn">▶ 유튜브</div></div>
+      </div>
+      <div class="bottom-right">
+        <div class="cs-box"><div class="cs-info"><div class="cs-name">NE능률 고객센터</div><div class="cs-tel">1833-8368</div><div class="cs-time">평일 09:00~16:00 (점심 12:00~13:00)</div></div><div class="cs-btns"><button class="cs-btn" data-goto="cs">1:1문의</button><button class="cs-btn" data-goto="cs">FAQ</button></div></div>
+        <div class="cs-box"><div class="cs-info"><div class="cs-name">AI 디지털 교육자료 공동 CS센터</div><div class="cs-tel">1661-0777</div><div class="cs-time">평일 09:00~18:00</div></div><div class="cs-btns"><button class="cs-btn" data-goto="cs">1:1문의</button></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="site-footer">
+    <div class="footer-nav"><div class="fnav-links"><a href="#">개인정보처리방침</a><a href="#">이용약관</a><a href="#">이메일무단수집거부</a><a href="#">지사안내</a><a href="#">찾아오시는 길</a><a href="#">학원/도서관 대량구매</a></div><button class="family-btn">FAMILY SITE ▾</button></div>
+    <div class="footer-info"><div class="footer-text"><p>㈜NE능률 (03925) 서울특별시 마포구 월드컵북로 396(상암동) 누리꿈스퀘어 비즈니스타워 10층  |  대표이사 : 이정진</p><p>고객센터 : 1833-8368  |  사업자등록번호 : 105-81-65267  |  통신판매신고번호 : 제2004-02120호</p><p>Copyright © NE Neungyule, Inc. All Rights Reserved</p></div><div class="footer-logo">NE능률</div></div>
+  </div>
+</section>
 
-  <script>
-    (function () {
-      var menu = document.getElementById('topmenu');
-      var shot = document.getElementById('shot');
-      var title = document.getElementById('title');
-      menu.addEventListener('click', function (e) {
-        var btn = e.target.closest('button[data-img]');
-        if (!btn) return;
-        Array.prototype.forEach.call(menu.querySelectorAll('button'), function (b) { b.classList.remove('active'); });
-        btn.classList.add('active');
-        shot.src = 'img/' + btn.getAttribute('data-img') + '.webp';
-        title.textContent = btn.getAttribute('data-title');
-        window.scrollTo(0, 0);
-      });
-    })();
-  </script>
+<!-- 2. 교재목록 -->
+<section class="screen" id="s-list">
+  <div class="wf-page">
+    <div class="wf-topbar"><h2>교재목록</h2><div class="wf-chips"><span class="wf-chip">레벨·제품유형·시리즈·브랜드 필터</span><span class="wf-chip">조건 변경 시 자동 조회</span><span class="wf-chip">장바구니 비회원OK</span><span class="wf-chip warn">제품유형 매핑 확인 필요</span></div></div>
+    <div style="font-size:14px;font-weight:700;color:var(--muted);margin-bottom:12px;">홈 &gt; ELT &gt; Reading</div>
+    <div class="filter-bar">
+      <div class="filter-group"><label>레벨 (다중)</label><div class="chk-row"><label><input type="checkbox"> 유아</label><label><input type="checkbox" checked> 초등</label><label><input type="checkbox"> 중등</label><label><input type="checkbox"> 고등</label></div></div>
+      <div class="filter-group"><label>제품유형</label><div class="chk-row"><label><input type="checkbox" checked> 교재</label><label><input type="checkbox"> E-Book</label><label><input type="checkbox"> 자료</label></div></div>
+      <div class="filter-group"><label>시리즈</label><select><option>전체</option><option>Bricks</option><option>Grammar Power</option></select></div>
+      <div class="filter-group"><label>정렬</label><select><option>판매량순</option><option>신상품순</option><option>낮은가격순</option></select></div>
+      <button class="btn sm" style="background:var(--ink);color:#fff;border-color:var(--ink);">조회</button>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <span style="font-size:13px;color:var(--muted);">총 128건</span>
+      <div style="display:flex;gap:0;">
+        <button class="tab active" onclick="switchViewType(this,'buy')">교재구매형</button>
+        <button class="tab" onclick="switchViewType(this,'ebook')">E-Book·자료형</button>
+      </div>
+    </div>
+    <div id="cards-buy" class="book-list-grid">
+      <div class="book-list-card"><div class="cover">표지</div><div class="badge new" style="align-self:flex-start;">NEW</div><div class="title">Bricks Reading 150 Level 1</div><div class="price">13,500원 <span style="color:var(--red);font-size:12px;">10%</span></div><div class="btns"><button class="btn sm cart-add">장바구니</button><button class="btn sm primary" data-goto="detail">상세</button></div></div>
+      <div class="book-list-card"><div class="cover">표지</div><div class="title">Grammar Power Level 1</div><div class="price">13,500원</div><div class="btns"><button class="btn sm cart-add">장바구니</button><button class="btn sm primary" data-goto="detail">상세</button></div></div>
+      <div class="book-list-card"><div class="cover">표지</div><div class="badge hot" style="align-self:flex-start;">HOT</div><div class="title">능률 중학영어 독해 Level 2</div><div class="price">11,700원</div><div class="btns"><button class="btn sm cart-add">장바구니</button><button class="btn sm primary" data-goto="detail">상세</button></div></div>
+      <div class="book-list-card"><div class="cover">표지</div><div class="title">빠른독해 바른독해 기초</div><div class="price">14,000원</div><div class="btns"><button class="btn sm cart-add">장바구니</button><button class="btn sm primary" data-goto="detail">상세</button></div></div>
+      <div class="book-list-card"><div class="cover">표지</div><div class="title">초등영어 리딩 클리어 1</div><div class="price">10,800원</div><div class="btns"><button class="btn sm cart-add">장바구니</button><button class="btn sm primary" data-goto="detail">상세</button></div></div>
+      <div class="book-list-card"><div class="cover">표지</div><div class="title">수능 빈칸백서 실전편</div><div class="price">16,000원</div><div class="btns"><button class="btn sm" disabled>품절</button><button class="btn sm primary" data-goto="detail">상세</button></div></div>
+      <div class="book-list-card"><div class="cover">표지</div><div class="title">수능 1등급 영어독해</div><div class="price">15,300원</div><div class="btns"><button class="btn sm cart-add">장바구니</button><button class="btn sm primary" data-goto="detail">상세</button></div></div>
+      <div class="book-list-card"><div class="cover">표지</div><div class="title">중학 영문법 3800제 2학년</div><div class="price">13,500원</div><div class="btns"><button class="btn sm cart-add">장바구니</button><button class="btn sm primary" data-goto="detail">상세</button></div></div>
+      <div class="book-list-card"><div class="cover">표지</div><div class="title">Grammar Inside Level 3</div><div class="price">12,600원</div><div class="btns"><button class="btn sm cart-add">장바구니</button><button class="btn sm primary" data-goto="detail">상세</button></div></div>
+      <div class="book-list-card"><div class="cover">표지</div><div class="title">능률 VOCA 고등 수능</div><div class="price">13,500원</div><div class="btns"><button class="btn sm cart-add">장바구니</button><button class="btn sm primary" data-goto="detail">상세</button></div></div>
+    </div>
+    <div id="cards-data" style="display:none;" class="book-list-grid">
+      <div class="book-list-card"><div class="cover">E-Book</div><div class="title">Bricks Reading 150 L1 E-Book</div><div class="price">9,000원</div><div class="btns"><button class="btn sm primary" data-goto="ebook">보기</button></div></div>
+      <div class="book-list-card"><div class="cover">E-Book</div><div class="title">Grammar Power L1 E-Book</div><div class="price">9,000원</div><div class="btns"><button class="btn sm primary" data-goto="ebook">보기</button></div></div>
+      <div class="book-list-card"><div class="cover">자료</div><div class="title">MP3 파일 다운로드</div><div class="price">무료</div><div class="btns"><button class="btn sm primary" data-goto="data">다운로드</button></div></div>
+    </div>
+  </div>
+  <div class="site-footer"><div class="footer-nav"><div class="fnav-links"><a href="#">개인정보처리방침</a><a href="#">이용약관</a><a href="#">학원/도서관 대량구매</a></div><button class="family-btn">FAMILY SITE ▾</button></div><div class="footer-text"><p>Copyright © NE Neungyule, Inc. All Rights Reserved</p></div></div>
+</section>
+
+<!-- 3. E-Book/자료 -->
+<section class="screen" id="s-ebook">
+  <div class="wf-page">
+    <div class="wf-topbar"><h2>E-Book / 자료</h2><div class="wf-chips"><span class="wf-chip">로그인 필요 (구매 회원만 접근)</span><span class="wf-chip">PDF 뷰어 내장</span></div></div>
+    <div style="display:flex;gap:24px;">
+      <div style="flex:1;"><div class="wf-box"><h3>E-Book 뷰어</h3><div class="ph" style="height:500px;font-size:16px;">📖 E-Book 뷰어 영역<br><small>Bricks Reading 150 Level 1</small></div></div><div style="display:flex;gap:8px;margin-top:12px;"><button class="btn">◀ 이전</button><button class="btn">1 / 180</button><button class="btn">다음 ▶</button></div></div>
+      <div style="width:280px;"><div class="wf-box"><h3>교재 정보</h3><div class="ph" style="height:120px;">표지 이미지</div><p style="margin-top:12px;font-size:14px;font-weight:800;">Bricks Reading 150 Level 1</p><p style="font-size:13px;color:var(--muted);margin-top:4px;">NE능률 영어교육연구소</p></div><div class="wf-box"><h3>학습자료 다운로드</h3><div style="display:flex;flex-direction:column;gap:8px;"><button class="btn" style="justify-content:space-between;">📎 정답·해설 PDF</button><button class="btn" style="justify-content:space-between;">🎵 MP3 파일</button><button class="btn" style="justify-content:space-between;">📝 단어 리스트</button></div></div></div>
+    </div>
+  </div>
+  <div class="site-footer"><div class="footer-text"><p>Copyright © NE Neungyule, Inc. All Rights Reserved</p></div></div>
+</section>
+
+<!-- 4. 교재상세 -->
+<section class="screen" id="s-detail">
+  <div class="wf-page">
+    <div style="font-size:13px;color:var(--muted);margin-bottom:16px;">홈 &gt; ELT &gt; Reading &gt; Bricks Reading 150</div>
+    <div style="display:flex;gap:40px;margin-bottom:24px;">
+      <div style="width:300px;flex-shrink:0;"><div class="ph" style="height:380px;font-size:16px;">📚 교재 표지</div><div style="display:flex;gap:8px;margin-top:8px;"><button class="btn sm">앞표지</button><button class="btn sm">뒤표지</button><button class="btn sm">미리보기</button></div></div>
+      <div style="flex:1;">
+        <div style="display:flex;gap:8px;margin-bottom:8px;"><span class="badge new">NEW</span><span style="font-size:13px;color:var(--muted);">ELT &gt; Reading</span></div>
+        <h2 style="font-size:26px;font-weight:800;margin-bottom:8px;">Bricks Reading 150 Level 1</h2>
+        <p style="font-size:14px;color:var(--muted);margin-bottom:20px;">NE능률 영어교육연구소 저  |  능률교육  |  2026.01.15</p>
+        <div style="background:var(--fill);border-radius:8px;padding:16px;margin-bottom:20px;"><div style="font-size:28px;font-weight:800;color:var(--ink);">13,500원</div><div style="font-size:14px;color:var(--muted);text-decoration:line-through;">정가 15,000원</div><div style="font-size:14px;color:var(--red);font-weight:700;">10% 할인 · 적립 135P</div></div>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;"><label style="font-size:14px;font-weight:700;">수량</label><div class="qty-ctrl"><button id="detail-minus">−</button><input type="number" id="view-qty" value="1" min="1" max="999"><button id="detail-plus">+</button></div></div>
+        <div style="display:flex;gap:10px;"><button class="btn" style="flex:1;padding:14px;" onclick="alert('장바구니에 담겼습니다!')">🛒 장바구니</button><button class="btn primary" style="flex:1;padding:14px;" data-goto="order">바로 구매</button><button class="btn" style="padding:14px;">♡ 찜</button></div>
+        <div style="display:flex;gap:8px;margin-top:12px;"><button class="btn sm" data-goto="data">📎 학습자료</button><button class="btn sm" data-goto="ebook">📖 E-Book</button><button class="btn sm">🎵 MP3</button></div>
+      </div>
+    </div>
+    <div class="tabs-bar"><div class="tab active">교재소개</div><div class="tab">목차</div><div class="tab">관련자료</div><div class="tab">리뷰</div><div class="tab">Q&amp;A</div></div>
+    <div class="wf-box"><h3>교재 소개</h3><div class="ph" style="height:200px;">교재 소개 이미지 및 설명 영역</div></div>
+    <div class="wf-box"><h3>함께 구매한 교재</h3><div style="display:flex;gap:14px;"><div class="book-list-card" style="width:160px;"><div class="cover">표지</div><div class="title">Grammar Power L1</div><div class="price">13,500원</div><button class="btn sm cart-add">장바구니</button></div><div class="book-list-card" style="width:160px;"><div class="cover">표지</div><div class="title">능률 VOCA 중등</div><div class="price">13,500원</div><button class="btn sm cart-add">장바구니</button></div></div></div>
+  </div>
+  <div class="site-footer"><div class="footer-text"><p>Copyright © NE Neungyule, Inc. All Rights Reserved</p></div></div>
+</section>
+
+<!-- 5. 장바구니 -->
+<section class="screen" id="s-cart">
+  <div class="wf-page">
+    <div class="step-bar"><span class="step active">① 장바구니</span><span class="step-sep">›</span><span class="step">② 주문/결제</span><span class="step-sep">›</span><span class="step">③ 주문완료</span></div>
+    <div style="display:flex;gap:24px;">
+      <div style="flex:1;">
+        <div style="display:flex;gap:8px;margin-bottom:12px;"><label style="display:flex;align-items:center;gap:6px;font-weight:700;"><input type="checkbox" id="cart-all"> 전체선택</label><button class="btn sm" id="cart-del-selected">선택삭제</button><button class="btn sm" id="cart-del-all">전체삭제</button></div>
+        <table class="wf" id="cart-table">
+          <thead><tr><th style="width:40px;"></th><th>교재</th><th style="width:80px;">수량</th><th style="width:100px;">금액</th><th style="width:60px;"></th></tr></thead>
+          <tbody>
+            <tr data-price="13500" data-list="15000" data-point="135"><td><input type="checkbox" class="cart-check" checked></td><td><div style="display:flex;gap:10px;align-items:center;"><div class="ph" style="width:60px;height:75px;flex-shrink:0;">표지</div><div><div style="font-weight:700;">Bricks Reading 150 Level 1</div><div style="color:var(--muted);font-size:12px;">NE능률 영어교육연구소</div><div style="color:var(--red);font-size:13px;font-weight:700;">13,500원 (10%↓)</div></div></div></td><td><div class="qty-ctrl"><button class="qty-minus">−</button><input type="number" class="qty-input" value="1" min="1"><button class="qty-plus">+</button></div></td><td class="cart-amount" style="font-weight:700;">13,500원</td><td><button class="btn sm row-del">삭제</button></td></tr>
+            <tr data-price="13500" data-list="15000" data-point="135"><td><input type="checkbox" class="cart-check" checked></td><td><div style="display:flex;gap:10px;align-items:center;"><div class="ph" style="width:60px;height:75px;flex-shrink:0;">표지</div><div><div style="font-weight:700;">능률 중학영어 독해 Level 2</div><div style="color:var(--muted);font-size:12px;">NE능률 영어교육연구소</div><div style="color:var(--red);font-size:13px;font-weight:700;">13,500원 (10%↓)</div></div></div></td><td><div class="qty-ctrl"><button class="qty-minus">−</button><input type="number" class="qty-input" value="1" min="1"><button class="qty-plus">+</button></div></td><td class="cart-amount" style="font-weight:700;">13,500원</td><td><button class="btn sm row-del">삭제</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="width:300px;">
+        <div class="order-sum"><div class="order-sum-row"><span>총 상품금액</span><span id="cart-sum-product">30,000원</span></div><div class="order-sum-row"><span>상품할인</span><span id="cart-sum-discount">- 3,000원</span></div><div class="order-sum-row"><span>배송비</span><span id="cart-sum-delivery">0원</span></div><div class="order-sum-row"><span>결제예상금액</span><span id="cart-sum-total">27,000원</span></div><div style="font-size:13px;color:var(--green);padding:8px 0;">적립예정 <span id="cart-sum-point">+ 270P</span></div></div>
+        <button class="btn primary" style="width:100%;padding:16px;margin-top:12px;font-size:16px;" data-goto="order">주문하기</button>
+        <button class="btn" style="width:100%;padding:16px;margin-top:8px;" data-goto="list">계속 쇼핑</button>
+      </div>
+    </div>
+  </div>
+  <div class="site-footer"><div class="footer-text"><p>Copyright © NE Neungyule, Inc. All Rights Reserved</p></div></div>
+</section>
+
+<!-- 6. 주문/결제 -->
+<section class="screen" id="s-order">
+  <div class="wf-page">
+    <div class="step-bar"><span class="step">① 장바구니</span><span class="step-sep">›</span><span class="step active">② 주문/결제</span><span class="step-sep">›</span><span class="step">③ 주문완료</span></div>
+    <div style="display:flex;gap:24px;">
+      <div style="flex:1;">
+        <div class="wf-box"><h3>배송지 정보</h3>
+          <div style="display:flex;gap:0;border-bottom:2px solid var(--line);margin-bottom:16px;" id="addr-tabs">
+            <div class="tab active" data-addr="same">통합회원 주소</div>
+            <div class="tab" data-addr="new">새로 입력</div>
+            <div class="tab" data-addr="recent">최근 배송지</div>
+          </div>
+          <div class="form-row"><label>받는 분</label><div class="field"><input type="text" id="addr-name" value="홍길동" style="width:200px;"></div></div>
+          <div class="form-row"><label>연락처</label><div class="field"><input type="text" id="addr-tel" value="010-1234-5678" style="width:200px;"></div></div>
+          <div class="form-row"><label>우편번호</label><div class="field" style="display:flex;gap:8px;"><input type="text" id="addr-zip" value="06234" style="width:100px;"><button class="btn sm">주소 검색</button></div></div>
+          <div class="form-row"><label>주소</label><div class="field"><input type="text" id="addr-addr1" value="서울특별시 강남구 테헤란로" style="width:100%;"><input type="text" id="addr-addr2" value="OO빌딩 5층" style="width:100%;margin-top:6px;"></div></div>
+        </div>
+        <div class="wf-box"><h3>결제수단</h3>
+          <div id="pay-methods" style="display:flex;flex-wrap:wrap;gap:8px;">
+            <label class="opt selected" style="flex:1;min-width:120px;"><input type="radio" name="pay" value="card" checked> 신용카드</label>
+            <label class="opt" style="flex:1;min-width:120px;"><input type="radio" name="pay" value="kakao"> 카카오페이</label>
+            <label class="opt" style="flex:1;min-width:120px;"><input type="radio" name="pay" value="naver"> 네이버페이</label>
+            <label class="opt" style="flex:1;min-width:120px;"><input type="radio" name="pay" value="vbank"> 가상계좌</label>
+          </div>
+        </div>
+        <div class="wf-box"><h3>포인트 사용</h3>
+          <div style="display:flex;gap:8px;align-items:center;"><input type="number" id="point-use" value="0" style="width:120px;"><span style="font-size:13px;color:var(--muted);">보유 3,200P</span><button class="btn sm" id="point-all">전액사용</button></div>
+          <div id="point-warn" style="font-size:12px;color:var(--muted);margin-top:6px;">※ 100P 단위 / 유효기간이 가까운 포인트부터 차감</div>
+        </div>
+        <div class="wf-box">
+          <label style="display:flex;align-items:flex-start;gap:8px;cursor:pointer;"><input type="checkbox" id="order-agree"> <span style="font-size:13px;">주문 내용을 확인하였으며, 정보 제공 등에 동의합니다. (필수)</span></label>
+          <div id="pay-agree-hint" style="font-size:12px;color:var(--muted);margin-top:6px;">※ 주문 동의 체크 시 결제가 가능합니다.</div>
+          <button class="btn primary" id="btn-pay" disabled style="width:100%;padding:14px;margin-top:12px;font-size:15px;" data-goto="complete">결제하기</button>
+        </div>
+      </div>
+      <div style="width:300px;">
+        <div class="order-sum"><div style="font-size:15px;font-weight:800;margin-bottom:12px;">주문 요약</div><div style="display:flex;gap:10px;margin-bottom:12px;align-items:center;"><div class="ph" style="width:50px;height:65px;flex-shrink:0;">표지</div><div><div style="font-size:13px;font-weight:700;">Bricks Reading 150 Level 1 외 1건</div></div></div><div class="order-sum-row"><span>상품금액</span><span id="ord-product">30,000원</span></div><div class="order-sum-row"><span>상품할인</span><span id="ord-discount">- 3,000원</span></div><div class="order-sum-row"><span>쿠폰</span><span id="ord-coupon">- 0원</span></div><div class="order-sum-row"><span>포인트</span><span id="ord-point">- 0원</span></div><div class="order-sum-row"><span>배송비</span><span id="ord-delivery">0원</span></div><div class="order-sum-row"><span>최종 결제금액</span><span id="ord-total">27,000원</span></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="site-footer"><div class="footer-text"><p>Copyright © NE Neungyule, Inc. All Rights Reserved</p></div></div>
+</section>
+
+<!-- 7. 주문완료 -->
+<section class="screen" id="s-complete">
+  <div class="wf-page" style="text-align:center;padding:60px 40px;">
+    <div style="font-size:64px;margin-bottom:20px;">✅</div>
+    <h2 style="font-size:28px;font-weight:800;margin-bottom:12px;">주문이 완료되었습니다!</h2>
+    <p style="color:var(--muted);font-size:15px;margin-bottom:8px;">주문번호 : NE-2026-062201</p>
+    <p style="color:var(--muted);font-size:14px;margin-bottom:32px;">결제금액 : 27,000원 · 신용카드 결제 완료</p>
+    <div class="wf-box" style="max-width:500px;margin:0 auto 24px;text-align:left;"><h3>주문 상품</h3><div style="display:flex;gap:10px;margin-bottom:10px;"><div class="ph" style="width:50px;height:65px;flex-shrink:0;">표지</div><div><div style="font-weight:700;font-size:14px;">Bricks Reading 150 Level 1</div><div style="color:var(--muted);font-size:12px;">1권 · 13,500원</div></div></div><div style="display:flex;gap:10px;"><div class="ph" style="width:50px;height:65px;flex-shrink:0;">표지</div><div><div style="font-weight:700;font-size:14px;">능률 중학영어 독해 Level 2</div><div style="color:var(--muted);font-size:12px;">1권 · 13,500원</div></div></div></div>
+    <div style="display:flex;gap:12px;justify-content:center;"><button class="btn primary" data-goto="mypage">주문내역 확인</button><button class="btn" data-goto="main">계속 쇼핑</button></div>
+  </div>
+  <div class="site-footer"><div class="footer-text"><p>Copyright © NE Neungyule, Inc. All Rights Reserved</p></div></div>
+</section>
+
+<!-- 8. 마이페이지 -->
+<section class="screen" id="s-mypage">
+  <div class="wf-page">
+    <div style="display:flex;gap:24px;">
+      <div style="width:240px;flex-shrink:0;">
+        <div class="aside-user"><div class="avatar">👤</div><div class="name">홍길동님</div><div class="grade">GOLD 회원 · 3,200P 보유</div></div>
+        <nav class="aside-menu"><div style="font-size:11px;font-weight:700;color:var(--muted);padding:8px 16px;margin-top:8px;">주문·배송</div><a class="active" href="#">주문내역</a><a href="#">배송조회</a><div style="font-size:11px;font-weight:700;color:var(--muted);padding:8px 16px;margin-top:8px;">나의 활동</div><a href="#" data-goto="wish">찜 목록</a><a href="#">리뷰</a><a href="#">Q&amp;A</a><div style="font-size:11px;font-weight:700;color:var(--muted);padding:8px 16px;margin-top:8px;">혜택</div><a href="#">포인트</a><a href="#">쿠폰</a><div style="font-size:11px;font-weight:700;color:var(--muted);padding:8px 16px;margin-top:8px;">계정</div><a href="#">회원정보 수정</a><a href="#">회원탈퇴</a></nav>
+      </div>
+      <div style="flex:1;">
+        <h2 style="font-size:22px;font-weight:800;margin-bottom:20px;">주문내역</h2>
+        <div style="display:flex;gap:8px;margin-bottom:16px;"><button class="btn sm">최근 3개월</button><button class="btn sm">6개월</button><button class="btn sm">1년</button></div>
+        <table class="wf"><thead><tr><th>주문일</th><th>주문번호</th><th>교재</th><th>금액</th><th>상태</th><th>처리</th></tr></thead><tbody><tr><td>2026.06.22</td><td>NE-2026-062201</td><td>Bricks Reading 150 L1 외 1건</td><td>27,000원</td><td><span style="color:var(--green);font-weight:700;">배송완료</span></td><td><button class="btn sm">교환·반품</button></td></tr><tr><td>2026.05.10</td><td>NE-2026-051001</td><td>능률 VOCA 고등 수능</td><td>13,500원</td><td><span style="color:var(--green);font-weight:700;">배송완료</span></td><td><button class="btn sm">리뷰쓰기</button></td></tr></tbody></table>
+      </div>
+    </div>
+  </div>
+  <div class="site-footer"><div class="footer-text"><p>Copyright © NE Neungyule, Inc. All Rights Reserved</p></div></div>
+</section>
+
+<!-- 9. 찜 -->
+<section class="screen" id="s-wish">
+  <div class="wf-page">
+    <h2 style="font-size:22px;font-weight:800;margin-bottom:20px;">찜 목록</h2>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;"><label style="display:flex;align-items:center;gap:6px;"><input type="checkbox"> 전체선택</label><div style="display:flex;gap:8px;"><button class="btn sm">선택 삭제</button><button class="btn sm primary cart-add">선택 장바구니</button></div></div>
+    <div class="book-list-grid">
+      <div class="book-list-card"><div class="cover">표지</div><div class="title">Bricks Reading 150 Level 1</div><div class="price">13,500원</div><div class="btns"><button class="btn sm cart-add">장바구니</button><button class="btn sm primary" data-goto="detail">상세</button></div></div>
+      <div class="book-list-card"><div class="cover">표지</div><div class="title">Grammar Power Level 1</div><div class="price">13,500원</div><div class="btns"><button class="btn sm cart-add">장바구니</button><button class="btn sm primary" data-goto="detail">상세</button></div></div>
+      <div class="book-list-card"><div class="cover">표지</div><div class="title">능률 VOCA 고등 수능</div><div class="price">13,500원</div><div class="btns"><button class="btn sm cart-add">장바구니</button><button class="btn sm primary" data-goto="detail">상세</button></div></div>
+    </div>
+  </div>
+  <div class="site-footer"><div class="footer-text"><p>Copyright © NE Neungyule, Inc. All Rights Reserved</p></div></div>
+</section>
+
+<!-- 10. 학습자료실 -->
+<section class="screen" id="s-data">
+  <div class="wf-page">
+    <div class="wf-topbar"><h2>학습자료실</h2><div class="wf-chips"><span class="wf-chip">비회원: 미리보기만</span><span class="wf-chip">회원/구매자: 전체 다운</span><span class="wf-chip warn">저작권 안내 필요</span></div></div>
+    <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:12px 16px;margin-bottom:20px;font-size:13px;color:#1e40af;">📌 학습자료는 구매 회원에게만 제공됩니다. 비회원은 미리보기만 가능합니다.</div>
+    <div class="filter-bar"><div class="filter-group"><label>교재명 검색</label><input type="text" placeholder="교재명을 입력하세요" style="width:240px;"></div><div class="filter-group"><label>카테고리</label><select><option>전체</option><option>ELT</option><option>초·중등</option><option>고등</option></select></div><div class="filter-group"><label>자료유형</label><div class="chk-row"><label><input type="checkbox" class="dl-check" checked> MP3</label><label><input type="checkbox" class="dl-check" checked> 정답/해설</label><label><input type="checkbox" class="dl-check"> 단어리스트</label></div></div><button class="btn sm primary">검색</button></div>
+    <div style="display:flex;gap:8px;margin-bottom:12px;"><label><input type="checkbox" id="data-all"> 전체선택</label><button class="btn sm" id="btn-download-multi">선택 다운로드</button></div>
+    <table class="wf"><thead><tr><th style="width:40px;"></th><th>교재명</th><th>자료유형</th><th>파일</th><th>다운로드</th></tr></thead><tbody>
+      <tr><td><input type="checkbox" class="dl-check"></td><td>Bricks Reading 150 Level 1</td><td>MP3</td><td>bricks_r150_l1_mp3.zip (45MB)</td><td><button class="btn sm">다운로드</button></td></tr>
+      <tr><td><input type="checkbox" class="dl-check"></td><td>Bricks Reading 150 Level 1</td><td>정답/해설 PDF</td><td>bricks_r150_l1_ans.pdf (2MB)</td><td><button class="btn sm">다운로드</button></td></tr>
+      <tr><td><input type="checkbox" class="dl-check"></td><td>Grammar Power Level 1</td><td>MP3</td><td>gp_l1_mp3.zip (38MB)</td><td><button class="btn sm">다운로드</button></td></tr>
+      <tr><td><input type="checkbox" class="dl-check"></td><td>능률 VOCA 고등 수능</td><td>단어리스트</td><td>voca_word.pdf (500KB)</td><td><button class="btn sm">다운로드</button></td></tr>
+    </tbody></table>
+  </div>
+  <div class="site-footer"><div class="footer-text"><p>Copyright © NE Neungyule, Inc. All Rights Reserved</p></div></div>
+</section>
+
+<!-- 11. 고객센터 -->
+<section class="screen" id="s-cs">
+  <div class="wf-page">
+    <h2 style="font-size:26px;font-weight:800;margin-bottom:24px;">고객센터</h2>
+    <div class="wf-grid cols2" style="margin-bottom:24px;">
+      <div class="cs-box"><div class="cs-info"><div class="cs-name">NE능률 고객센터</div><div class="cs-tel">1833-8368</div><div class="cs-time">평일 09:00~16:00 (점심 12:00~13:00)</div></div><div class="cs-btns"><button class="cs-btn">문자상담</button></div></div>
+      <div class="cs-box"><div class="cs-info"><div class="cs-name">AI 디지털 교육자료 공동 CS센터</div><div class="cs-tel">1661-0777</div><div class="cs-time">평일 09:00~18:00</div></div></div>
+    </div>
+    <div class="tabs-bar"><div class="tab active">FAQ</div><div class="tab">1:1 문의</div><div class="tab">공지사항</div></div>
+    <div class="wf-box"><h3>자주 묻는 질문</h3>
+      <div style="display:flex;flex-direction:column;gap:4px;">
+        <details style="border:1px solid var(--line);border-radius:8px;padding:14px;"><summary style="font-weight:700;cursor:pointer;">배송은 얼마나 걸리나요?</summary><div style="margin-top:8px;color:var(--ink3);">일반 배송은 결제 완료 후 평일 기준 2~3일 이내 도착합니다.</div></details>
+        <details style="border:1px solid var(--line);border-radius:8px;padding:14px;"><summary style="font-weight:700;cursor:pointer;">교환/반품은 어떻게 하나요?</summary><div style="margin-top:8px;color:var(--ink3);">수령 후 7일 이내에 마이페이지 &gt; 주문내역에서 신청 가능합니다.</div></details>
+        <details style="border:1px solid var(--line);border-radius:8px;padding:14px;"><summary style="font-weight:700;cursor:pointer;">포인트는 언제 적립되나요?</summary><div style="margin-top:8px;color:var(--ink3);">구매 확정 후 익일 자동 적립됩니다.</div></details>
+      </div>
+    </div>
+    <div class="wf-box"><h3>1:1 문의 작성</h3>
+      <div class="form-row"><label>문의유형</label><div class="field"><select style="width:200px;"><option>주문/결제</option><option>배송/교환</option><option>교재문의</option><option>학습자료</option><option>기타</option></select></div></div>
+      <div class="form-row"><label>제목</label><div class="field"><input type="text" placeholder="문의 제목을 입력하세요" style="width:100%;"></div></div>
+      <div class="form-row"><label>내용</label><div class="field"><textarea style="width:100%;height:120px;padding:10px;border:1px solid var(--line);border-radius:6px;font:inherit;" placeholder="문의 내용을 입력하세요"></textarea></div></div>
+      <button class="btn primary" style="margin-top:8px;">문의 등록</button>
+    </div>
+  </div>
+  <div class="site-footer"><div class="footer-nav"><div class="fnav-links"><a href="#">개인정보처리방침</a><a href="#">이용약관</a><a href="#">학원/도서관 대량구매</a></div><button class="family-btn">FAMILY SITE ▾</button></div><div class="footer-text"><p>Copyright © NE Neungyule, Inc. All Rights Reserved</p></div></div>
+</section>
+
+</div>
+<script>
+(function(){
+  var $=function(s,c){return (c||document).querySelector(s);};
+  var $$=function(s,c){return Array.prototype.slice.call((c||document).querySelectorAll(s));};
+  var won=function(n){return n.toLocaleString('ko-KR')+'원';};
+
+  function showScreen(key){
+    $$('.screen').forEach(function(s){s.classList.remove('active');});
+    var el=$('#s-'+key);if(el)el.classList.add('active');
+    $$('.wf-nav button').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-screen')===key);});
+    window.scrollTo(0,0);
+  }
+  $$('.wf-nav button').forEach(function(b){b.addEventListener('click',function(){showScreen(b.getAttribute('data-screen'));});});
+  document.addEventListener('click',function(e){var t=e.target.closest('[data-goto]');if(t){e.preventDefault();showScreen(t.getAttribute('data-goto'));}});
+
+  $$('#best-tabs .best-tab').forEach(function(tab){tab.addEventListener('click',function(){$$('#best-tabs .best-tab').forEach(function(t){t.classList.remove('active');});tab.classList.add('active');});});
+
+  document.addEventListener('click',function(e){
+    var tab=e.target.closest('#addr-tabs .tab');if(!tab)return;
+    $$('#addr-tabs .tab').forEach(function(t){t.classList.remove('active');});tab.classList.add('active');
+    var mode=tab.getAttribute('data-addr');
+    if(mode==='same'){$('#addr-name').value='홍길동';$('#addr-tel').value='010-1234-5678';$('#addr-zip').value='06234';$('#addr-addr1').value='서울특별시 강남구 테헤란로';$('#addr-addr2').value='OO빌딩 5층';}
+    else if(mode==='new'){['addr-name','addr-tel','addr-zip','addr-addr1','addr-addr2'].forEach(function(id){var el=$('#'+id);if(el)el.value='';});}
+  });
+
+  window.switchViewType=function(el,type){
+    $$('#s-list .tab').forEach(function(t){t.classList.remove('active');});el.classList.add('active');
+    $('#cards-buy').style.display=type==='buy'?'':'none';
+    $('#cards-data').style.display=type==='ebook'?'':'none';
+  };
+
+  window.doSearch=function(){var q=$('#search-input').value.trim();if(q)showScreen('list');};
+  $('#search-input').addEventListener('keydown',function(e){if(e.key==='Enter')doSearch();});
+
+  function recalcCart(){
+    var rows=$$('#cart-table tbody tr');if(!rows.length)return;
+    var product=0,list=0,point=0;
+    rows.forEach(function(tr){
+      var chk=$('.cart-check',tr);if(!chk||!chk.checked)return;
+      var qty=parseInt(($('.qty-input',tr)||{}).value||'1',10);
+      var price=parseInt(tr.getAttribute('data-price'),10)||0;
+      var listP=parseInt(tr.getAttribute('data-list'),10)||0;
+      var pt=parseInt(tr.getAttribute('data-point'),10)||0;
+      product+=price*qty;list+=listP*qty;point+=pt*qty;
+      var amt=$('.cart-amount',tr);if(amt)amt.textContent=won(price*qty);
+    });
+    var discount=list-product;var delivery=product>=30000||product===0?0:2500;var pay=product+delivery;
+    var set=function(id,v){var el=$('#'+id);if(el)el.textContent=v;};
+    set('cart-sum-product',won(list));set('cart-sum-discount','- '+won(discount));set('cart-sum-delivery',won(delivery));set('cart-sum-total',won(pay));set('cart-sum-point','+ '+point.toLocaleString('ko-KR')+'P');
+  }
+  document.addEventListener('click',function(e){
+    var tr=e.target.closest('#cart-table tbody tr');if(!tr)return;
+    var input=$('.qty-input',tr);
+    if(e.target.classList.contains('qty-plus')&&input){input.value=Math.min(999,(parseInt(input.value,10)||1)+1);recalcCart();}
+    if(e.target.classList.contains('qty-minus')&&input){input.value=Math.max(1,(parseInt(input.value,10)||1)-1);recalcCart();}
+    if(e.target.classList.contains('row-del')){tr.remove();recalcCart();}
+  });
+  document.addEventListener('change',function(e){
+    if(e.target.classList.contains('cart-check'))recalcCart();
+    var all=$('#cart-all');if(all&&e.target===all){$$('.cart-check').forEach(function(c){c.checked=all.checked;});recalcCart();}
+    if(e.target.name==='pay'){$$('.opt').forEach(function(o){o.classList.toggle('selected',!!$('input[type=radio]:checked',o));});}
+  });
+  var delSel=$('#cart-del-selected');if(delSel)delSel.addEventListener('click',function(){$$('#cart-table tbody tr').forEach(function(tr){var c=$('.cart-check',tr);if(c&&c.checked)tr.remove();});recalcCart();});
+  var delAll=$('#cart-del-all');if(delAll)delAll.addEventListener('click',function(){if(confirm('장바구니를 전체 비우시겠습니까?')){$$('#cart-table tbody tr').forEach(function(tr){tr.remove();});recalcCart();}});
+  recalcCart();
+
+  var orderState={product:27000,coupon:0,point:0,delivery:0,have:3200};
+  function recalcOrder(){var total=orderState.product-orderState.coupon-orderState.point+orderState.delivery;if(total<0)total=0;var set=function(id,v){var el=$('#'+id);if(el)el.textContent=v;};set('ord-total',won(total));set('ord-coupon','- '+won(orderState.coupon));set('ord-point','- '+won(orderState.point));}
+  var pointInput=$('#point-use');
+  if(pointInput){pointInput.addEventListener('input',function(){var v=parseInt(pointInput.value,10)||0;var warn=$('#point-warn');if(v%100!==0){warn.textContent='※ 100P 단위로만 사용 가능합니다.';warn.style.color='var(--red)';}else if(v>orderState.have){warn.textContent='※ 보유 포인트('+orderState.have+'P)를 초과할 수 없습니다.';warn.style.color='var(--red)';}else{warn.textContent='※ 100P 단위 / 유효기간이 가까운 포인트부터 차감';warn.style.color='';}orderState.point=(v%100===0&&v<=orderState.have)?v:0;recalcOrder();});var pa=$('#point-all');if(pa)pa.addEventListener('click',function(){var u=Math.floor(orderState.have/100)*100;pointInput.value=u;pointInput.dispatchEvent(new Event('input'));});}
+  var agree=$('#order-agree'),payBtn=$('#btn-pay');
+  if(agree&&payBtn){agree.addEventListener('change',function(){payBtn.disabled=!agree.checked;var h=$('#pay-agree-hint');if(h)h.textContent=agree.checked?'※ 결제 가능 상태입니다.':'※ 주문 동의 체크 시 결제가 가능합니다.';});}
+  recalcOrder();
+
+  var vqty=$('#view-qty');
+  if(vqty){$('#detail-minus').addEventListener('click',function(){vqty.value=Math.max(1,(parseInt(vqty.value,10)||1)-1);});$('#detail-plus').addEventListener('click',function(){vqty.value=(parseInt(vqty.value,10)||1)+1;});}
+
+  document.addEventListener('click',function(e){if(e.target.classList.contains('cart-add')){alert('장바구니에 담겼습니다! (비회원도 이용 가능)');}});
+
+  var multiBtn=$('#btn-download-multi');if(multiBtn)multiBtn.addEventListener('click',function(){var n=$$('.dl-check:checked').length;if(n<2){alert('2개 이상 선택 시 멀티 다운로드가 가능합니다.');return;}alert(n+'개 파일을 다운로드합니다. (더미)');});
+  var dataAll=$('#data-all');if(dataAll)dataAll.addEventListener('change',function(){$$('.dl-check').forEach(function(c){c.checked=dataAll.checked;});});
+
+  showScreen('main');
+})();
+</script>
 </body>
 </html>
