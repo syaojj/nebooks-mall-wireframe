@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NE Books · Pencil 와이어프레임 v4.0</title>
+<!--
+  =====================================================================
+  NE Books 자사몰 개편 — Pencil 와이어프레임 v4.0 (뷰어)
+  - 출처: Pencil(.pen) pencil/v0.3.pen → export_nodes(webp)
+  - 본 페이지는 Pencil 디자인을 그대로 보여주는 정적 뷰어입니다.
+    (이미지 기반 — 폼/장바구니 등 실제 인터랙션은 동작하지 않으며 화면 전환만 제공)
+  =====================================================================
+-->
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: "Pretendard Variable","맑은 고딕",system-ui,sans-serif; background: #dcdcdc; color: #222; }
+  .top { position: sticky; top: 0; z-index: 10; background: #222; color: #fff; border-bottom: 3px solid #000; padding: 10px 18px; }
+  .top .row1 { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .top h1 { font-size: 15px; font-weight: 700; }
+  .top .tag { font-size: 11px; background: #555; padding: 2px 8px; border-radius: 2px; }
+  .top a.home { margin-left: auto; color: #ddd; font-size: 12px; text-decoration: none; border: 1px solid #555; padding: 4px 10px; border-radius: 3px; }
+  .top a.home:hover { background: #333; }
+  /* 상단 가로 메뉴 */
+  .topmenu { display: flex; flex-wrap: wrap; align-items: center; margin-top: 8px; }
+  .topmenu button { background: none; border: none; border-right: 1px solid #555; color: #ddd; font: inherit; font-size: 12.5px; padding: 3px 12px; cursor: pointer; }
+  .topmenu button:first-child { padding-left: 0; }
+  .topmenu button:last-child { border-right: none; }
+  .topmenu button:hover { color: #fff; }
+  .topmenu button.active { color: #fff; font-weight: 700; text-decoration: underline; }
+
+  .stage { padding: 20px 24px 60px; }
+  .info { background: #fff7e6; border: 1px dashed #d9a441; color: #8a5d00; font-size: 12px; padding: 8px 12px; border-radius: 4px; margin-bottom: 14px; }
+  .screen-title { font-size: 16px; font-weight: 800; margin-bottom: 4px; }
+  .screen-meta { font-size: 12px; color: #666; margin-bottom: 12px; }
+  .frame { background: #fff; border: 1px solid #999; padding: 8px; display: inline-block; max-width: 100%; }
+  .frame img { display: block; width: 1024px; max-width: 100%; height: auto; }
+  .note { margin-top: 16px; font-size: 11.5px; color: #777; }
+</style>
+</head>
+<body>
+  <div class="top">
+    <div class="row1">
+      <h1>NE Books 자사몰 개편 · Pencil 와이어프레임 v4.0</h1>
+      <span class="tag">Pencil(.pen) v0.3 export</span>
+      <a class="home" href="../index.html">← 버전 선택으로</a>
+    </div>
+    <nav class="topmenu" id="topmenu">
+      <button data-img="01-main"     class="active" data-title="1. 메인 화면">메인</button>
+      <button data-img="02-list"     data-title="2. 교재목록 화면">교재목록</button>
+      <button data-img="03-ebook"    data-title="2-2. E-Book / 자료">E-Book/자료</button>
+      <button data-img="04-detail"   data-title="3. 교재상세 화면">교재상세</button>
+      <button data-img="05-cart"     data-title="4. 장바구니 화면">장바구니</button>
+      <button data-img="06-order"    data-title="5. 주문 / 결제">주문/결제</button>
+      <button data-img="07-complete" data-title="주문 / 결제완료">주문완료</button>
+      <button data-img="08-mypage"   data-title="6. 마이페이지">마이페이지</button>
+      <button data-img="09-wish"     data-title="7. 찜 (책갈피)">찜</button>
+      <button data-img="10-data"     data-title="8. 학습자료실">학습자료실</button>
+      <button data-img="11-cs"       data-title="9. 고객센터">고객센터</button>
+    </nav>
+  </div>
+
+  <main class="stage">
+    <div class="info">Pencil(.pen) v0.3 디자인을 이미지로 내보낸 뷰어입니다. 상단 메뉴로 화면을 전환하며, 폼·장바구니 등 실제 기능 동작은 포함하지 않습니다(디자인 검토용).</div>
+    <div class="screen-title" id="title">1. 메인 화면</div>
+    <div class="screen-meta">NE Books 개편 Front 와이어프레임 · Pencil v4.0 (v0.3.pen)</div>
+    <div class="frame"><img id="shot" src="img/01-main.webp" alt="Pencil 와이어프레임 화면"></div>
+    <div class="note">※ 원본은 Pencil(.pen) 파일이며, 본 페이지는 해당 디자인을 캡처한 정적 이미지입니다.</div>
+  </main>
+
+  <script>
+    (function () {
+      var menu = document.getElementById('topmenu');
+      var shot = document.getElementById('shot');
+      var title = document.getElementById('title');
+      menu.addEventListener('click', function (e) {
+        var btn = e.target.closest('button[data-img]');
+        if (!btn) return;
+        Array.prototype.forEach.call(menu.querySelectorAll('button'), function (b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        shot.src = 'img/' + btn.getAttribute('data-img') + '.webp';
+        title.textContent = btn.getAttribute('data-title');
+        window.scrollTo(0, 0);
+      });
+    })();
+  </script>
+</body>
+</html>
