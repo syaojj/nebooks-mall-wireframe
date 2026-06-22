@@ -17,3 +17,7 @@ desktop.ini
 
 # 백업 zip 제외
 *.zip
+
+# 내부 기획/정책 문서 (README/CHANGELOG는 유지)
+NE_Books_*.md
+NE Books*.md
