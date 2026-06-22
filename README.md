@@ -8,7 +8,7 @@ NE Books 개편_기능 정의서_v3.0_260618 + 정책정의서 v1.1 (Wireframe v
 |---|---|---|
 | **기획 검토용 와이어프레임 v0.5** | 흑백/회색톤 기본 와이어프레임 (구조 검토용) | [`wireframe_v1.0/index.html`](wireframe_v1.0/index.html) |
 | **디자인.md 적용 와이어프레임 v0.5** | NE Design.md v0.11.5-alpha 적용 retrofit | [`wireframe_v2.0/index.html`](wireframe_v2.0/index.html) |
-| **Pencil 와이어프레임 v0.5** | Pencil(v0.3.pen) 디자인 화면 이미지 뷰어 (11화면) | [`wireframe_v4.0/index.html`](wireframe_v4.0/index.html) |
+| **Pencil 와이어프레임 v0.5** | Pencil → HTML export (자체 완결, 11화면) | [`wireframe_v4.0/index.html`](wireframe_v4.0/index.html) |
 
 > 루트 [`index.html`](index.html)에서 세 버전을 카드로 선택해 들어갈 수 있습니다.
 
@@ -24,7 +24,7 @@ NE Books 개편_기능 정의서_v3.0_260618 + 정책정의서 v1.1 (Wireframe v
 index.html                 # 버전 선택 랜딩
 wireframe_v1.0/            # 기획 검토용 (index.html, style.css, script.js)
 wireframe_v2.0/            # 디자인.md 적용 (index.html, app.css, script.js, styles/, docs/)
-wireframe_v4.0/            # Pencil 와이어프레임 v0.5 (index.html + img/*.webp, Pencil v0.3.pen 이미지 export)
+wireframe_v4.0/            # Pencil 와이어프레임 v0.5 (index.html — Pencil HTML export, 자체 완결 11화면)
 pencil/                    # Pencil 디자인 원본 (v0.1~v0.4.pen)
 ```
 
