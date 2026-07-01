@@ -1651,13 +1651,33 @@
       <span class="go">NE Tutor 바로가기 ›</span>
     </div>
 
-    <!-- 교재 영역 선택 : 1depth 선택 → 2depth 노출 (필터 영역 제외) -->
+    <!-- 교재 영역 선택 : 1depth(교재 분류·단일) → 2depth(학습유형·다중) -->
     <div class="areanote">학습자료를 받을 <b>교재 영역</b>을 선택하세요.</div>
-    <div class="filterbox areabox">
-      <div class="frow"><div class="flabel">대분류</div><div class="fopts" id="data-d1">
-        <span class="fpill on" data-d1="elt">ELT</span><span class="fpill" data-d1="es">초등/중등</span><span class="fpill" data-d1="hi">고등</span><span class="fpill" data-d1="text">교과서 및 자습서</span><span class="fpill" data-d1="exam">수험/일반</span><span class="fpill" data-d1="mk">수학/국어</span>
-      </div></div>
-      <div class="frow"><div class="flabel">세부 영역</div><div class="fopts" id="data-d2"></div></div>
+    <style>
+      #screen-data .ne-filterblock{padding:24px 0;border-top:1px solid var(--ne-boundary);border-bottom:1px solid var(--ne-boundary);margin-bottom:24px}
+      #screen-data .step-label{font-size:14px;font-weight:700;color:var(--ne-text-heading);margin:0 0 12px;display:flex;align-items:center;gap:7px}
+      #screen-data .step-label .num{width:20px;height:20px;border-radius:50%;background:var(--ne-text-heading);color:#fff;font-size:12px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto}
+      #screen-data .step-label .hint{font-weight:400;color:var(--ne-text-faint);font-size:13px}
+      #screen-data .depth1{display:flex;gap:8px;overflow-x:auto;margin-bottom:26px;scrollbar-width:none}
+      #screen-data .depth1::-webkit-scrollbar{display:none}
+      #screen-data .depth1 .tab{flex:0 0 auto;padding:13px 20px;font-size:15px;font-weight:700;color:var(--ne-text-faint);border-radius:24px;cursor:pointer;white-space:nowrap;transition:.15s;user-select:none}
+      #screen-data .depth1 .tab.active{background:var(--ne-text-heading);color:#fff}
+      #screen-data .depth2{display:flex;gap:10px;flex-wrap:wrap}
+      #screen-data .depth2 .chip{padding:12px 22px;font-size:15px;font-weight:700;border:1.5px solid var(--ne-boundary);border-radius:24px;color:var(--ne-text-heading);cursor:pointer;background:#fff;transition:.15s;user-select:none}
+      #screen-data .depth2 .chip.active{background:rgba(232,56,40,.08);border-color:var(--ne-primary);color:var(--ne-primary)}
+    </style>
+    <div class="ne-filterblock">
+      <div class="step-label"><span class="num">1</span>교재 분류 <span class="hint">· 단일 선택</span></div>
+      <div class="depth1" id="data-d1">
+        <div class="tab active" data-d1="elt">ELT</div>
+        <div class="tab" data-d1="es">초등/중등</div>
+        <div class="tab" data-d1="hi">고등</div>
+        <div class="tab" data-d1="text">교과서 및 자습서</div>
+        <div class="tab" data-d1="exam">수험/일반</div>
+        <div class="tab" data-d1="mk">수학/국어</div>
+      </div>
+      <div class="step-label"><span class="num">2</span>학습유형 <span class="hint">· 다중 선택</span></div>
+      <div class="depth2" id="data-d2"></div>
     </div>
 
     <!-- 상단 바 : 교재목록과 동일한 보기유형(교재구매형/E-Book·자료형) + 정렬 -->
@@ -3490,33 +3510,48 @@
 
   function toast(m){var t=root.querySelector('#dataToast');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(function(){t.classList.remove('on');},1900);}
 
-  /* 교재 영역 선택 : 1depth 선택 → 2depth 노출 + 더미 건수 갱신 */
+  /* 교재 영역 선택 : 1depth(교재 분류·단일) → 2depth(학습유형·다중, 전체 로직) + 더미 건수 갱신 */
   var D2 = {
-    elt:  ['Coursebook','Phonics','Readers','Reading','Listening','Speaking','Writing','Grammar','Vocabulary'],
-    es:   ['중학내신','고등선행','어휘','Phonics','쓰기','독해','듣기','문법/구문','TOEFL/TEPS/NELT'],
-    hi:   ['어휘','독해','듣기','문법/구문','수능대비','고교내신','단기특강','TOEFL/TEPS/NELT'],
-    text: ['중학영어 교과서','고등영어 교과서','수학 교과서','중국어/일본어'],
-    exam: ['TOEIC','TOEIC SPEAKING/WRITING','TOEFL/OPIC/TEPS','FLEX','일반영어'],
-    mk:   ['유아','초등','중등','고등']
+    elt:  ['전체','Phonics','Readers','Reading','Listening','Speaking','Writing','Grammar','Vocabulary'],
+    es:   ['전체','중학내신','고등선행','어휘','쓰기','독해','듣기','문법/구문','TOEFL/TEPS/NELT'],
+    hi:   ['전체','어휘','독해','듣기','문법/구문','수능대비','고교내신','단기특강','TOEFL/TEPS/NELT'],
+    text: ['전체','중학영어 교과서','고등영어 교과서','수학 교과서','중국어/일본어'],
+    exam: ['전체','TOEIC','TOEIC SPEAKING/WRITING','TOEFL/OPIC/TEPS','FLEX','일반영어'],
+    mk:   ['전체','유아','초등','중등','고등']
   };
   var d1wrap = root.querySelector('#data-d1');
   var d2wrap = root.querySelector('#data-d2');
   var cntB = root.querySelector('.cnt b');
-  function bumpCount(label){ if(cntB){ cntB.textContent = 12 + (label.length*9 + label.charCodeAt(0)) % 120; } }
-  function renderD2(key){
-    var items = D2[key] || [];
-    d2wrap.innerHTML = items.map(function(t,i){ return '<span class="fpill'+(i===0?' on':'')+'">'+t+'</span>'; }).join('');
-    d2wrap.querySelectorAll('.fpill').forEach(function(p){p.addEventListener('click',function(){
-      d2wrap.querySelectorAll('.fpill').forEach(function(x){x.classList.remove('on');});
-      p.classList.add('on'); bumpCount(p.textContent);
-    });});
-    if(items.length) bumpCount(items[0]);
+  var currentCat = 'elt';
+  var activeChips = { '전체': true };
+  function bumpCount(){
+    if(!cntB) return;
+    var keys = Object.keys(activeChips);
+    var seed = currentCat.length + keys.join('').length;
+    cntB.textContent = 12 + (seed * 13) % 120;
   }
-  d1wrap.querySelectorAll('.fpill').forEach(function(p){p.addEventListener('click',function(){
-    d1wrap.querySelectorAll('.fpill').forEach(function(x){x.classList.remove('on');});
-    p.classList.add('on'); renderD2(p.getAttribute('data-d1'));
+  function renderChips(){
+    var items = D2[currentCat] || [];
+    d2wrap.innerHTML = items.map(function(t){ return '<div class="chip'+(activeChips[t]?' active':'')+'">'+t+'</div>'; }).join('');
+    d2wrap.querySelectorAll('.chip').forEach(function(el){el.addEventListener('click',function(){
+      var c = el.textContent;
+      if(c === '전체'){ activeChips = { '전체': true }; }
+      else {
+        delete activeChips['전체'];
+        if(activeChips[c]) delete activeChips[c]; else activeChips[c] = true;
+        if(Object.keys(activeChips).length === 0) activeChips = { '전체': true };
+      }
+      renderChips(); bumpCount();
+    });});
+  }
+  d1wrap.querySelectorAll('.tab').forEach(function(t){t.addEventListener('click',function(){
+    d1wrap.querySelectorAll('.tab').forEach(function(x){x.classList.remove('active');});
+    t.classList.add('active');
+    currentCat = t.getAttribute('data-d1');
+    activeChips = { '전체': true };
+    renderChips(); bumpCount();
   });});
-  renderD2('elt');
+  renderChips(); bumpCount();
 
   /* 보기유형 : 교재구매형 / E-Book·자료형 (교재목록과 동일 · 기본 E-Book·자료형) */
   var vt = root.querySelectorAll('#data-viewtype .nb-tab');
