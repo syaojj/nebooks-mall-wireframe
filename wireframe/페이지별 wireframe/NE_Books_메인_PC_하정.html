@@ -1,0 +1,378 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=1280">
+<title>NE_Books</title>
+<style>
+  :root{--ink:#222732;--line:#d7dbe2;--line2:#e6e9ee;--fill:#eef0f3;--fill2:#f7f8fa;--muted:#8b909c;--bar2:#dde1e7;
+    --new:#1f9d72;--red:#e23b3b;--orange:#e8852b;--blue:#3a78f2;--bluebg:#eaf1ff;}
+  *{box-sizing:border-box}
+  body{margin:0;background:#fff;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Apple SD Gothic Neo","Malgun Gothic",sans-serif}
+  a{color:inherit;text-decoration:none}
+  .container{max-width:1280px;margin:0 auto;padding:0 24px}
+  .spacer{flex:1}
+
+  .utilbar{background:#f4f5f7;border-bottom:1px solid var(--line2);font-size:12px;color:#5a606c}
+  .utilbar .container{display:flex;align-items:center;gap:14px;height:38px;font-weight:600;flex-wrap:wrap}
+  .utilbar .sep{color:#cfd3da}
+
+  .header .container{display:flex;align-items:center;gap:24px;padding-top:22px;padding-bottom:22px}
+  .logo{font-size:26px;font-weight:800}.logo .r{color:var(--red)}
+  .srch{flex:1;max-width:940px;display:flex;align-items:center;gap:12px}
+  .srchwrap{position:relative;flex:1}
+  .recobtn{flex-shrink:0;background:var(--ink);color:#fff;border-radius:9px;padding:13px 18px;font-size:13.5px;font-weight:800;white-space:nowrap;cursor:pointer}
+  .srchbox{height:48px;border:2px solid var(--ink);border-radius:8px;display:flex;align-items:center;padding:0 18px;color:var(--muted);font-size:14px;cursor:text}
+  .srchpop{position:absolute;top:calc(100% + 8px);left:0;right:0;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 16px 38px rgba(20,25,40,.16);padding:18px 20px;z-index:200;display:none}
+  .srchpop.open{display:block}
+  .srchpop .pht{font-size:13px;font-weight:800;color:#3d4756;margin:0 0 14px}
+  .popgrid{display:grid;grid-template-rows:repeat(5,auto);grid-auto-flow:column;gap:10px 36px}
+  .popitem{display:flex;align-items:center;gap:11px;font-size:14px;color:#3d4756;font-weight:600;cursor:pointer;padding:3px 0}
+  .popitem:hover{color:var(--ink)}
+  .popno{width:24px;height:24px;border-radius:50%;background:var(--ink);color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .popfoot{font-size:12px;color:var(--muted);margin:14px 0 0;border-top:1px solid var(--line2);padding-top:11px}
+  .uicons{display:flex;align-items:center;gap:22px;margin-left:auto}
+  .uic{display:flex;flex-direction:column;align-items:center;gap:5px;font-size:11px;color:#5a606c;font-weight:700}
+  .uic .ci{width:34px;height:34px;border-radius:50%;background:var(--fill);border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;font-size:17px}
+
+  .gnb{border-top:1px solid var(--line2);border-bottom:2px solid var(--ink)}
+  .gnb .container{display:flex;align-items:center;justify-content:space-between;height:54px;font-size:15px;font-weight:700}
+  .gnb a{color:#444b57}.gnb a.on{color:var(--ink)}
+
+  .hero{position:relative;overflow:hidden;padding:38px 0}
+  .heroband{position:absolute;inset:0;background:#bfe6f7;transition:background .5s ease;z-index:0}
+  .herostage{position:relative;z-index:1}
+  .herovp{overflow:hidden}
+  .slides{display:flex;gap:30px;touch-action:pan-y}
+  .herobanner{flex:0 0 1000px;display:grid;grid-template-columns:1.1fr .9fr;gap:36px;align-items:center;padding:18px 44px;min-height:300px;opacity:.4;transition:opacity .45s}
+  .herobanner.active{opacity:1}
+  .btag{display:inline-block;font-size:11px;font-weight:800;letter-spacing:1.4px;padding:6px 14px;border-radius:7px;margin:0 0 18px;color:#fff}
+  .btag.promo{background:var(--red)}.btag.newt{background:var(--new)}.btag.event{background:var(--orange)}
+  .htitle{font-size:36px;line-height:1.2;font-weight:800;letter-spacing:-.03em;margin:0 0 16px;color:var(--ink)}
+  .hdesc{color:#4a5568;font-size:15px;line-height:1.6;margin:0 0 26px}
+  .hbtn{display:inline-block;background:var(--ink);color:#fff;border-radius:9px;padding:13px 30px;font-size:14px;font-weight:700}
+  .hvis{height:236px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.6);color:#6b7686;font-weight:800;font-size:14px}
+  .herokeys{position:relative;z-index:1;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:24px}
+  .hkey{background:#fff;color:#5a606c;border:1px solid var(--line);border-radius:20px;padding:8px 16px;font-size:13px;font-weight:700;cursor:pointer}
+  .hkey.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+  .sec{padding:38px 0;border-bottom:1px solid var(--line2)}
+  .sechead{display:flex;align-items:center;gap:10px;margin:0 0 20px}
+  .sectitle{font-size:22px;font-weight:800;margin:0}
+
+  .quick{display:grid;grid-template-columns:repeat(7,1fr);gap:12px}
+  .qk{display:flex;flex-direction:column;align-items:center;gap:11px;padding:22px 8px;border:1px solid var(--line2);border-radius:14px;background:#fff;text-align:center;transition:.15s}
+  .qk:hover{box-shadow:0 8px 20px rgba(30,40,60,.08);transform:translateY(-2px)}
+  .qk .qi{width:56px;height:56px;border-radius:17px;background:var(--fill);display:flex;align-items:center;justify-content:center;font-size:27px}
+  .qk .qt{font-size:13px;font-weight:700;color:#3d4756;line-height:1.3}
+
+  .promotabs{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:20px}
+  .ptab{background:var(--fill);border:1px solid var(--line2);border-radius:22px;padding:9px 18px;font-size:13px;color:#5a606c;font-weight:700;cursor:pointer}
+  .ptab.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .bestwrap{display:grid;grid-template-columns:1fr 2.7fr;gap:22px;align-items:stretch}
+  .bestpromo{background:var(--fill2);border:1px solid var(--line2);border-radius:16px;padding:32px 28px;display:flex;flex-direction:column}
+  .bptag{font-size:12px;font-weight:800;color:#5a606c;background:#fff;border:1px solid var(--line2);border-radius:22px;padding:6px 14px;align-self:flex-start;margin:0 0 20px}
+  .bpmain{font-size:34px;font-weight:800;line-height:1.2;margin:0 0 16px;color:#3a4a8c;letter-spacing:-.02em}
+  .bpsub{font-size:15px;color:#5a606c;margin:0;line-height:1.55}
+  .cartbtn{margin-top:auto;background:var(--blue);color:#fff;border-radius:10px;padding:15px 18px;font-size:14px;font-weight:800;text-align:center;cursor:pointer}
+  .bestcards{display:flex;gap:16px;overflow-x:auto;min-width:0;padding-bottom:6px}
+  .bcard{flex:0 0 196px;border:1px solid var(--line2);border-radius:12px;padding:12px;background:#fff;position:relative}
+  .chk{position:absolute;top:11px;left:11px;width:22px;height:22px;border-radius:6px;border:1.5px solid var(--blue);background:var(--bluebg);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--blue);font-weight:800;z-index:2;cursor:pointer}
+  .chk.off{background:#fff;border-color:var(--line);color:transparent}
+  .cover{aspect-ratio:3/4;background:var(--fill);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:11px;margin-bottom:12px;position:relative}
+  .dk{position:absolute;top:8px;right:8px;color:#fff;border-radius:5px;font-size:10px;padding:2px 7px;font-weight:800}
+  .gtag{display:inline-block;font-size:11px;color:#5a606c;background:var(--fill2);border:1px solid var(--line2);border-radius:5px;padding:2px 8px;font-weight:700;margin-bottom:8px}
+  .bname{height:9px;width:92%;background:var(--bar2);border-radius:4px;margin:0 0 6px}.bname.s{width:62%}
+  .price{display:flex;align-items:baseline;gap:7px;margin:11px 0 3px;flex-wrap:wrap}
+  .ori{font-size:11px;color:#b6bcc6;text-decoration:line-through}.dis{font-size:16px;font-weight:800}.rate{font-size:11px;color:var(--red);font-weight:800}
+  .bact{display:flex;gap:7px;justify-content:flex-end;margin-top:9px}
+  .m{width:32px;height:30px;border-radius:7px;border:1px solid var(--line2);background:var(--fill2);display:inline-flex;align-items:center;justify-content:center;font-size:15px;cursor:pointer}
+
+  .promo2{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+  .pcard{border:1px solid var(--line2);border-radius:14px;overflow:hidden;display:grid;grid-template-columns:.8fr 1fr;background:#fff;min-height:160px}
+  .pimg{background:var(--fill);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:12px;font-weight:600}
+  .ptext{padding:24px 26px}
+  .plabel{font-size:11px;font-weight:800;color:var(--red);letter-spacing:1px;margin-bottom:9px}
+  .pmain{font-size:19px;font-weight:800;margin:0 0 9px}.psub{font-size:14px;color:#6b7280;line-height:1.55;margin:0}
+  .arrows{margin-left:auto;color:var(--muted);font-size:18px;letter-spacing:6px}
+
+  .tutor{background:linear-gradient(135deg,#f1f3f6,#eef1f6);padding:38px 0}
+  .tgroups{display:grid;grid-template-columns:1fr 2fr;gap:18px 22px;margin-top:22px}
+  .tg.full{grid-column:1 / -1}
+  .tglab{font-size:14px;font-weight:800;margin:0 0 11px;color:#3d4756}
+  .tirow{display:flex;gap:16px}
+  .titem{display:flex;align-items:center;gap:16px;background:#fff;border:1px solid var(--line2);border-radius:15px;padding:20px 22px;flex:1;transition:.15s}
+  .titem:hover{box-shadow:0 8px 20px rgba(30,40,60,.07)}
+  .tic{width:54px;height:54px;border-radius:14px;background:var(--fill);display:flex;align-items:center;justify-content:center;font-size:25px;flex-shrink:0}
+  .tid{font-size:12.5px;color:#7a828f;margin:0 0 3px}
+  .tit{font-size:17px;font-weight:800;margin:0}
+
+  .bz{display:grid;grid-template-columns:1.5fr 1fr;gap:30px;padding:40px 0}
+  .bz .h{font-size:16px;font-weight:800;margin:0 0 16px}
+  .noti{display:flex;justify-content:space-between;gap:14px;font-size:14px;color:#3d4756;padding:13px 2px;border-bottom:1px solid var(--line2)}
+  .noti .nt b{color:var(--red);font-weight:800}.noti .nd{color:var(--muted);font-size:13px;white-space:nowrap}
+  .snstitle{font-size:16px;font-weight:800;margin:26px 0 13px}
+  .snsrow{display:flex;gap:10px;flex-wrap:wrap}
+  .chip{font-size:13px;color:#5a606c;background:#fff;border:1px solid var(--line2);border-radius:9px;padding:10px 15px;font-weight:600;display:inline-flex;align-items:center;gap:8px}
+  .si{width:22px;height:22px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;font-size:12px;color:#fff;font-weight:800}
+  .csright{display:flex;flex-direction:column;height:100%}
+  .csbox{background:#fff;border:1px solid var(--line2);border-radius:12px;padding:22px 24px;margin-bottom:14px;flex:1;display:flex;flex-direction:row;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .csright .csbox:last-child{margin-bottom:0}
+  .csbox .cn{font-size:14px;font-weight:800}.csbox .tel{font-size:24px;font-weight:800;margin:5px 0}.csbox .ct{font-size:12.5px;color:var(--muted)}
+  .csbtns{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.csbtns .chip{padding:8px 13px;font-size:12.5px}
+
+  .ftr{background:#2a2f3a;color:#aeb4c0;font-size:13px;line-height:2}
+  .ftr .container{padding-top:26px;padding-bottom:30px}
+  .ftr .fnav{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+  .ftr .fnav a{color:#cdd2db;font-weight:600}.ftr .fnav .b{color:#fff;font-weight:800}
+  .ftr .fnav .sep{color:#555c69}
+  .ftr .family{float:right;border:1px solid #555c69;border-radius:22px;padding:9px 20px;color:#cdd2db}
+  .ftr .fco{color:#8b909c}.ftr .fco b{color:#aeb4c0}
+  .ftr .flogo{float:right;font-weight:800;color:#7d8390;font-size:17px;margin-top:8px}
+</style></head>
+<body>
+
+  <div class="utilbar"><div class="container">
+    <span>NE능률</span><span class="sep">|</span><span>교과서</span><span class="sep">|</span><span>영어·수학교재</span><span class="sep">|</span><span>ELT교재</span><span class="sep">|</span><span>영자신문</span><span class="sep">|</span><span>아이챌린지</span><span class="sep">|</span><span>유아교육</span><span class="sep">|</span><span>영어레벨테스트</span><span class="sep">|</span><span>초중등영어학원</span>
+    <span class="spacer"></span><span>👤 통합회원가입</span>
+  </div></div>
+
+  <header class="header"><div class="container">
+    <div class="logo"><span class="r">NE_</span>Books</div>
+    <div class="srch"><div class="srchwrap">
+      <div class="srchbox" id="srchBox">🔎 교재명 또는 검색어를 입력해 주세요.<span class="spacer"></span>🔍</div>
+      <div class="srchpop" id="srchPop">
+        <p class="pht">인기 검색어</p>
+        <div class="popgrid">
+          <div class="popitem"><span class="popno">1</span>능률 voca</div>
+          <div class="popitem"><span class="popno">2</span>course book</div>
+          <div class="popitem"><span class="popno">3</span>Ebook</div>
+          <div class="popitem"><span class="popno">4</span>단어장</div>
+          <div class="popitem"><span class="popno">5</span>영어문법</div>
+          <div class="popitem"><span class="popno">6</span>중등문법</div>
+          <div class="popitem"><span class="popno">7</span>리딩튜터</div>
+          <div class="popitem"><span class="popno">8</span>중등 독해</div>
+          <div class="popitem"><span class="popno">9</span>주니어 리딩튜터</div>
+          <div class="popitem"><span class="popno">10</span>grammar</div>
+        </div>
+        <p class="popfoot">* 최근 10일간 인기 검색어입니다.</p>
+      </div>
+    </div><a class="recobtn">🎯 맞춤형 교재추천</a></div>
+    <div class="uicons">
+      <a class="uic"><span class="ci">👤</span>로그인</a>
+      <a class="uic"><span class="ci">🛒</span>장바구니</a>
+      <a class="uic"><span class="ci">📋</span>MY페이지</a>
+      <a class="uic"><span class="ci">🎧</span>고객센터</a>
+    </div>
+  </div></header>
+
+  <nav class="gnb"><div class="container">
+    <a class="on">ELT</a><a>초·중등</a><a>고등</a><a>교과서·자습서</a><a>수험·일반</a><a>수학·국어</a><a>학습자료실</a><a>도서몰</a>
+  </div></nav>
+
+  <section class="hero">
+    <div class="heroband" id="heroBand"></div>
+    <div class="herostage">
+      <div class="herovp">
+        <div class="slides" id="heroSlides">
+          <div class="herobanner" data-bg="#bfe6f7"><div>
+            <span class="btag promo">PROMOTION</span>
+            <h2 class="htitle">성적이 달라지는<br>방학 특강 조합</h2>
+            <p class="hdesc">문법 개념 정리 + 리스닝 훈련으로 방학 대비 끝! 지금 기획전에서 만나보세요.</p>
+            <a class="hbtn">바로가기 →</a>
+          </div><div class="hvis">홍보 이미지 영역</div></div>
+          <div class="herobanner" data-bg="#d9eda3"><div>
+            <span class="btag newt">NEW</span>
+            <h2 class="htitle">신간 출시<br>지금 만나보세요</h2>
+            <p class="hdesc">새롭게 출간된 교재를 가장 먼저 확인하세요. 미리보기와 함께 제공됩니다.</p>
+            <a class="hbtn">바로가기 →</a>
+          </div><div class="hvis">홍보 이미지 영역</div></div>
+          <div class="herobanner" data-bg="#fbd6dd"><div>
+            <span class="btag event">EVENT</span>
+            <h2 class="htitle">이벤트·세미나<br>한눈에 보기</h2>
+            <p class="hdesc">진행 중인 이벤트와 선생님 세미나 일정을 확인하고 참여하세요.</p>
+            <a class="hbtn">바로가기 →</a>
+          </div><div class="hvis">홍보 이미지 영역</div></div>
+          <div class="herobanner" data-bg="#c9d6f6"><div>
+            <span class="btag promo">PROMOTION</span>
+            <h2 class="htitle">온라인 영어 레벨테스트<br>NELT 무료 체험</h2>
+            <p class="hdesc">한국 교육과정 기준 영어 레벨테스트로 우리 아이 실력을 정확하게.</p>
+            <a class="hbtn">바로가기 →</a>
+          </div><div class="hvis">홍보 이미지 영역</div></div>
+          <div class="herobanner" data-bg="#fce9bd"><div>
+            <span class="btag event">EVENT</span>
+            <h2 class="htitle">7월 혼강 세미나<br>신청 접수 중</h2>
+            <p class="hdesc">수업이 달라지는 기준, 더 넓어진 혼강 세미나에 지금 참여하세요.</p>
+            <a class="hbtn">바로가기 →</a>
+          </div><div class="hvis">홍보 이미지 영역</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="herokeys" id="heroKeys">
+      <span class="hkey on">방학 특강 조합</span>
+      <span class="hkey">신간 출시</span>
+      <span class="hkey">이벤트·세미나</span>
+      <span class="hkey">NELT 레벨테스트</span>
+      <span class="hkey">혼강 세미나</span>
+    </div>
+  </section>
+
+  <section class="sec"><div class="container">
+    <div class="quick">
+      <a class="qk"><span class="qi">🛍️</span><span class="qt">교재 구매</span></a>
+      <a class="qk"><span class="qi">📊</span><span class="qt">레벨차트</span></a>
+      <a class="qk"><span class="qi">📁</span><span class="qt">학습자료실</span></a>
+      <a class="qk"><span class="qi">📄</span><span class="qt">정답·MP3 다운</span></a>
+      <a class="qk"><span class="qi">🧇</span><span class="qt">NE Waffle</span></a>
+      <a class="qk"><span class="qi">🧑‍🏫</span><span class="qt">영어 선생님 바로가기</span></a>
+      <a class="qk"><span class="qi">➗</span><span class="qt">수학 선생님 바로가기</span></a>
+    </div>
+  </div></section>
+
+  <section class="sec"><div class="container">
+    <div class="sechead"><h2 class="sectitle">베스트셀러</h2></div>
+    <div class="promotabs">
+      <span class="ptab on" data-tag="중등 여름방학 추천 코스" data-main="성적이 달라지는|방학 특강 조합" data-sub="문법 개념 정리 + 리스닝 훈련으로 방학 대비 끝!">중등 여름방학 추천 코스</span><span class="ptab" data-tag="쉬운 암기 중등 필수 VOCA" data-main="외우면 끝나는|중등 필수 VOCA" data-sub="하루 10분, 시험에 꼭 나오는 단어만 골라 암기!">쉬운 암기 중등 필수 VOCA</span><span class="ptab" data-tag="스스로 읽는 파닉스" data-main="혼자서도 술술|읽는 파닉스" data-sub="소리 규칙부터 문장 읽기까지 단계별 완성!">스스로 읽는 파닉스</span><span class="ptab" data-tag="빠른이해 초등문법서" data-main="처음 배우는|초등 영문법" data-sub="핵심 개념을 그림과 예문으로 쉽고 빠르게!">빠른이해 초등문법서</span><span class="ptab" data-tag="고등 독해 완성" data-main="수능까지 잇는|고등 독해 완성" data-sub="유형별 전략으로 독해 자신감 UP!">고등 독해 완성</span>
+    </div>
+    <div class="bestwrap">
+      <div class="bestpromo">
+        <span class="bptag">중등 여름방학 추천 코스</span>
+        <p class="bpmain">성적이 달라지는<br>방학 특강 조합</p>
+        <p class="bpsub">문법 개념 정리 + 리스닝 훈련으로 방학 대비 끝!</p>
+        <a class="cartbtn">🛒 장바구니 담기</a>
+      </div>
+      <div class="bestcards">
+        <div class="bcard"><span class="chk">✓</span><div class="cover"><span class="dk" style="background:var(--red)">HOT</span>표지</div><span class="gtag">중1·문법</span><div class="bname"></div><div class="bname s"></div><div class="price"><span class="ori">15,000</span><span class="dis">13,500</span><span class="rate">10%</span></div><div class="bact"><i class="m">🔍</i><i class="m">🛒</i></div></div>
+        <div class="bcard"><span class="chk">✓</span><div class="cover"><span class="dk" style="background:var(--new)">NEW</span>표지</div><span class="gtag">중2·듣기</span><div class="bname"></div><div class="bname s"></div><div class="price"><span class="ori">15,000</span><span class="dis">13,500</span><span class="rate">10%</span></div><div class="bact"><i class="m">🔍</i><i class="m">🛒</i></div></div>
+        <div class="bcard"><span class="chk">✓</span><div class="cover">표지</div><span class="gtag">중3·독해</span><div class="bname"></div><div class="bname s"></div><div class="price"><span class="ori">16,000</span><span class="dis">14,400</span><span class="rate">10%</span></div><div class="bact"><i class="m">🔍</i><i class="m">🛒</i></div></div>
+        <div class="bcard"><span class="chk">✓</span><div class="cover">표지</div><span class="gtag">중1·어휘</span><div class="bname"></div><div class="bname s"></div><div class="price"><span class="ori">14,000</span><span class="dis">12,600</span><span class="rate">10%</span></div><div class="bact"><i class="m">🔍</i><i class="m">🛒</i></div></div>
+        <div class="bcard"><span class="chk">✓</span><div class="cover">표지</div><span class="gtag">중2·문법</span><div class="bname"></div><div class="bname s"></div><div class="price"><span class="ori">17,500</span><span class="dis">15,750</span><span class="rate">10%</span></div><div class="bact"><i class="m">🔍</i><i class="m">🛒</i></div></div>
+        <div class="bcard"><span class="chk">✓</span><div class="cover">표지</div><span class="gtag">중3·문법</span><div class="bname"></div><div class="bname s"></div><div class="price"><span class="ori">16,500</span><span class="dis">14,850</span><span class="rate">10%</span></div><div class="bact"><i class="m">🔍</i><i class="m">🛒</i></div></div>
+      </div>
+    </div>
+  </div></section>
+
+  <section class="sec"><div class="container">
+    <div class="sechead"><h2 class="sectitle">큐레이션 &amp; 이벤트</h2><span class="arrows">‹ ● ● ○ ›</span></div>
+    <div class="promo2">
+      <div class="pcard"><div class="pimg">홍보 이미지</div><div class="ptext"><p class="plabel">신간</p><p class="pmain">메인 문구가 들어갑니다</p><p class="psub">서브 문구 — 한두 줄 설명이 들어가는 영역</p></div></div>
+      <div class="pcard"><div class="pimg">홍보 이미지</div><div class="ptext"><p class="plabel">이벤트</p><p class="pmain">메인 문구가 들어갑니다</p><p class="psub">서브 문구 — 한두 줄 설명이 들어가는 영역</p></div></div>
+    </div>
+  </div></section>
+
+  <section class="tutor"><div class="container">
+    <div class="sechead" style="margin-bottom:0"><h2 class="sectitle">선생님을 위한 티칭 플랫폼 NE Tutor</h2></div>
+    <div class="tgroups">
+      <div class="tg">
+        <p class="tglab">수업자료</p>
+        <div class="tirow"><div class="titem"><span class="tic">📘</span><div><p class="tid">지도서·수업자료</p><p class="tit">E/book 교재자료</p></div></div></div>
+      </div>
+      <div class="tg">
+        <p class="tglab">평가서비스</p>
+        <div class="tirow">
+          <div class="titem"><span class="tic">📊</span><div><p class="tid">iBT 영어 레벨테스트</p><p class="tit">NELT</p></div></div>
+          <div class="titem"><span class="tic">📝</span><div><p class="tid">성취도 평가부터 오답 학습까지 자동화</p><p class="tit">성취 TEST</p></div></div>
+        </div>
+      </div>
+      <div class="tg full">
+        <p class="tglab">디지털 문제뱅크</p>
+        <div class="tirow">
+          <div class="titem"><span class="tic">🪄</span><div><p class="tid">단어시험지 자동 생성</p><p class="tit">어휘 문제 마법사</p></div></div>
+          <div class="titem"><span class="tic">🏦</span><div><p class="tid">3만 개 문항 무제한 출제</p><p class="tit">문법 문제뱅크</p></div></div>
+          <div class="titem"><span class="tic">🔎</span><div><p class="tid">문장형식별 예문검색 1분컷</p><p class="tit">문법 예문 검색</p></div></div>
+        </div>
+      </div>
+    </div>
+  </div></section>
+
+  <section><div class="container"><div class="bz">
+    <div>
+      <p class="h">공지사항</p>
+      <a class="noti"><span class="nt">[안내] 절판(예정포함) 국어교재 (1/7 기준)</span><span class="nd">2025.12.29</span></a>
+      <a class="noti"><span class="nt">[안내] 2026학년도 <b>★ 교과서·자습서·문제집 구매 안내 ★</b></span><span class="nd">2025.12.29</span></a>
+      <a class="noti"><span class="nt">[자료] 2026년 NE능률 영어 교재 카달로그 및 가이드북</span><span class="nd">2025.12.22</span></a>
+      <p class="snstitle">공식 SNS</p>
+      <div class="snsrow">
+        <a class="chip"><span class="si" style="background:#03c75a">N</span>NE능률 Lounge 카페</a>
+        <a class="chip"><span class="si" style="background:#e1306c">📷</span>NE능률 인스타그램</a>
+        <a class="chip"><span class="si" style="background:#ff0000">▶</span>NE능률 유튜브</a>
+      </div>
+    </div>
+    <div class="csright">
+      <div class="csbox"><div class="csinfo"><div class="cn">NE능률 고객센터</div><div class="tel">1833-8368</div><div class="ct">평일 9~16시 · 점심 12~13시</div></div><div class="csbtns"><a class="chip">1:1문의</a><a class="chip">FAQ</a><a class="chip">문자상담</a></div></div>
+      <div class="csbox"><div class="csinfo"><div class="cn">AI 디지털 교육자료 공동 CS센터</div><div class="tel">1661-0777</div><div class="ct">평일 9~18시</div></div><div class="csbtns"><a class="chip">1:1문의</a></div></div>
+    </div>
+  </div></div></section>
+
+  <footer class="ftr"><div class="container">
+    <span class="family">FAMILY SITE ▾</span>
+    <div class="fnav">
+      <a>개인정보처리방침</a><span class="sep">|</span><a>이용약관</a><span class="sep">|</span><a>이메일무단수집거부</a><span class="sep">|</span><a>지사안내</a><span class="sep">|</span><a>찾아오시는 길</a><span class="sep">|</span><a class="b">학원/도서관 대량구매</a>
+    </div>
+    <div class="flogo">NE능률</div>
+    <div class="fco">
+      ㈜NE능률 (03925) 서울 특별시 마포구 월드컵북로 396(상암동) 누리꿈스퀘어 비즈니스타워 10층 &nbsp;|&nbsp; 대표이사 : 이정진<br>
+      고객센터 : 1833-8368 / 02-2014-7260 [사업별 고객센터 안내]<br>
+      팩스 : 02-337-4956 &nbsp;|&nbsp; 사업자등록번호 : 105-81-65267 &nbsp;|&nbsp; 통신판매신고번호 : 제2004-02120호 [정보조회]<br>
+      개인정보 보호책임자(CPO) : 선민재(necpo@neungyule.com)<br>
+      Copyright © NE Neungyule, Inc. All Rights Reserved
+    </div>
+  </div></footer>
+
+<script>
+(function(){
+  var track=document.getElementById('heroSlides');
+  var reals=Array.prototype.slice.call(track.children);
+  var n=reals.length;
+  var keys=Array.prototype.slice.call(document.querySelectorAll('#heroKeys .hkey'));
+  var band=document.getElementById('heroBand');
+  track.insertBefore(reals[n-1].cloneNode(true), reals[0]);
+  track.appendChild(reals[0].cloneNode(true));
+  var all=Array.prototype.slice.call(track.children);
+  var pos=1, animating=false, sx=null, timer=null;
+  function center(anim){
+    track.style.transition=anim?'transform .45s ease':'none';
+    var vp=track.parentElement.clientWidth, c=all[pos];
+    track.style.transform='translateX('+((vp-c.offsetWidth)/2 - c.offsetLeft)+'px)';
+    all.forEach(function(x,i){x.classList.toggle('active',i===pos);});
+    var real=((pos-1)%n+n)%n; keys.forEach(function(k,i){k.classList.toggle('on',i===real);});
+    if(band)band.style.background=all[pos].getAttribute('data-bg');
+    if(!anim){track.offsetHeight;}
+  }
+  function move(d){ if(animating)return; animating=true; pos+=d; center(true); reset(); }
+  function jump(p){ if(animating)return; animating=true; pos=p; center(true); reset(); }
+  track.addEventListener('transitionend',function(){
+    animating=false;
+    if(pos===n+1){pos=1;center(false);}
+    else if(pos===0){pos=n;center(false);}
+  });
+  keys.forEach(function(k,idx){k.addEventListener('click',function(){jump(idx+1);});});
+  var p=document.getElementById('hPrev'),nx=document.getElementById('hNext');
+  if(p)p.addEventListener('click',function(){move(-1);});
+  if(nx)nx.addEventListener('click',function(){move(1);});
+  track.addEventListener('pointerdown',function(e){sx=e.clientX;clearInterval(timer);});
+  window.addEventListener('pointerup',function(e){if(sx===null)return;var dx=e.clientX-sx;if(Math.abs(dx)>40)move(dx<0?1:-1);sx=null;});
+  window.addEventListener('resize',function(){center(false);});
+  function reset(){clearInterval(timer);timer=setInterval(function(){move(1);},5000);}
+  center(false);reset();
+})();
+(function(){
+  var tabs=Array.prototype.slice.call(document.querySelectorAll('.promotabs .ptab'));
+  var bptag=document.querySelector('.bestpromo .bptag'),bpmain=document.querySelector('.bestpromo .bpmain'),bpsub=document.querySelector('.bestpromo .bpsub');
+  tabs.forEach(function(t){t.addEventListener('click',function(){
+    tabs.forEach(function(x){x.classList.remove('on');});t.classList.add('on');
+    if(bptag)bptag.textContent=t.getAttribute('data-tag');
+    if(bpmain)bpmain.innerHTML=(t.getAttribute('data-main')||'').replace('|','<br>');
+    if(bpsub)bpsub.textContent=t.getAttribute('data-sub');
+  });});
+})();
+(function(){
+  Array.prototype.slice.call(document.querySelectorAll('.bcard .chk')).forEach(function(c){
+    c.addEventListener('click',function(){c.classList.toggle('off');c.textContent=c.classList.contains('off')?'':'✓';});
+  });
+})();
+(function(){
+  var box=document.getElementById('srchBox'),pop=document.getElementById('srchPop');
+  if(!box||!pop)return;
+  box.addEventListener('click',function(e){e.stopPropagation();pop.classList.toggle('open');});
+  pop.addEventListener('click',function(e){e.stopPropagation();});
+  document.addEventListener('click',function(){pop.classList.remove('open');});
+})();
+</script>
+</body></html>

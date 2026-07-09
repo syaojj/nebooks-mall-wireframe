@@ -1,0 +1,197 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=1280">
+<title>NE_Books 교재 오류정정</title>
+<style>
+  :root{--ink:#222732;--line:#d7dbe2;--line2:#e6e9ee;--fill:#eef0f3;--fill2:#f7f8fa;--muted:#8b909c;--bar2:#dde1e7;
+    --new:#1f9d72;--newbg:#e6f6ef;--red:#e23b3b;--orange:#e8852b;--blue:#3a78f2;--bluebg:#eaf1ff;}
+  *{box-sizing:border-box}
+  body{margin:0;background:#fff;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Apple SD Gothic Neo","Malgun Gothic",sans-serif}
+  a{color:inherit;text-decoration:none}
+  .container{max-width:1280px;margin:0 auto;padding:0 24px}.spacer{flex:1}
+
+  /* 공통 헤더 */
+  .utilbar{background:#f4f5f7;border-bottom:1px solid var(--line2);font-size:12px;color:#5a606c}
+  .utilbar .container{display:flex;align-items:center;gap:14px;height:38px;font-weight:600;flex-wrap:wrap}
+  .utilbar .sep{color:#cfd3da}
+  .header .container{display:flex;align-items:center;gap:24px;padding-top:22px;padding-bottom:22px}
+  .logo{font-size:26px;font-weight:800}.logo .r{color:var(--red)}
+  .srch{flex:1;max-width:900px;display:flex;align-items:center;gap:12px}.srchwrap{position:relative;flex:1}
+  .recobtn{flex-shrink:0;background:var(--ink);color:#fff;border-radius:9px;padding:13px 18px;font-size:13.5px;font-weight:800;white-space:nowrap;cursor:pointer}
+  .srchbox{height:48px;border:2px solid var(--ink);border-radius:8px;display:flex;align-items:center;padding:0 18px;color:var(--muted);font-size:14px;cursor:text}
+  .uicons{display:flex;align-items:center;gap:22px;margin-left:auto}
+  .uic{display:flex;flex-direction:column;align-items:center;gap:5px;font-size:11px;color:#5a606c;font-weight:700}
+  .uic .ci{width:34px;height:34px;border-radius:50%;background:var(--fill);border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;font-size:17px}
+  .uic.on .ci{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .gnb{border-top:1px solid var(--line2);border-bottom:2px solid var(--ink)}
+  .gnb .container{display:flex;align-items:center;justify-content:space-between;height:54px;font-size:15px;font-weight:700}
+  .gnb a{color:#444b57}.gnb a.on{color:var(--ink)}
+
+  /* 페이지 헤더 */
+  .crumb{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);padding:18px 0 0}.crumb .sep{color:#cfd3da}
+  .phead{display:flex;align-items:center;margin:14px 0 8px}
+  .ptitle{font-size:28px;font-weight:800;margin:0;letter-spacing:-.02em}
+  .pdesc{font-size:14px;color:var(--muted);margin:0 0 22px}
+
+  /* 검색/필터 */
+  .searchrow{display:flex;align-items:center;gap:8px;background:var(--fill2);border:1px solid var(--line2);border-radius:12px;padding:14px 16px;margin-bottom:12px}
+  .searchrow .lbl{font-size:13px;font-weight:800;color:#3d4756;margin-right:6px;white-space:nowrap}
+  .sel{border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:13px;background:#fff;color:#3d4756}
+  .stext{flex:1;border:1px solid var(--line);border-radius:8px;padding:10px 13px;font-size:13px}
+  .sbtn{background:var(--ink);color:#fff;border-radius:8px;padding:11px 20px;font-size:13px;font-weight:800;cursor:pointer;white-space:nowrap}
+  .cats{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin:16px 0}
+  .cat{background:var(--fill);border:1px solid var(--line2);border-radius:20px;padding:8px 15px;font-size:12.5px;color:#5a606c;font-weight:700;cursor:pointer}
+  .cat.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .linkbtn{margin-left:auto;border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-size:12.5px;font-weight:700;color:#5a606c;cursor:pointer}
+
+  .tbl{width:100%;border-collapse:collapse;font-size:13.5px}
+  .tbl th{background:var(--fill2);color:#5a606c;font-weight:700;font-size:12.5px;padding:13px 10px;border-top:2px solid var(--ink);border-bottom:1px solid var(--line2);text-align:center}
+  .tbl td{padding:15px 10px;border-bottom:1px solid var(--line2);text-align:center;color:#3d4756}
+  .tbl td.l{text-align:left}
+  .tbl tr.erow td{cursor:pointer}
+  .tbl tr.erow:hover td{background:var(--fill2)}
+  .badge{display:inline-block;font-size:11px;font-weight:800;border-radius:6px;padding:3px 9px;color:#5a606c;background:var(--fill)}
+
+  .pager2{display:flex;gap:6px;justify-content:center;margin-top:0;align-items:center}
+  .pg{min-width:30px;height:30px;padding:0 8px;border:1px solid var(--line2);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:12.5px;color:#5a606c;cursor:pointer}
+  .pg.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .actionbtn{background:var(--orange);color:#fff;border-radius:9px;padding:12px 22px;font-size:13.5px;font-weight:800;cursor:pointer}
+  .botrow{display:flex;align-items:center;margin-top:18px}.botrow .actionbtn{margin-left:auto}
+
+  /* 상세 보기 */
+  .readhead{display:flex;align-items:center;gap:14px;border-top:2px solid var(--ink);border-bottom:1px solid var(--line2);background:var(--fill2);padding:16px 20px;flex-wrap:wrap}
+  .readhead .lbl{font-size:13px;font-weight:800;color:#5a606c;width:50px}
+  .readhead .ttl{font-weight:700;color:#222732;flex:1;font-size:15px}
+  .readhead .date{color:var(--muted);font-size:13px}
+  .bookinfo{display:flex;align-items:center;gap:18px;padding:18px 20px;border-bottom:1px solid var(--line2);background:#fff}
+  .bookinfo .bcover{width:64px;height:84px;border-radius:6px;background:var(--fill);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:11px;flex-shrink:0}
+  .bookinfo .bn{font-size:14px;font-weight:700;margin:0 0 6px;color:#222732}
+  .bookinfo .bd{font-size:12.5px;color:#6b7280;margin:0}
+  .readbody{padding:32px 24px;font-size:14px;color:#3d4756;line-height:1.95;border-bottom:1px solid var(--line2);white-space:pre-line;min-height:150px}
+  .btn-ghost{border:1px solid var(--line);border-radius:8px;padding:12px 26px;font-size:13px;font-weight:700;color:#5a606c;cursor:pointer}
+
+  .ftr{background:#2a2f3a;color:#aeb4c0;font-size:13px;line-height:2;margin-top:48px}
+  .ftr .container{padding-top:26px;padding-bottom:30px}
+  .ftr .fnav{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+  .ftr .fnav a{color:#cdd2db;font-weight:600}.ftr .fnav .b{color:#fff;font-weight:800}.ftr .fnav .sep{color:#555c69}
+  .ftr .family{float:right;border:1px solid #555c69;border-radius:22px;padding:9px 20px;color:#cdd2db}
+  .ftr .fco{color:#8b909c}.ftr .fco b{color:#aeb4c0}.ftr .flogo{float:right;font-weight:800;color:#7d8390;font-size:17px;margin-top:8px}
+</style></head>
+<body>
+
+  <div class="utilbar"><div class="container">
+    <span>NE능률</span><span class="sep">|</span><span>교과서</span><span class="sep">|</span><span>영어·수학교재</span><span class="sep">|</span><span>ELT교재</span><span class="sep">|</span><span>영자신문</span><span class="sep">|</span><span>아이챌린지</span><span class="sep">|</span><span>유아교육</span><span class="sep">|</span><span>영어레벨테스트</span><span class="sep">|</span><span>초중등영어학원</span>
+    <span class="spacer"></span><span>👤 통합회원가입</span>
+  </div></div>
+
+  <header class="header"><div class="container">
+    <a class="logo"><span class="r">NE_</span>Books</a>
+    <div class="srch"><div class="srchwrap">
+      <div class="srchbox">🔎 교재명 또는 검색어를 입력해 주세요.<span class="spacer"></span>🔍</div>
+    </div><span class="recobtn">🎯 맞춤형 교재추천</span></div>
+    <div class="uicons">
+      <a class="uic"><span class="ci">👤</span>로그인</a>
+      <a class="uic"><span class="ci">🛒</span>장바구니</a>
+      <a class="uic"><span class="ci">📋</span>MY페이지</a>
+      <a class="uic on"><span class="ci">🎧</span>고객센터</a>
+    </div>
+  </div></header>
+
+  <nav class="gnb"><div class="container">
+    <a>ELT</a><a>초·중등</a><a>고등</a><a>교과서·자습서</a><a>수험·일반</a><a>수학·국어</a><a>학습자료실</a><a>도서몰</a>
+  </div></nav>
+
+  <main class="container">
+    <div class="crumb"><span>🏠 홈</span><span class="sep">›</span><span>고객센터</span><span class="sep">›</span><span>교재 오류정정</span></div>
+    <div class="phead"><h1 class="ptitle">교재 오류정정</h1></div>
+    <p class="pdesc">교재의 오류사항에 대해 정정알림을 확인하실 수 있습니다.</p>
+
+    <!-- 목록 -->
+    <div id="errata-list">
+      <div class="searchrow">
+        <select class="sel"><option>전체</option><option>공통</option><option>ELT</option><option>초중고(영어)</option><option>교과서 관련</option><option>수험/일반</option><option>수학/국어</option></select>
+        <input class="stext" placeholder="검색할 키워드를 입력하세요">
+        <span class="sbtn">검색</span>
+      </div>
+      <div class="searchrow">
+        <span class="lbl">교재 선택</span>
+        <select class="sel"><option>구분</option><option>ELT</option><option>초·중등</option><option>고등</option><option>교과서·자습서</option><option>수험·일반</option><option>수학·국어</option></select>
+        <select class="sel"><option>영역/대상</option><option>독해</option><option>문법</option><option>어휘</option><option>듣기</option></select>
+        <select class="sel"><option>교재 시리즈</option><option>리딩튜터</option><option>능률 VOCA</option><option>내신백신</option><option>그래머 존</option></select>
+        <select class="sel"><option>교재명</option><option>리딩튜터 챌린저 2</option><option>능률 VOCA 어원편</option></select>
+        <span class="sbtn">검색</span>
+      </div>
+
+      <div class="cats">
+        <span class="cat on">전체</span><span class="cat">공통</span><span class="cat">ELT</span><span class="cat">초중고(영어)</span><span class="cat">교과서 관련</span><span class="cat">수험/일반</span><span class="cat">수학/국어</span>
+        <span class="linkbtn">교과서 콘텐츠 FAQ ›</span>
+      </div>
+
+      <table class="tbl">
+        <thead><tr><th style="width:70px">NO</th><th style="width:130px">분류</th><th class="l">제목</th><th style="width:120px">등록일</th><th style="width:70px">조회</th></tr></thead>
+        <tbody>
+          <tr class="erow" data-badge="교과서 관련" data-title="중등 내신백신 기출문제집 English 2-1 기말고사(김기택) 수정사항" data-date="2026.06.22" data-book="중등 내신백신 기출문제집 English 2-1 기말고사 (김기택)" data-pub="출간일: 2025-12-01" data-body="〈중등 내신백신 기출문제집 English 2-1 기말고사(김기택)〉 수정 사항 안내 드립니다.&#10;&#10;p.45 3번 문항 정답 정정&#10;&#10;(수정전) 정답 ③&#10;(수정후) 정답 ②&#10;&#10;다음 재판 시 수정하여 출간할 예정입니다.&#10;교재 이용에 불편을 드려 죄송합니다.">
+            <td>831</td><td>교과서 관련</td><td class="l">중등 내신백신 기출문제집 English 2-1 기말고사(김기택) 수정사항</td><td>2026.06.22</td><td>8</td></tr>
+          <tr class="erow" data-badge="교과서 관련" data-title="내신백신 기출 문제집 공통영어 1 (민병천) 수정사항" data-date="2026.06.15" data-book="내신백신 기출 문제집 공통영어 1 (민병천)" data-pub="출간일: 2025-11-10" data-body="〈내신백신 기출 문제집 공통영어 1(민병천)〉 수정 사항 안내 드립니다.&#10;&#10;p.112 지문 일부 정정&#10;&#10;(수정전) it's&#10;(수정후) its&#10;&#10;다음 재판 시 수정하여 출간할 예정입니다.&#10;교재 이용에 불편을 드려 죄송합니다.">
+            <td>830</td><td>교과서 관련</td><td class="l">내신백신 기출 문제집 공통영어 1 (민병천) 수정사항</td><td>2026.06.15</td><td>24</td></tr>
+          <tr class="erow" data-badge="초중고(영어)" data-title="[2025 개정] 리딩튜터 챌린저2 수정사항" data-date="2026.05.27" data-book="리딩튜터 챌린저 2 (2025 개정)" data-pub="출간일: 2025-01-05" data-body="〈리딩튜터 챌린저 2 (2025 개정)〉 수정 사항 안내 드립니다.&#10;&#10;p.298 INDEX as 페이지 정정&#10;&#10;(수정전) as  98&#10;(수정후) as  100&#10;&#10;다음 재판 시 수정하여 출간할 예정입니다.&#10;교재 이용에 불편을 드려 죄송합니다.">
+            <td>829</td><td>초중고(영어)</td><td class="l">[2025 개정] 리딩튜터 챌린저2 수정사항</td><td>2026.05.27</td><td>63</td></tr>
+          <tr class="erow" data-badge="수학/국어" data-title="[2022 개정] 중학 수학 2-1 정오표" data-date="2026.05.21" data-book="중학 수학 2-1 (2022 개정)" data-pub="출간일: 2024-12-20" data-body="〈중학 수학 2-1 (2022 개정)〉 정오표 안내 드립니다.&#10;&#10;p.76 예제 3 풀이 정정&#10;&#10;(수정전) x = 4&#10;(수정후) x = 5&#10;&#10;다음 재판 시 수정하여 출간할 예정입니다.&#10;교재 이용에 불편을 드려 죄송합니다.">
+            <td>828</td><td>수학/국어</td><td class="l">[2022 개정] 중학 수학 2-1 정오표</td><td>2026.05.21</td><td>80</td></tr>
+          <tr class="erow" data-badge="수학/국어" data-title="[2022 개정] 중학 국어 자습서 정오표" data-date="2026.05.21" data-book="중학 국어 자습서 (2022 개정)" data-pub="출간일: 2024-12-20" data-body="〈중학 국어 자습서 (2022 개정)〉 정오표 안내 드립니다.&#10;&#10;p.203 어휘 풀이 정정&#10;&#10;(수정전) 부사어&#10;(수정후) 관형어&#10;&#10;다음 재판 시 수정하여 출간할 예정입니다.&#10;교재 이용에 불편을 드려 죄송합니다.">
+            <td>827</td><td>수학/국어</td><td class="l">[2022 개정] 중학 국어 자습서 정오표</td><td>2026.05.21</td><td>63</td></tr>
+          <tr class="erow" data-badge="수험/일반" data-title="능률 VOCA 어원편 (개정판) 수정사항" data-date="2026.05.12" data-book="능률 VOCA 어원편 (개정판)" data-pub="출간일: 2025-02-10" data-body="〈능률 VOCA 어원편 (개정판)〉 수정 사항 안내 드립니다.&#10;&#10;p.88 표제어 뜻풀이 정정&#10;&#10;(수정전) 막다&#10;(수정후) 견디다&#10;&#10;다음 재판 시 수정하여 출간할 예정입니다.&#10;교재 이용에 불편을 드려 죄송합니다.">
+            <td>826</td><td>수험/일반</td><td class="l">능률 VOCA 어원편 (개정판) 수정사항</td><td>2026.05.12</td><td>112</td></tr>
+          <tr class="erow" data-badge="ELT" data-title="Reading Sense 3 (개정) 정오 안내" data-date="2026.05.02" data-book="Reading Sense 3 (개정)" data-pub="출간일: 2025-03-02" data-body="〈Reading Sense 3 (개정)〉 정오 안내 드립니다.&#10;&#10;p.54 Q5 보기 정정&#10;&#10;(수정전) (b) however&#10;(수정후) (b) therefore&#10;&#10;다음 재판 시 수정하여 출간할 예정입니다.&#10;교재 이용에 불편을 드려 죄송합니다.">
+            <td>825</td><td>ELT</td><td class="l">Reading Sense 3 (개정) 정오 안내</td><td>2026.05.02</td><td>95</td></tr>
+          <tr class="erow" data-badge="공통" data-title="2026 상반기 교재 정오표 통합 안내" data-date="2026.04.20" data-book="2026 상반기 교재 (통합)" data-pub="등록일: 2026-04-20" data-body="2026 상반기 교재 정오표를 통합 안내드립니다.&#10;&#10;세부 정오 내용은 각 교재별 상세 페이지 및 본 게시판의 개별 공지를 참고해 주세요.&#10;교재 이용에 불편을 드려 죄송합니다.">
+            <td>824</td><td>공통</td><td class="l">2026 상반기 교재 정오표 통합 안내</td><td>2026.04.20</td><td>301</td></tr>
+        </tbody>
+      </table>
+
+      <div class="botrow">
+        <div class="pager2" style="margin-top:0"><span class="pg">«</span><span class="pg on">1</span><span class="pg">2</span><span class="pg">3</span><span class="pg">»</span></div>
+        <span class="actionbtn" id="reportBtn">📝 교재 오류 신고하기 ›</span>
+      </div>
+    </div>
+
+    <!-- 상세 -->
+    <div id="errata-detail" style="display:none">
+      <div class="readhead"><span class="lbl">제목</span><span class="ttl"><span class="badge" id="edBadge">분류</span> <span id="edTitle">-</span></span><span class="date" id="edDate">-</span></div>
+      <div class="bookinfo"><span class="bcover">표지</span><div><p class="bn" id="edBook">-</p><p class="bd" id="edPub">-</p></div></div>
+      <div class="readbody" id="edBody">-</div>
+      <div class="botrow"><span class="btn-ghost" id="errataBack" style="margin-left:auto">목록 ›</span></div>
+    </div>
+  </main>
+
+  <footer class="ftr"><div class="container">
+    <span class="family">FAMILY SITE ▾</span>
+    <div class="fnav">
+      <a>개인정보처리방침</a><span class="sep">|</span><a>이용약관</a><span class="sep">|</span><a>이메일무단수집거부</a><span class="sep">|</span><a>지사안내</a><span class="sep">|</span><a>찾아오시는 길</a><span class="sep">|</span><a class="b">학원/도서관 대량구매</a>
+    </div>
+    <div class="flogo">NE능률</div>
+    <div class="fco">
+      ㈜NE능률 (03925) 서울 특별시 마포구 월드컵북로 396(상암동) 누리꿈스퀘어 비즈니스타워 10층 &nbsp;|&nbsp; 대표이사 : 이정진<br>
+      고객센터 : 1833-8368 / 02-2014-7260 [사업별 고객센터 안내]<br>
+      Copyright © NE Neungyule, Inc. All Rights Reserved
+    </div>
+  </div></footer>
+
+<script>
+  /* 카테고리 단일선택 */
+  document.querySelectorAll('.cats .cat').forEach(function(c){c.addEventListener('click',function(){
+    document.querySelectorAll('.cats .cat').forEach(function(x){x.classList.remove('on');});c.classList.add('on');});});
+
+  var list=document.getElementById('errata-list'),detail=document.getElementById('errata-detail');
+  function show(el){
+    document.getElementById('edBadge').textContent=el.dataset.badge;
+    document.getElementById('edTitle').textContent=el.dataset.title;
+    document.getElementById('edDate').textContent=el.dataset.date;
+    document.getElementById('edBook').textContent=el.dataset.book;
+    document.getElementById('edPub').textContent=el.dataset.pub;
+    document.getElementById('edBody').textContent=el.dataset.body;
+    list.style.display='none';detail.style.display='block';window.scrollTo({top:0,behavior:'smooth'});
+  }
+  document.querySelectorAll('.erow').forEach(function(r){r.addEventListener('click',function(){show(r);});});
+  document.getElementById('errataBack').addEventListener('click',function(){detail.style.display='none';list.style.display='block';});
+  document.getElementById('reportBtn').addEventListener('click',function(){alert('1:1 문의 > 교재 오류신고 작성 폼으로 이동합니다.');});
+</script>
+</body></html>

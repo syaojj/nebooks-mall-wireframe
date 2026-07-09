@@ -1,0 +1,637 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NE_Books 고객센터 (모바일)</title>
+<style>
+  :root{--ink:#222732;--line:#d7dbe2;--line2:#e6e9ee;--fill:#eef0f3;--fill2:#f7f8fa;--muted:#8b909c;--bar2:#dde1e7;
+    --new:#1f9d72;--newbg:#e6f6ef;--red:#e23b3b;--orange:#e8852b;--blue:#3a78f2;--bluebg:#eaf1ff;--pp:#6a4fb0;}
+  *{box-sizing:border-box}
+  body{margin:0;background:#dfe2e7;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Apple SD Gothic Neo","Malgun Gothic",sans-serif;padding:24px 0 50px}
+  a{color:inherit;text-decoration:none}.spacer{flex:1}
+  .phone{width:390px;margin:0 auto;background:#fff;border-radius:30px;box-shadow:0 20px 60px rgba(20,25,40,.22);overflow:hidden;position:relative}
+  .statusbar{height:30px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;font-size:11px;font-weight:700}
+  .scr{height:720px;overflow-y:auto;overflow-x:hidden}.scr::-webkit-scrollbar{width:0}
+
+  /* 헤더 인디케이터 */
+  .mtopwrap{position:relative;z-index:60}
+  .mhd{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line2);background:#fff}
+  .mhd .logo{font-size:19px;font-weight:800;cursor:pointer}.mhd .logo .r{color:var(--red)}
+  .hicons{display:flex;gap:14px;font-size:18px;margin-left:auto;align-items:center}.hicons .ham{cursor:pointer}
+  .pindbar{display:flex;justify-content:center;padding:13px;border-bottom:1px solid var(--line2);background:#fff}
+  .pind{display:inline-flex;align-items:center;gap:6px;font-size:15px;font-weight:800;color:var(--ink);cursor:pointer;text-align:center}
+  .pcaret{font-size:11px;color:var(--muted);transition:transform .2s}.pind.open .pcaret{transform:rotate(180deg)}
+  .pinddrop{display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border-bottom:1px solid var(--line2);box-shadow:0 14px 26px rgba(20,25,40,.14);max-height:72vh;overflow-y:auto}
+  .pinddrop.open{display:block}
+  .pinddrop a{display:block;text-align:center;padding:14px;font-size:14px;font-weight:700;color:#3d4756;border-bottom:1px solid var(--line2);cursor:pointer}
+  .pinddrop a:last-child{border-bottom:0}.pinddrop a.on{color:var(--pp)}
+
+  .wrap{padding:16px}
+  .panel{display:none}.panel.on{display:block}
+  .pgt{display:none}
+
+  /* 검색/필터 */
+  .searchrow{display:flex;gap:7px;background:var(--fill2);border:1px solid var(--line2);border-radius:11px;padding:11px;margin-bottom:12px;flex-wrap:wrap}
+  .searchrow .sel{border:1px solid var(--line);border-radius:8px;padding:9px 8px;font-size:12px;background:#fff}
+  .searchrow .stext{flex:1;min-width:90px;border:1px solid var(--line);border-radius:8px;padding:9px 10px;font-size:12px}
+  .sbtn{background:var(--ink);color:#fff;border-radius:8px;padding:9px 15px;font-size:12px;font-weight:800;cursor:pointer}
+  .cats{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:14px;white-space:nowrap}.cats::-webkit-scrollbar{height:0}
+  .cat{flex:0 0 auto;background:var(--fill);border:1px solid var(--line2);border-radius:18px;padding:7px 13px;font-size:12px;color:#5a606c;font-weight:700;cursor:pointer}
+  .cat.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .linkbtn{flex:0 0 auto;border:1px solid var(--line);border-radius:18px;padding:7px 12px;font-size:11.5px;font-weight:700;color:#5a606c;cursor:pointer}
+
+  /* 리스트(공지/오류정정) */
+  .nlist .nrow{display:flex;align-items:center;gap:10px;padding:14px 2px;border-bottom:1px solid var(--line2);cursor:pointer}
+  .nlist .nrow:last-child{border-bottom:0}
+  .nbadge{flex:0 0 auto;font-size:10px;font-weight:800;border-radius:5px;padding:3px 8px}
+  .nbadge.must{color:var(--red);background:#fdeaea}.nbadge.imp{color:var(--orange);background:#fdf0e2}.nbadge.info{color:#5a606c;background:var(--fill)}
+  .nbadge.cat{color:#5a606c;background:var(--fill)}
+  .ntxt{flex:1;min-width:0}
+  .ntit{font-size:13px;font-weight:600;color:#3d4756;line-height:1.4;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+  .nmeta{font-size:11px;color:var(--muted);margin-top:4px}
+  .notice-no{display:inline-block;background:var(--orange);color:#fff;border-radius:5px;padding:2px 8px;font-size:10px;font-weight:800}
+
+  /* 상세 */
+  .readhead{border-top:2px solid var(--ink);border-bottom:1px solid var(--line2);background:var(--fill2);padding:14px 14px}
+  .readhead .badge{font-size:10px;font-weight:800;border-radius:5px;padding:3px 8px}
+  .readhead .badge.info{color:#5a606c;background:var(--fill)}.readhead .badge.must{color:var(--red);background:#fdeaea}.readhead .badge.imp{color:var(--orange);background:#fdf0e2}
+  .readhead .rttl{font-size:14px;font-weight:700;color:#222732;margin:8px 0 4px;line-height:1.4}
+  .readhead .rdate{font-size:11.5px;color:var(--muted)}
+  .bookinfo{display:flex;gap:12px;align-items:center;padding:14px;border-bottom:1px solid var(--line2)}
+  .bookinfo .bcover{width:52px;height:68px;border-radius:6px;background:var(--fill);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:10px;flex-shrink:0}
+  .bookinfo .bn{font-size:13px;font-weight:700;margin:0 0 5px}.bookinfo .bd{font-size:11.5px;color:#6b7280;margin:0}
+  .readbody{padding:18px 14px;font-size:13px;color:#3d4756;line-height:1.9;white-space:pre-line;border-bottom:1px solid var(--line2);min-height:120px}
+  .backbtn{display:block;width:100%;text-align:center;border:1px solid var(--line);border-radius:9px;padding:12px;font-size:13px;font-weight:700;color:#5a606c;margin-top:16px;cursor:pointer}
+  .qd{border:1px solid var(--line2);border-radius:12px;overflow:hidden}
+  .qdhead{background:var(--fill2);border-bottom:1px solid var(--line2);padding:14px}
+  .qdcat{display:inline-block;font-size:10px;font-weight:800;color:#5a606c;background:#fff;border:1px solid var(--line2);border-radius:5px;padding:2px 8px}
+  .qdtitle{font-size:14px;font-weight:700;margin:8px 0 5px;line-height:1.4;color:#222732}
+  .qddate{font-size:11.5px;color:var(--muted);margin:0;line-height:1.5}.qddate .star{color:#f5b50a}
+  .qdbody{padding:16px 14px;font-size:13px;line-height:1.85;color:#3d4756;white-space:pre-line}
+  .rvcover{width:48px;height:62px;border-radius:6px;background:var(--fill);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:10px;flex-shrink:0}
+  .rvr{display:flex;gap:12px;padding:13px 14px;border-bottom:1px solid var(--line2);font-size:12.5px;color:#3d4756}.rvr:last-child{border-bottom:0}
+  .rvr .rvl{flex:0 0 52px;font-weight:800;color:#5a606c}
+  .rvr.col{flex-direction:column;gap:8px}.rvr .rvc{line-height:1.85;white-space:pre-line}
+
+  /* 서브탭 */
+  .subtabs{display:flex;gap:6px;border-bottom:2px solid var(--line2);margin-bottom:16px}
+  .subtab{padding:10px 14px;font-size:13.5px;font-weight:800;color:#9aa0ac;border-bottom:2px solid transparent;margin-bottom:-2px;cursor:pointer}
+  .subtab.on{color:var(--ink);border-bottom-color:var(--ink)}
+  .statusf{display:flex;gap:6px;margin-left:auto}.sf{border:1px solid var(--line2);border-radius:7px;padding:6px 11px;font-size:11.5px;font-weight:700;color:#5a606c;cursor:pointer}.sf.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+  /* FAQ 아코디언 */
+  .faq .fq{padding:14px 2px;border-bottom:1px solid var(--line2);cursor:pointer;display:flex;gap:8px;align-items:flex-start}
+  .faq .fq .qm{color:var(--orange);font-weight:800;flex:0 0 auto}
+  .faq .fq .qcat{flex:0 0 auto;font-size:10px;font-weight:700;color:#5a606c;background:var(--fill);border-radius:5px;padding:2px 7px;margin-right:4px}
+  .faq .fq .qt{flex:1;font-size:13px;font-weight:600;color:#3d4756;line-height:1.4}
+  .faq .fq .ar{flex:0 0 auto;color:var(--muted)}
+  .faq .fa{display:none;background:var(--fill2);padding:14px 14px 14px 30px;font-size:12.5px;color:#3d4756;line-height:1.85;border-bottom:1px solid var(--line2)}
+  .faq .fa .ai{display:inline-block;width:20px;height:20px;border-radius:50%;background:#9aa0ac;color:#fff;font-weight:800;text-align:center;line-height:20px;font-size:11px;margin-right:8px;vertical-align:top}
+
+  /* 이벤트 카드 */
+  .evlist{display:flex;flex-direction:column;gap:12px}
+  .evcard{border:1px solid var(--line2);border-radius:12px;overflow:hidden;background:#fff;cursor:pointer}
+  .evimg{height:120px;background:var(--fill);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:11px;position:relative}
+  .evtag{position:absolute;top:8px;left:8px;background:var(--ink);color:#fff;font-size:9.5px;font-weight:800;padding:3px 8px;border-radius:5px}
+  .evbody{padding:12px 13px}.evdate{font-size:11px;color:var(--muted);margin:0 0 4px}.evtt{font-size:13px;font-weight:700;margin:0;line-height:1.4}
+  .ing{display:inline-block;font-size:9px;font-weight:800;color:#fff;background:var(--red);border-radius:4px;padding:2px 6px;margin-left:5px}
+  .winnerbtn{margin-left:auto;font-size:11px;font-weight:700;color:var(--pp);cursor:pointer}
+
+  /* NE Point 안내 */
+  .neptop{display:flex;align-items:center;gap:16px;border:1px solid var(--line2);border-radius:13px;padding:18px;margin-bottom:14px}
+  .neptop .npt{font-size:15px;font-weight:800;margin:0 0 7px}.neptop .npx{font-size:12px;color:#5a606c;line-height:1.6;margin:0}
+  .neptop .nplogo{font-size:20px;font-weight:800;color:#5cb646;flex-shrink:0}
+  .neptt{font-size:14px;font-weight:800;margin:18px 0 9px}
+  .gtbl{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:6px}
+  .gtbl th{background:#7bc043;color:#fff;font-weight:700;padding:9px;border:1px solid #6cae39}
+  .gtbl td{padding:9px 10px;border:1px solid var(--line2);color:#3d4756;line-height:1.5}
+  .gtbl td.k{font-weight:700;width:34%}.gtbl td.c{text-align:center;color:#5cb646;font-weight:700;width:24%}
+  .nepnote{font-size:11.5px;color:#5cb646;font-weight:700;margin-top:12px}
+
+  /* 후기 */
+  .rvlist .rv{display:flex;align-items:center;gap:10px;padding:14px 2px;border-bottom:1px solid var(--line2);cursor:pointer}
+  .rv .rvcat{flex:0 0 auto;font-size:10px;font-weight:700;color:#5a606c;background:var(--fill);border-radius:5px;padding:2px 7px}
+  .rv .rvtxt{flex:1;min-width:0}
+  .rv .rvbook{font-size:11px;color:#6b7280;margin-bottom:3px}
+  .rv .rvtit{font-size:13px;font-weight:600;color:#3d4756;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .rv .rvstar{flex:0 0 auto;color:#f5b50a;font-size:11px}
+  .rv.blind{cursor:default}.rv.blind .rvtit{color:#9aa0ac}
+  .star{color:#f5b50a}
+
+  /* 폼 (1:1·후기 작성) */
+  .qnotice{font-size:11.5px;color:#5a606c;line-height:1.6;background:var(--fill2);border:1px solid var(--line2);border-radius:10px;padding:13px 14px;margin-bottom:16px}
+  .qninfo{font-size:11px;color:#5a606c;margin-top:10px;padding-top:10px;border-top:1px solid var(--line2)}
+  .qnchips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+  .fpill{background:var(--fill);border:1px solid var(--line2);border-radius:18px;padding:6px 10px;font-size:11px;color:#5a606c;font-weight:700}
+  .card{background:#fff;border:1px solid var(--line2);border-radius:14px;padding:16px;margin-bottom:14px}
+  .frow{border-bottom:1px solid var(--line2);padding:13px 0}.frow:last-child{border-bottom:0}
+  .fl{font-size:12px;font-weight:800;color:#3d4756;margin:0 0 8px}.fl i{color:var(--red);font-style:normal}
+  .finput{width:100%;border:1px solid var(--line);border-radius:8px;padding:10px 11px;font-size:12.5px;font-family:inherit;background:#fff}
+  .em{display:flex;gap:6px;align-items:center}.em .finput{flex:1}
+  .fnote{font-size:10.5px;color:var(--muted);margin:7px 0 0;line-height:1.5}
+  .guidebox{background:var(--fill2);border:1px solid var(--line2);border-radius:8px;padding:12px;font-size:11px;color:#5a606c;line-height:1.6;margin-bottom:9px}
+  .qtype{display:flex;gap:11px;font-size:11.5px;white-space:nowrap;align-items:center}.qtype label{white-space:nowrap}
+  .guestnotice{background:var(--fill2);border:1px solid var(--line2);border-radius:10px;padding:13px 14px;font-size:11.5px;color:#5a606c;line-height:1.7;margin-bottom:14px}
+  .guestnotice b{color:#3d4756}.guestnotice .lk{color:var(--blue);font-weight:700}
+  .captcha{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .capimg{background:#fbf3cf;border:1px solid #e7d98a;border-radius:6px;padding:7px 14px;font-size:16px;font-weight:800;letter-spacing:2px;color:#7a5a00;font-family:monospace}
+  .caprefresh{width:30px;height:30px;border:1px solid var(--line);border-radius:7px;display:flex;align-items:center;justify-content:center;color:#5a606c;cursor:pointer}
+  .consent{border:1px solid var(--line2);border-radius:10px;padding:13px 14px;margin-top:12px}
+  .consent h4{font-size:12px;font-weight:800;margin:0 0 9px;color:#3d4756}
+  .ctable{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:8px}
+  .ctable th{background:var(--fill2);border:1px solid var(--line2);padding:7px;font-weight:700;color:#5a606c}
+  .ctable td{border:1px solid var(--line2);padding:8px;text-align:center;color:#3d4756}
+  .consent .ctxt{font-size:11px;color:#6b7280;line-height:1.5;margin:0 0 8px}
+  .consent label{font-size:12px;font-weight:600;color:#3d4756}
+  .warnred{color:var(--red);font-weight:700;font-size:11px;margin:8px 0 0}
+  .starpick{font-size:20px;color:#d7dbe2;cursor:pointer}.starpick.on{color:#f5b50a}
+  .formbtns{display:flex;gap:9px;margin-top:16px}.formbtns span{flex:1;text-align:center;border-radius:9px;padding:13px;font-size:13px;font-weight:800;cursor:pointer}
+  .b-ghost{border:1px solid var(--line);color:#5a606c}.b-solid{background:var(--ink);color:#fff}
+  .actionbtn{display:block;width:100%;text-align:center;background:var(--orange);color:#fff;border-radius:10px;padding:13px;font-size:13.5px;font-weight:800;margin-top:14px;cursor:pointer}
+  .pager{display:flex;gap:6px;justify-content:center;margin-top:18px}.pg{min-width:28px;height:28px;padding:0 7px;border:1px solid var(--line2);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:12px;color:#5a606c}.pg.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .needfix{border:1px dashed var(--line);border-radius:12px;background:var(--fill2);padding:34px 16px;text-align:center;color:var(--muted);font-size:12.5px;line-height:1.6}
+
+  /* 햄버거 드로어 (메인·마이페이지와 동일) */
+  .drawer{position:absolute;top:30px;left:0;right:0;bottom:0;z-index:600;display:none}
+  .drawer.open{display:block}
+  .drawer .dim{position:absolute;inset:0;background:rgba(0,0,0,.45)}
+  .drawer .dw{position:absolute;top:0;left:0;bottom:0;width:100%;background:#fff;display:flex;flex-direction:column;transform:translateX(-100%);transition:transform .28s ease}
+  .drawer.open .dw{transform:translateX(0)}
+  .dwtop{display:flex;align-items:center;gap:12px;padding:14px 16px;font-size:14px;font-weight:700;border-bottom:1px solid var(--line2)}
+  .dwtop .x{font-size:20px;cursor:pointer}.dwtop .hm{font-size:18px}.dwtop .lk{cursor:pointer}
+  .authin b{color:var(--pp)}.authin #logoutBtn{color:var(--muted);text-decoration:underline;font-weight:700;font-size:12.5px}
+  .dwic{font-size:18px;cursor:pointer;position:relative}
+  .dwic.cart i{position:absolute;top:-7px;right:-9px;background:var(--orange);color:#fff;font-size:9px;font-weight:800;border-radius:10px;padding:1px 5px;font-style:normal}
+  .dwbanner{background:linear-gradient(135deg,#7b8ef2,#5566e6);color:#fff;padding:15px 16px;font-size:14px;font-weight:800;display:flex;align-items:center;gap:8px}
+  .dwbanner .go{margin-left:auto;font-size:17px}
+  .dwbody{flex:1;display:grid;grid-template-columns:108px 1fr;overflow:hidden}
+  .dwcats{background:var(--fill2);overflow-y:auto;border-right:1px solid var(--line2)}
+  .dwcat{display:flex;align-items:center;justify-content:center;min-height:48px;padding:0 6px;font-size:12px;font-weight:700;color:#7a828f;border-bottom:1px solid var(--line2);cursor:pointer;text-align:center;white-space:nowrap}
+  .dwcat.on{background:#fff;color:var(--pp);font-weight:800}
+  .dwsub{overflow-y:auto}.dwsub a{display:flex;align-items:center;min-height:48px;padding:0 18px;font-size:13.5px;font-weight:600;color:#3d4756;border-bottom:1px solid var(--line2);cursor:pointer}
+  .dwbottom{display:flex;justify-content:space-around;padding:14px 8px;border-top:1px solid var(--line2);font-size:12px;font-weight:700;color:#5a606c}.dwbottom span{cursor:pointer}
+
+  /* 푸터 */
+  .ftr{background:#2a2f3a;color:#9aa0ac;font-size:11px;line-height:1.9;padding:18px 16px}
+  .fnav2{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:11px;margin-bottom:14px}
+  .fnav2 a{color:#cdd2db;font-weight:600}.fnav2 a.b{color:#fff;font-weight:800}.fsep{color:#555c69}
+  .bizrow{display:flex;align-items:center;gap:8px;font-size:12px;color:#cdd2db;font-weight:700;cursor:pointer;padding:6px 0}.bizrow .caret{font-size:9px}
+  .bizinfo{font-size:11px;line-height:1.85;color:#9aa0ac;margin:4px 0 2px}
+  .familybar{border:1px solid #555c69;border-radius:9px;padding:11px 14px;font-size:12px;color:#cdd2db;display:flex;align-items:center;justify-content:space-between;margin:13px 0 10px}
+  .copyr{font-size:10.5px;color:#7d8390}
+  .cap{width:390px;margin:14px auto 0;text-align:center;color:#7a8088;font-size:12px}
+</style></head>
+<body>
+  <div class="phone">
+    <div class="statusbar"><span>9:41</span><span>📶 🔋</span></div>
+    <div class="scr">
+      <div class="mtopwrap">
+        <div class="mhd">
+          <span class="logo" id="homeBtn"><span class="r">NE_</span>Books</span>
+          <span class="hicons"><span>🔍</span><span>🛒</span><span class="ham" id="hamBtn">☰</span></span>
+        </div>
+        <div class="pindbar"><span class="pind" id="pindBtn">공지사항 <span class="pcaret">▾</span></span></div>
+        <div class="pinddrop" id="pindDrop">
+          <a class="on" data-go="notice">공지사항</a>
+          <a data-go="guide">이용가이드</a>
+          <a data-go="faq">FAQ</a>
+          <a data-go="event">이벤트 / 신간·개정 / 세미나</a>
+          <a data-go="errata">교재 오류정정</a>
+          <a data-go="qna">1:1 문의</a>
+          <a data-go="review">교재 후기</a>
+          <a data-go="branch">지사안내</a>
+        </div>
+      </div>
+
+      <div class="wrap">
+        <!-- 공지사항 -->
+        <div class="panel on" id="panel-notice">
+          <div id="notice-list">
+            <p class="pgt">NE Books 공지사항을 확인하실 수 있습니다.</p>
+            <div class="searchrow"><select class="sel"><option>전체</option><option>공통</option><option>ELT</option><option>초중고(영어)</option><option>교과서 관련</option><option>수험·일반</option><option>수학·국어</option></select><input class="stext" placeholder="검색어 입력"><span class="sbtn">검색</span></div>
+            <div class="cats"><span class="cat on">전체</span><span class="cat">공통</span><span class="cat">ELT</span><span class="cat">초중고(영어)</span><span class="cat">교과서 관련</span><span class="cat">수험·일반</span><span class="cat">수학·국어</span></div>
+            <div class="nlist">
+              <div class="nrow nrowq" data-badge="필독" data-bcls="must" data-title="개인정보 처리방침 개정 안내 (6/23 시행)" data-date="2026.06.16 · 조회 312" data-body="안녕하세요. NE능률 회원님.&#10;개인정보 처리방침이 2026년 6월 23일부로 개정되어 아래와 같이 안내드립니다.&#10;&#10;1. 개정 사유 - 수탁업체 변경 및 보유기간 정비&#10;2. 시행일자 : 2026년 6월 23일&#10;&#10;자세한 내용은 [개인정보처리방침] 페이지에서 확인하실 수 있습니다.">
+                <span class="notice-no">공지</span><div class="ntxt"><div class="ntit"><b style="color:var(--red)">[필독]</b> 개인정보 처리방침 개정 안내 (6/23 시행)</div><div class="nmeta">2026.06.16 · 조회 312</div></div></div>
+              <div class="nrow nrowq" data-badge="중요" data-bcls="imp" data-title="2026학년도 교과서·자습서·문제집 구매 안내" data-date="2025.12.29 · 조회 921" data-body="2026학년도 교과서·자습서·문제집 구매 안내드립니다.&#10;&#10;· 구매 방법 및 배송 일정, 교재별 구성은 본문을 참고해 주세요.">
+                <span class="notice-no">공지</span><div class="ntxt"><div class="ntit"><b style="color:var(--orange)">[중요]</b> 2026학년도 교과서·자습서·문제집 구매 안내</div><div class="nmeta">2025.12.29 · 조회 921</div></div></div>
+              <div class="nrow nrowq" data-badge="안내" data-bcls="info" data-title="고객센터 운영시간 및 휴게시간 변경 안내" data-date="2025.12.10 · 조회 180" data-body="고객센터 운영시간 및 휴게시간이 변경됩니다.&#10;&#10;· 운영시간 : 평일 09:00 ~ 18:00&#10;· 휴게시간 : 12:00 ~ 13:00">
+                <span class="nbadge info">안내</span><div class="ntxt"><div class="ntit">고객센터 운영시간 및 휴게시간 변경 안내 (2/1)</div><div class="nmeta">2025.12.10 · 조회 180</div></div></div>
+              <div class="nrow nrowq" data-badge="안내" data-bcls="info" data-title="절판(예정포함) 국어교재 (1/7 기준)" data-date="2025.12.29 · 조회 540" data-body="절판(예정 포함) 국어교재 목록을 안내드립니다.&#10;해당 교재는 재고 소진 시 구매가 제한될 수 있습니다.">
+                <span class="nbadge info">안내</span><div class="ntxt"><div class="ntit">절판(예정포함) 국어교재 (1/7 기준)</div><div class="nmeta">2025.12.29 · 조회 540</div></div></div>
+            </div>
+            <div class="pager"><span class="pg on">1</span><span class="pg">2</span><span class="pg">3</span><span class="pg">»</span></div>
+          </div>
+          <div id="notice-detail" style="display:none">
+            <div class="readhead"><span class="badge info" id="ndBadge">안내</span><p class="rttl" id="ndTitle">-</p><p class="rdate" id="ndDate">-</p></div>
+            <div class="readbody" id="ndBody">-</div>
+            <span class="backbtn" id="noticeBack">목록</span>
+          </div>
+        </div>
+
+        <!-- 이용가이드 -->
+        <div class="panel" id="panel-guide">
+          <div class="subtabs"><span class="subtab on" data-sub="site">사이트 이용 가이드</span><span class="subtab" data-sub="point">NE Point 안내</span></div>
+          <div class="subpanel" data-sub="site">
+            <div class="needfix">🛠 디자인 완료 후 콘텐츠/이미지 재작업 예정<br>(사이트 이용 가이드 영역)</div>
+          </div>
+          <div class="subpanel" data-sub="point" style="display:none">
+            <div class="neptop"><div><p class="npt">NE Point란?</p><p class="npx">NE Books·NE Times에서 회원가입·온라인 활동 등으로 적립한 포인트를 상품 구매 시 현금처럼 사용하고 다양한 혜택을 누리는 제도입니다.</p></div></div>
+            <p class="neptt">적립</p>
+            <table class="gtbl"><tbody>
+              <tr><td class="k">교재 구매</td><td>정가 기준 교재별 적립률(구매확정 시)</td><td class="c">적립</td></tr>
+              <tr><td class="k">교재 후기</td><td>교재별 최초 1회 500P</td><td class="c">적립</td></tr>
+              <tr><td class="k">온라인 엽서</td><td>교재당 1회 500P</td><td class="c">적립</td></tr>
+              <tr><td class="k">마케팅 수신동의</td><td>SMS/전화 동의 시 최초 1회 2,000P</td><td class="c">적립</td></tr>
+              <tr><td class="k">이벤트</td><td>이벤트별 정책에 따라 지급</td><td class="c">적립</td></tr>
+            </tbody></table>
+            <p class="neptt">사용</p>
+            <table class="gtbl"><tbody>
+              <tr><td class="k">NE Books</td><td>자사몰 상품 구매 시 100P 단위 사용</td><td class="c">사용</td></tr>
+              <tr><td class="k">NE Times</td><td>마케팅 수신동의(SMS/전화) 이력 시 1회 1,000~2,000P</td><td class="c">사용</td></tr>
+            </tbody></table>
+            <p class="neptt">유효기간 / 차감</p>
+            <table class="gtbl"><tbody>
+              <tr><td class="k">유효기간</td><td>적립일 기준 1년(이벤트 별도) · 만료 시 소멸</td></tr>
+              <tr><td class="k">주문취소/반품</td><td>사용 포인트 복원 + 구매 적립 포인트 회수</td></tr>
+            </tbody></table>
+            <p class="nepnote">* NE Point 혜택은 상시로 업데이트 될 예정입니다.</p>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div class="panel" id="panel-faq">
+          <p class="pgt">자주 묻는 문의사항을 확인하고 검색하실 수 있습니다.</p>
+          <div class="searchrow"><select class="sel"><option>전체</option><option>사이트 이용</option><option>회원정보</option><option>NE Point</option><option>교재</option><option>부가 서비스</option><option>주문/결제</option><option>취소/환불</option><option>배송</option><option>기타</option></select><input class="stext" placeholder="검색어 입력"><span class="sbtn">검색</span></div>
+          <div class="cats"><span class="cat on">전체</span><span class="cat">사이트 이용</span><span class="cat">회원정보</span><span class="cat">NE Point</span><span class="cat">교재</span><span class="cat">부가 서비스</span><span class="cat">주문/결제</span><span class="cat">취소/환불</span><span class="cat">배송</span><span class="cat">기타</span></div>
+          <div class="faq">
+            <div class="fq"><span class="qm">Q</span><span class="qcat">주문/결제</span><span class="qt">주문 결제 수단은 무엇이 있나요?</span><span class="ar">⌄</span></div>
+            <div class="fa"><span class="ai">A</span>신용카드, 실시간 계좌이체, 무통장입금(가상계좌)으로 결제하실 수 있습니다. 일부 결제 수단은 최소 결제 금액 제한이 있을 수 있습니다.</div>
+            <div class="fq"><span class="qm">Q</span><span class="qcat">취소/환불</span><span class="qt">주문 취소 및 환불은 어떻게 하나요?</span><span class="ar">⌄</span></div>
+            <div class="fa"><span class="ai">A</span>배송 준비 전에는 마이페이지 &gt; 주문내역에서 직접 취소가 가능합니다. 배송 시작 후에는 1:1 문의(주문·배송)로 반품/교환을 신청해 주세요. 환불은 결제 수단에 따라 영업일 기준 3~5일 소요됩니다.</div>
+            <div class="fq"><span class="qm">Q</span><span class="qcat">배송</span><span class="qt">배송은 보통 며칠 걸리나요?</span><span class="ar">⌄</span></div>
+            <div class="fa"><span class="ai">A</span>주문 후 평균 2~3일(영업일 기준) 이내 배송됩니다. 도서 산간 및 일부 지역은 1~2일 추가될 수 있습니다.</div>
+            <div class="fq"><span class="qm">Q</span><span class="qcat">회원정보</span><span class="qt">여러 ID에 동일한 사람으로 본인인증을 할 수 있나요?</span><span class="ar">⌄</span></div>
+            <div class="fa"><span class="ai">A</span>이미 어떤 ID로 본인인증한 경우, 다른 ID에 동일한 사람으로 본인인증을 할 수 없습니다. 본인인증은 신용평가사·아이핀 인증을 통해 이루어지므로 휴대폰번호가 바뀌어도 기존 인증 ID가 있으면 추가 인증은 불가합니다. 필요 시 고객센터(1833-8368)로 문의해 주세요.</div>
+            <div class="fq"><span class="qm">Q</span><span class="qcat">NE Point</span><span class="qt">포인트는 어떻게 적립되고 사용하나요?</span><span class="ar">⌄</span></div>
+            <div class="fa"><span class="ai">A</span>교재 구매·후기 작성·온라인 엽서·마케팅 수신동의·이벤트 등으로 적립되며, NE Books 자사몰에서 100P 단위로 사용할 수 있습니다. 자세한 내용은 [이용가이드 &gt; NE Point 안내]를 확인해 주세요.</div>
+          </div>
+          <div class="pager"><span class="pg on">1</span><span class="pg">2</span><span class="pg">»</span></div>
+        </div>
+
+        <!-- 이벤트 / 신간·개정 / 세미나 -->
+        <div class="panel" id="panel-event">
+          <div class="subtabs"><span class="subtab on">이벤트</span><span class="subtab">신간·개정</span><span class="subtab">세미나</span></div>
+          <div class="cats"><span class="cat on">전체</span><span class="cat">ELT</span><span class="cat">초·중·고</span><span class="cat">수험·일반</span><span class="cat">수학·국어</span></div>
+          <div style="display:flex;align-items:center;margin-bottom:12px"><span class="winnerbtn" id="winnerBtn" style="margin-left:0">🏆 당첨자발표</span><span class="statusf"><span class="sf on">진행중</span><span class="sf">종료</span></span></div>
+          <div class="evlist">
+            <div class="evcard"><div class="evimg"><span class="evtag">ELT</span>홍보 이미지</div><div class="evbody"><p class="evdate">2026.06.22 ~ 2026.07.24</p><p class="evtt">수업이 달라지는 기준, 7월 혼강 세미나<span class="ing">진행중</span></p></div></div>
+            <div class="evcard"><div class="evimg"><span class="evtag">초·중·고</span>홍보 이미지</div><div class="evbody"><p class="evdate">2026.06.01 ~ 2026.06.30</p><p class="evtt">여름방학 대비 교재 기획전<span class="ing">진행중</span></p></div></div>
+            <div class="evcard"><div class="evimg"><span class="evtag">수학·국어</span>홍보 이미지</div><div class="evbody"><p class="evdate">2026.05.20 ~ 2026.06.20</p><p class="evtt">수학/국어 신간 출시 안내</p></div></div>
+          </div>
+          <div class="pager"><span class="pg on">1</span><span class="pg">2</span></div>
+        </div>
+
+        <!-- 교재 오류정정 -->
+        <div class="panel" id="panel-errata">
+          <div id="errata-list">
+            <p class="pgt">교재의 오류사항에 대해 정정알림을 확인하실 수 있습니다.</p>
+            <div class="searchrow"><select class="sel"><option>구분</option></select><select class="sel"><option>영역/대상</option></select><select class="sel"><option>교재 시리즈</option></select><span class="sbtn">검색</span></div>
+            <div class="cats"><span class="cat on">전체</span><span class="cat">공통</span><span class="cat">ELT</span><span class="cat">초중고(영어)</span><span class="cat">교과서 관련</span><span class="cat">수험·일반</span><span class="cat">수학·국어</span><span class="linkbtn">교과서 콘텐츠 FAQ ›</span></div>
+            <div class="nlist">
+              <div class="nrow erow" data-badge="교과서 관련" data-title="중등 내신백신 기출문제집 English 2-1 기말고사(김기택) 수정사항" data-date="2026.06.22 · 조회 8" data-book="중등 내신백신 기출문제집 English 2-1 기말고사 (김기택)" data-pub="출간일: 2025-12-01" data-body="〈중등 내신백신 기출문제집 English 2-1 기말고사〉 수정 사항 안내드립니다.&#10;&#10;p.45 3번 문항 정답 정정&#10;(수정전) 정답 ③&#10;(수정후) 정답 ②&#10;&#10;다음 재판 시 수정하여 출간할 예정입니다.">
+                <span class="nbadge cat">교과서</span><div class="ntxt"><div class="ntit">중등 내신백신 기출문제집 English 2-1 기말고사(김기택) 수정사항</div><div class="nmeta">2026.06.22 · 조회 8</div></div></div>
+              <div class="nrow erow" data-badge="초중고(영어)" data-title="[2025 개정] 리딩튜터 챌린저2 수정사항" data-date="2026.05.27 · 조회 63" data-book="리딩튜터 챌린저 2 (2025 개정)" data-pub="출간일: 2025-01-05" data-body="〈리딩튜터 챌린저 2 (2025 개정)〉 수정 사항 안내드립니다.&#10;&#10;p.298 INDEX as 페이지 정정&#10;(수정전) as 98&#10;(수정후) as 100&#10;&#10;다음 재판 시 수정하여 출간할 예정입니다.">
+                <span class="nbadge cat">초중고</span><div class="ntxt"><div class="ntit">[2025 개정] 리딩튜터 챌린저2 수정사항</div><div class="nmeta">2026.05.27 · 조회 63</div></div></div>
+              <div class="nrow erow" data-badge="수학·국어" data-title="[2022 개정] 중학 수학 2-1 정오표" data-date="2026.05.21 · 조회 80" data-book="중학 수학 2-1 (2022 개정)" data-pub="출간일: 2024-12-20" data-body="〈중학 수학 2-1 (2022 개정)〉 정오표 안내드립니다.&#10;&#10;p.76 예제 3 풀이 정정&#10;(수정전) x = 4&#10;(수정후) x = 5">
+                <span class="nbadge cat">수학·국어</span><div class="ntxt"><div class="ntit">[2022 개정] 중학 수학 2-1 정오표</div><div class="nmeta">2026.05.21 · 조회 80</div></div></div>
+            </div>
+            <span class="actionbtn" id="errataReport">교재 오류 신고하기 ›</span>
+          </div>
+          <div id="errata-detail" style="display:none">
+            <div class="readhead"><span class="badge info" id="edBadge">분류</span><p class="rttl" id="edTitle">-</p><p class="rdate" id="edDate">-</p></div>
+            <div class="bookinfo"><span class="bcover">표지</span><div><p class="bn" id="edBook">-</p><p class="bd" id="edPub">-</p></div></div>
+            <div class="readbody" id="edBody">-</div>
+            <span class="backbtn" id="errataBack">목록</span>
+          </div>
+        </div>
+
+        <!-- 1:1 문의 -->
+        <div class="panel" id="panel-qna">
+          <div class="subtabs"><span class="subtab on" data-sub="member">회원 로그인</span><span class="subtab" data-sub="guest">비회원 문의</span></div>
+
+          <!-- 회원(로그인) -->
+          <div class="subpanel" data-sub="member">
+            <div class="qnotice">문의하신 내용은 빠른 시일 안에 답변드리겠습니다.
+              <div class="qninfo">ⓘ 문의 전에 먼저 확인하여 주시면 문의를 쉽고 빠르게 해결하실 수 있습니다.</div>
+              <div class="qnchips"><span class="fpill">도움말(FAQ)</span><span class="fpill">교재정오 알림</span><span class="fpill">교과서 콘텐츠 FAQ</span></div>
+            </div>
+            <div class="card">
+              <div class="frow"><p class="fl">상담유형</p><div class="qtype"><label><input type="radio" name="qt" value="general" checked> 일반 문의</label><label><input type="radio" name="qt" value="errata"> 교재 오류신고</label><label><input type="radio" name="qt" value="order"> 주문·배송 관련 문의</label></div></div>
+              <div class="frow"><p class="fl">상담분류 <i>*</i></p><select class="finput" id="qcat"><option>문의분류를 선택해 주세요</option><option>회원정보</option><option>교재·교과서 문의</option><option>부가서비스 문의</option><option>자료요청</option><option>사이트이용</option><option>이벤트</option><option>영업 및 제휴문의</option><option>의견,제안</option><option>기타</option></select></div>
+              <div class="frow" id="qorderRow" style="display:none"><p class="fl">주문번호 / 상품</p>
+                <select class="finput" id="qorderSel" style="margin-bottom:8px"><option value="">주문번호 선택 (선택)</option><option>20260610-001 · 능률 VOCA 외 1건</option><option>20260520-002 · 내신백신 100</option></select>
+                <select class="finput" id="qprodSel" disabled><option value="">상품 선택 (선택)</option></select>
+                <p class="fnote">* 주문 관련 문의 시 관련 주문번호 혹은 상품을 선택해서 문의해주시면 더 빠른 답변이 가능합니다.</p>
+              </div>
+              <div class="frow"><p class="fl">작성자 <i>*</i></p><b>김능률</b> (neungyule)</div>
+              <div class="frow"><p class="fl">이메일 <i>*</i></p><div class="em"><input class="finput" value="neungyule"> @ <input class="finput" value="naver.com"></div><select class="finput" style="margin-top:8px"><option>naver.com</option><option>gmail.com</option><option>daum.net</option><option>직접입력</option></select></div>
+              <div class="frow"><p class="fl">연락처</p><div class="em"><input class="finput"> - <input class="finput"> - <input class="finput"></div><label style="display:inline-block;margin-top:8px;font-size:12px"><input type="checkbox"> 답변여부 SMS 알림받기</label></div>
+              <div class="frow"><p class="fl">제목 <i>*</i></p><input class="finput" placeholder="제목을 입력해 주세요."></div>
+              <div class="frow"><p class="fl">내용 <i>*</i></p><div class="guidebox">■ 안내사항 ■<br>· 교강사용 자료요청 시 재직 학교/학원(학원명·주소) 정보와 거래 지사(총판)명을 함께 기재해 주세요.</div><textarea class="finput" rows="6" placeholder="내용을 입력해 주세요."></textarea></div>
+              <div class="frow"><p class="fl">첨부파일</p><span class="sbtn" style="background:#a9936b">파일첨부</span> <span class="fnote" style="display:inline">(최대 5MB)</span></div>
+            </div>
+            <div class="formbtns"><span class="b-solid" style="background:var(--pp)">등록</span></div>
+          </div>
+
+          <!-- 비회원 -->
+          <div class="subpanel" data-sub="guest" style="display:none">
+            <div class="guestnotice"><b>비회원 문의 게시판입니다.</b><br>교사/강사 회원님은 학원/학교 정보 확인과 상담이력 관리를 위해 <span class="lk">[회원 로그인]</span> 후 이용을 부탁드립니다.<br>답변은 이메일로 제공되며 업무일 기준 1~2일 소요될 수 있습니다.</div>
+            <div class="qnotice"><div class="qninfo" style="border-top:0;margin-top:0;padding-top:0">ⓘ 문의 전에 먼저 확인하여 주시면 문의를 쉽고 빠르게 해결하실 수 있습니다.</div><div class="qnchips"><span class="fpill">도움말(FAQ)</span><span class="fpill">교재정오 알림</span><span class="fpill">교과서 콘텐츠 FAQ</span></div></div>
+            <div class="card">
+              <div class="frow"><p class="fl">상담유형</p><div class="qtype"><label><input type="radio" name="gqt" value="general" checked> 일반 문의</label><label><input type="radio" name="gqt" value="errata"> 교재 오류신고</label><label><input type="radio" name="gqt" value="order"> 주문·배송 관련 문의</label></div></div>
+              <div class="frow"><p class="fl">상담분류 <i>*</i></p><select class="finput" id="gcat"><option>문의분류를 선택해 주세요</option><option>회원정보</option><option>교재·교과서 문의</option><option>부가서비스 문의</option><option>자료요청</option><option>사이트이용</option><option>이벤트</option><option>영업 및 제휴문의</option><option>의견,제안</option><option>기타</option></select></div>
+              <div class="frow"><p class="fl">작성자 <i>*</i></p><input class="finput" placeholder="이름을 입력해 주세요"></div>
+              <div class="frow"><p class="fl">이메일 <i>*</i></p><div class="em"><input class="finput" placeholder="아이디"> @ <input class="finput" placeholder="도메인"></div><select class="finput" style="margin-top:8px"><option>직접입력</option><option>naver.com</option><option>gmail.com</option><option>daum.net</option></select></div>
+              <div class="frow"><p class="fl">연락처</p><div class="em"><input class="finput"> - <input class="finput"> - <input class="finput"></div><label style="display:inline-block;margin-top:8px;font-size:12px"><input type="checkbox"> 답변여부 SMS 알림받기</label></div>
+              <div class="frow"><p class="fl">제목 <i>*</i></p><input class="finput" placeholder="제목을 입력해 주세요."></div>
+              <div class="frow"><p class="fl">내용 <i>*</i></p><div class="guidebox">■ 안내사항 ■<br>· 교강사용 자료요청 시 재직 학교/학원 정보와 거래 지사명을 함께 기재해 주세요.<p class="warnred">※ 문의 내용에 개인정보가 포함되지 않도록 유의해 주세요.</p></div><textarea class="finput" rows="6" placeholder="내용을 입력해 주세요."></textarea></div>
+              <div class="frow"><p class="fl">첨부파일</p><span class="sbtn" style="background:#a9936b">파일첨부</span> <span class="fnote" style="display:inline">(최대 5MB)</span></div>
+              <div class="frow"><p class="fl">자동등록방지 <i>*</i></p><div class="captcha"><span class="capimg">Y52SH</span><span class="caprefresh">↻</span><input class="finput" style="flex:1" placeholder="보안문자 입력"></div></div>
+            </div>
+            <div class="consent">
+              <h4>(필수) 개인정보 수집 및 이용 동의</h4>
+              <table class="ctable"><thead><tr><th>수집 목적</th><th>항목</th><th>보유기간</th></tr></thead><tbody><tr><td>문의 답변 처리</td><td>이름, 이메일</td><td>3개월</td></tr></tbody></table>
+              <p class="ctxt">동의를 거부할 수 있으며, 거부 시 문의 등록 및 답변 처리가 불가합니다.</p>
+              <label><input type="checkbox"> 동의합니다.</label>
+            </div>
+            <div class="consent">
+              <h4>(선택) 개인정보 수집 및 이용 동의</h4>
+              <table class="ctable"><thead><tr><th>수집 목적</th><th>항목</th><th>보유기간</th></tr></thead><tbody><tr><td>답변 통지 알림</td><td>휴대폰번호</td><td>3개월</td></tr></tbody></table>
+              <p class="ctxt">거부하더라도 문의 등록은 가능하나 답변 통지 알림이 제한됩니다.</p>
+              <label><input type="checkbox"> 동의합니다.</label>
+            </div>
+            <div class="formbtns"><span class="b-solid" style="background:var(--pp)">등록</span></div>
+          </div>
+        </div>
+
+        <!-- 교재 후기 -->
+        <div class="panel" id="panel-review">
+          <div id="rv-list">
+            <p class="pgt">NE능률 교재에 대한 솔직한 후기를 확인하실 수 있습니다.</p>
+            <div class="searchrow"><select class="sel"><option>전체</option><option>ELT</option><option>초/중등</option><option>고등</option><option>교과서·자습서</option><option>수험·일반</option><option>수학·국어</option></select><input class="stext" placeholder="교재명 입력"><span class="sbtn">검색</span></div>
+            <div class="rvlist">
+              <div class="rv rvrow" data-cat="고등" data-book="능률VOCA 수능 필수 (2025 개정)" data-star="★★★★★" data-date="2026.06.20" data-user="nysnkan**" data-title="시험에 진짜 잘 나오는 단어들" data-content="수능에 자주 나오는 단어들이 잘 정리되어 있어 좋아요. 예문도 실제 시험 느낌이라 외우기 편했습니다.">
+                <span class="rvcat">고등</span><div class="rvtxt"><div class="rvbook">능률VOCA 수능 필수</div><div class="rvtit">시험에 진짜 잘 나오는 단어들</div></div><span class="rvstar">★★★★★</span></div>
+              <div class="rv blind"><span class="rvcat">초/중등</span><div class="rvtxt"><div class="rvbook">리딩튜터 주니어 3</div><div class="rvtit">해당 게시물 성격과 다른 게시물 등록으로 블라인드 처리되었습니다</div></div><span class="rvstar"></span></div>
+              <div class="rv rvrow" data-cat="수학·국어" data-book="개념원리 중학수학 2-1" data-star="★★★★★" data-date="2026.06.10" data-user="moms07**" data-title="개념 잡기 좋아요" data-content="개념 설명이 자세하고 예제가 단계별로 있어 혼자 공부하기 좋았습니다.">
+                <span class="rvcat">수학·국어</span><div class="rvtxt"><div class="rvbook">개념원리 중학수학 2-1</div><div class="rvtit">개념 잡기 좋아요</div></div><span class="rvstar">★★★★★</span></div>
+              <div class="rv rvrow" data-cat="ELT" data-book="Reading Sense 3" data-star="★★★★☆" data-date="2026.05.30" data-user="wtsi**" data-title="두 마리 토끼를 다 잡은 교재" data-content="독해력과 어휘를 같이 잡을 수 있는 구성이라 만족스러웠습니다.">
+                <span class="rvcat">ELT</span><div class="rvtxt"><div class="rvbook">Reading Sense 3</div><div class="rvtit">두 마리 토끼를 다 잡은 교재</div></div><span class="rvstar">★★★★☆</span></div>
+            </div>
+            <span class="actionbtn" id="rvWriteBtn" style="background:var(--ink)">교재 후기 작성하기 ›</span>
+          </div>
+          <div id="rv-detail" style="display:none">
+            <div class="qd">
+              <div class="qdhead" style="display:flex;align-items:center;gap:12px">
+                <span class="rvcover">표지</span>
+                <div><p class="qdcat" style="margin:0 0 5px" id="rdCat">분류</p><p class="qdtitle" style="margin:0" id="rdBook">교재명</p></div>
+              </div>
+              <div class="rvr"><span class="rvl">별점</span><span><span class="star" id="rdStar">★★★★★</span> <span style="color:var(--muted)">/ 5.0</span></span></div>
+              <div class="rvr"><span class="rvl">등록일</span><span id="rdDate">-</span></div>
+              <div class="rvr"><span class="rvl">작성자</span><span id="rdUser">-</span></div>
+              <div class="rvr"><span class="rvl">제목</span><span id="rdTitle">-</span></div>
+              <div class="rvr col"><span class="rvl">내용</span><div class="rvc" id="rdContent">-</div></div>
+            </div>
+            <span class="backbtn" id="rvBackBtn">목록</span>
+          </div>
+          <div id="rv-form" style="display:none">
+            <ul style="font-size:11.5px;color:#5a606c;line-height:1.7;margin:0 0 14px;padding-left:16px">
+              <li>구매한 교재에 한해 교재별 1회, 당일 최초 작성후기에 대해 1회만 500 NE Point가 적립됩니다.</li>
+              <li>부적합한 내용은 무통보 삭제 및 지급 포인트가 회수될 수 있습니다.</li>
+            </ul>
+            <div class="card">
+              <div class="frow"><p class="fl">교재명 <i>*</i></p><div class="em"><input class="finput" placeholder="교재명 검색"><span class="sbtn">검색</span></div></div>
+              <div class="frow"><p class="fl">별점 <i>*</i></p><span class="starpick on">★</span><span class="starpick on">★</span><span class="starpick on">★</span><span class="starpick">★</span><span class="starpick">★</span></div>
+              <div class="frow"><p class="fl">제목 <i>*</i></p><input class="finput" placeholder="제목을 입력해 주세요."></div>
+              <div class="frow"><p class="fl">내용 <i>*</i></p><textarea class="finput" rows="6" placeholder="내용을 입력해 주세요."></textarea></div>
+              <div class="frow"><p class="fl">교재 이미지</p><span class="sbtn" style="background:#a9936b">파일첨부</span> <span class="fnote" style="display:inline">(최대 5MB)</span></div>
+            </div>
+            <div class="formbtns"><span class="b-ghost" id="rvCancelBtn">목록</span><span class="b-solid">등록</span></div>
+          </div>
+        </div>
+
+        <!-- 지사안내(플레이스홀더) -->
+        <div class="panel" id="panel-branch"><div class="needfix">지사안내 페이지로 이동합니다.<br>(별도 페이지 연계)</div></div>
+      </div>
+
+      <!-- 푸터 -->
+      <div class="ftr">
+        <div class="fnav2"><a>개인정보처리방침</a><span class="fsep">|</span><a class="b">이용약관</a><span class="fsep">|</span><a>PC버전</a><span class="fsep">|</span><a>찾아오시는 길</a></div>
+        <div class="bizrow" id="bizToggle"><span>㈜NE능률 사업자정보</span><span class="caret" id="bizCaret">▼</span></div>
+        <div class="bizinfo" id="bizInfo" style="display:none">㈜NE능률 (03925) 서울 특별시 마포구 월드컵북로 396(상암동) 누리꿈스퀘어 비즈니스타워 10층<br>사업자등록번호 : 105-81-65267 &nbsp;|&nbsp; 대표이사 : 이정진<br>대표번호 : 1833-8368 / 02-2014-7260<br>팩스 : 02-337-4956<br>통신판매신고번호 : 제2004-02120호 [정보조회]<br>개인정보 보호책임자(CPO) : 선민재(necpo@neungyule.com)</div>
+        <div class="familybar">FAMILY SITE <span>▾</span></div>
+        <div class="copyr">Copyright © NE Neungyule, Inc. All Rights Reserved</div>
+      </div>
+    </div>
+
+    <!-- 햄버거 드로어 (메인·마이페이지와 동일) -->
+    <div class="drawer" id="drawer">
+      <div class="dim" id="drawerDim"></div>
+      <div class="dw">
+        <div class="dwtop"><span class="hm">🏠</span><span class="authout" id="authOut"><span class="lk" id="loginBtn">로그인</span><span style="color:var(--muted)">&nbsp;|&nbsp;</span><span>회원가입</span></span><span class="authin" id="authIn" style="display:none"><b>김능률님</b>, 반갑습니다 <span class="lk" id="logoutBtn">로그아웃</span></span><span class="spacer"></span><span class="dwic">🔍</span><span class="dwic cart">🛒<i>0</i></span><span class="x" id="drawerX">✕</span></div>
+        <div class="dwbanner">맞춤형 교재 추천 받기<span class="go">›</span></div>
+        <div class="dwbody">
+          <div class="dwcats" id="dwcats">
+            <div class="dwcat" data-c="ELT">ELT</div>
+            <div class="dwcat" data-c="초·중등">초·중등</div>
+            <div class="dwcat" data-c="고등">고등</div>
+            <div class="dwcat" data-c="교과서·자습서">교과서·자습서</div>
+            <div class="dwcat" data-c="수험·일반">수험·일반</div>
+            <div class="dwcat" data-c="수학·국어">수학·국어</div>
+            <div class="dwcat" data-c="학습자료실">학습자료실</div>
+            <div class="dwcat" data-c="도서몰">도서몰</div>
+            <div class="dwcat on" data-c="고객센터">고객센터</div>
+            <div class="dwcat mycat" data-c="마이페이지" style="display:none">마이페이지</div>
+          </div>
+          <div class="dwsub" id="dwsub"></div>
+        </div>
+        <div class="dwbottom"><span>공지사항</span><span>FAQ</span><span>교재오류 정정</span><span>1:1 문의</span></div>
+      </div>
+    </div>
+  </div>
+  <p class="cap">NE_Books 고객센터 · 모바일 와이어프레임 (390px)</p>
+
+<script>
+var titleMap={notice:'공지사항',guide:'이용가이드',faq:'FAQ',event:'이벤트 / 신간·개정 / 세미나',errata:'교재 오류정정',qna:'1:1 문의',review:'교재 후기',branch:'지사안내'};
+var panels=[].slice.call(document.querySelectorAll('.panel'));
+function go(name){
+  if(name==='branch'){ // 지사안내는 별도 페이지 (플레이스홀더 패널만 노출)
+  }
+  panels.forEach(function(p){p.classList.toggle('on',p.id==='panel-'+name);});
+  var pb=document.getElementById('pindBtn');if(pb)pb.firstChild.textContent=(titleMap[name]||'고객센터')+' ';
+  document.querySelectorAll('#pindDrop a').forEach(function(a){a.classList.toggle('on',a.getAttribute('data-go')===name);});
+  document.getElementById('pindDrop').classList.remove('open');
+  if(pb)pb.classList.remove('open');
+  document.getElementById('drawer').classList.remove('open');
+  document.querySelector('.scr').scrollTo({top:0,behavior:'smooth'});
+}
+// 인디케이터 + 홈 + 햄버거
+(function(){
+  var pindBtn=document.getElementById('pindBtn'),pindDrop=document.getElementById('pindDrop');
+  pindBtn.addEventListener('click',function(){var o=pindDrop.classList.toggle('open');pindBtn.classList.toggle('open',o);});
+  document.querySelectorAll('#pindDrop a').forEach(function(a){a.addEventListener('click',function(){go(a.getAttribute('data-go'));});});
+  document.getElementById('homeBtn').addEventListener('click',function(){location.href='NE_Books_메인_모바일_v1.html';});
+})();
+// 햄버거 드로어
+(function(){
+  var dr=document.getElementById('drawer');
+  document.getElementById('hamBtn').addEventListener('click',function(){dr.classList.add('open');});
+  document.getElementById('drawerX').addEventListener('click',function(){dr.classList.remove('open');});
+  document.getElementById('drawerDim').addEventListener('click',function(){dr.classList.remove('open');});
+  var SUB={
+    'ELT':['Coursebook','Phonics','Readers','Reading','Listening','Speaking','Writing','Grammar','Vocabulary'],
+    '초·중등':['중학내신','고등선행','어휘','Phonics','쓰기','독해','듣기','문법/구문','TOEFL/TEPS/NELT'],
+    '고등':['어휘','독해','듣기','문법/구문','수능대비','고교내신','단기특강','TOEFL/TEPS/NELT'],
+    '교과서·자습서':['중등영어 교과서','고등영어 교과서','수학 교과서','중국어/일본어'],
+    '수험·일반':['TOEIC','TOEIC Speaking/Writing','TOEFL/OPIC/TEPS','FLEX','일반영어'],
+    '수학·국어':['유아','초등','중등','고등'],
+    '학습자료실':['ELT자료','초/중등교재 자료','고등교재 자료','교과서/자습서 자료','수험/일반 자료','수학/국어 자료'],
+    '도서몰':['ELT','초/중등','고등','교과서/자습서','수험/일반','교과/부가상품','세트/패키지','온라인 서비스/이용권'],
+    '고객센터':['공지사항','이용가이드','FAQ','이벤트 / 신간·개정 / 세미나','교재 오류정정','1:1 문의','교재 후기','지사안내'],
+    '마이페이지':['홈','주문내역','포인트/쿠폰','학습자료실','찜','문의/답변','교재 후기','이벤트/세미나']
+  };
+  var CSGO={'공지사항':'notice','이용가이드':'guide','FAQ':'faq','이벤트 / 신간·개정 / 세미나':'event','교재 오류정정':'errata','1:1 문의':'qna','교재 후기':'review','지사안내':'branch'};
+  var MYPANEL={'홈':'home','주문내역':'orders','포인트/쿠폰':'point','학습자료실':'lib','찜':'wish','문의/답변':'qna','교재 후기':'review','이벤트/세미나':'event'};
+  var sub=document.getElementById('dwsub'),cats=document.getElementById('dwcats');
+  function render(c){
+    if(c==='고객센터'){sub.innerHTML=SUB[c].map(function(s){return '<a data-cgo="'+CSGO[s]+'">'+s+'</a>';}).join('');}
+    else if(c==='마이페이지'){sub.innerHTML=SUB[c].map(function(s){return '<a href="NE_Books_마이페이지_모바일_v1.html#'+MYPANEL[s]+'">'+s+'</a>';}).join('');}
+    else{sub.innerHTML=(SUB[c]||[]).map(function(s){return '<a>'+s+'</a>';}).join('');}
+  }
+  cats.querySelectorAll('.dwcat').forEach(function(el){el.addEventListener('click',function(){cats.querySelectorAll('.dwcat').forEach(function(x){x.classList.remove('on');});el.classList.add('on');render(el.getAttribute('data-c'));});});
+  sub.addEventListener('click',function(e){var a=e.target.closest('a[data-cgo]');if(a){e.preventDefault();go(a.getAttribute('data-cgo'));}});
+  render('고객센터');
+  var authOut=document.getElementById('authOut'),authIn=document.getElementById('authIn'),mycat=cats.querySelector('.mycat');
+  function setLogin(on){
+    authOut.style.display=on?'none':'';authIn.style.display=on?'':'none';
+    if(mycat)mycat.style.display=on?'flex':'none';
+  }
+  document.getElementById('loginBtn').addEventListener('click',function(){setLogin(true);});
+  document.getElementById('logoutBtn').addEventListener('click',function(){setLogin(false);});
+})();
+// 서브탭 (이용가이드/이벤트)
+(function(){
+  document.querySelectorAll('.subtabs').forEach(function(g){
+    var subs=g.querySelectorAll('.subtab'),panel=g.parentElement;
+    subs.forEach(function(s){s.addEventListener('click',function(){
+      subs.forEach(function(x){x.classList.remove('on');});s.classList.add('on');
+      var k=s.getAttribute('data-sub');
+      if(k)panel.querySelectorAll('.subpanel').forEach(function(p){p.style.display=p.getAttribute('data-sub')===k?'block':'none';});
+    });});
+  });
+})();
+// 카테고리/상태 칩 토글(시각)
+(function(){
+  document.querySelectorAll('.cats').forEach(function(g){var c=g.querySelectorAll('.cat');c.forEach(function(x){x.addEventListener('click',function(){c.forEach(function(y){y.classList.remove('on');});x.classList.add('on');});});});
+  document.querySelectorAll('.statusf').forEach(function(g){var s=g.querySelectorAll('.sf');s.forEach(function(x){x.addEventListener('click',function(){s.forEach(function(y){y.classList.remove('on');});x.classList.add('on');});});});
+})();
+// 분류 칩 좌우 드래그 스와이프 (터치는 기본)
+(function(){
+  document.querySelectorAll('.cats').forEach(function(el){
+    var down=false,moved=false,sx=0,sl=0;
+    el.addEventListener('pointerdown',function(e){down=true;moved=false;sx=e.clientX;sl=el.scrollLeft;});
+    el.addEventListener('pointermove',function(e){if(!down)return;var dx=e.clientX-sx;if(Math.abs(dx)>4)moved=true;el.scrollLeft=sl-dx;});
+    function up(){down=false;}
+    el.addEventListener('pointerup',up);el.addEventListener('pointerleave',up);el.addEventListener('pointercancel',up);
+    el.addEventListener('click',function(e){if(moved){e.preventDefault();e.stopPropagation();}},true);
+  });
+})();
+// 이벤트 당첨자발표는 '이벤트' 서브탭에서만 노출 (신간·개정/세미나는 미노출)
+(function(){
+  var subs=document.querySelectorAll('#panel-event .subtab'),win=document.getElementById('winnerBtn');
+  subs.forEach(function(s,i){s.addEventListener('click',function(){if(win)win.style.display=(i===0)?'':'none';});});
+})();
+// 공지 목록 → 상세
+(function(){
+  var list=document.getElementById('notice-list'),detail=document.getElementById('notice-detail');
+  list.querySelectorAll('.nrowq').forEach(function(r){r.addEventListener('click',function(){
+    document.getElementById('ndTitle').textContent=r.getAttribute('data-title');
+    document.getElementById('ndDate').textContent=r.getAttribute('data-date');
+    document.getElementById('ndBody').textContent=r.getAttribute('data-body');
+    var b=document.getElementById('ndBadge');b.textContent=r.getAttribute('data-badge');b.className='badge '+(r.getAttribute('data-bcls')||'info');
+    list.style.display='none';detail.style.display='block';document.querySelector('.scr').scrollTo({top:0});
+  });});
+  document.getElementById('noticeBack').addEventListener('click',function(){detail.style.display='none';list.style.display='block';});
+})();
+// 오류정정 목록 → 상세
+(function(){
+  var list=document.getElementById('errata-list'),detail=document.getElementById('errata-detail');
+  list.querySelectorAll('.erow').forEach(function(r){r.addEventListener('click',function(){
+    document.getElementById('edTitle').textContent=r.getAttribute('data-title');
+    document.getElementById('edDate').textContent=r.getAttribute('data-date');
+    document.getElementById('edBook').textContent=r.getAttribute('data-book');
+    document.getElementById('edPub').textContent=r.getAttribute('data-pub');
+    document.getElementById('edBody').textContent=r.getAttribute('data-body');
+    document.getElementById('edBadge').textContent=r.getAttribute('data-badge');
+    list.style.display='none';detail.style.display='block';document.querySelector('.scr').scrollTo({top:0});
+  });});
+  document.getElementById('errataBack').addEventListener('click',function(){detail.style.display='none';list.style.display='block';});
+  // 교재 오류 신고하기 → 1:1 문의(교재 오류신고) 작성
+  var rep=document.getElementById('errataReport');
+  if(rep)rep.addEventListener('click',function(){
+    go('qna');
+    var er=document.querySelector('#panel-qna .subpanel[data-sub="member"] input[name="qt"][value="errata"]');
+    if(er){er.checked=true;er.dispatchEvent(new Event('change'));}
+  });
+})();
+// FAQ 아코디언 (한 번에 하나)
+(function(){
+  var qs=[].slice.call(document.querySelectorAll('#panel-faq .fq'));
+  qs.forEach(function(q){q.addEventListener('click',function(){
+    var a=q.nextElementSibling,open=a&&a.style.display==='block';
+    document.querySelectorAll('#panel-faq .fa').forEach(function(x){x.style.display='none';});
+    qs.forEach(function(qq){var ar=qq.querySelector('.ar');if(ar)ar.textContent='⌄';});
+    if(!open&&a){a.style.display='block';var ar=q.querySelector('.ar');if(ar)ar.textContent='⌃';}
+  });});
+})();
+// 교재 후기 목록 → 상세 / 작성
+(function(){
+  var list=document.getElementById('rv-list'),detail=document.getElementById('rv-detail'),form=document.getElementById('rv-form');
+  list.querySelectorAll('.rvrow').forEach(function(r){r.addEventListener('click',function(){
+    document.getElementById('rdCat').textContent=r.getAttribute('data-cat')||'후기';
+    document.getElementById('rdBook').textContent=r.getAttribute('data-book');
+    document.getElementById('rdStar').textContent=r.getAttribute('data-star');
+    document.getElementById('rdDate').textContent=r.getAttribute('data-date');
+    document.getElementById('rdUser').textContent=r.getAttribute('data-user');
+    document.getElementById('rdTitle').textContent=r.getAttribute('data-title');
+    document.getElementById('rdContent').textContent=r.getAttribute('data-content');
+    list.style.display='none';form.style.display='none';detail.style.display='block';document.querySelector('.scr').scrollTo({top:0});
+  });});
+  document.getElementById('rvBackBtn').addEventListener('click',function(){detail.style.display='none';list.style.display='block';});
+  var w=document.getElementById('rvWriteBtn'),c=document.getElementById('rvCancelBtn');
+  w.addEventListener('click',function(){list.style.display='none';form.style.display='block';document.querySelector('.scr').scrollTo({top:0});});
+  c.addEventListener('click',function(){form.style.display='none';list.style.display='block';});
+  document.querySelectorAll('#rv-form .starpick').forEach(function(s,i,arr){s.addEventListener('click',function(){arr.forEach(function(x,j){x.classList.toggle('on',j<=i);});});});
+})();
+// 1:1 상담유형 → 분류 → 주문번호/상품
+(function(){
+  var cat=document.getElementById('qcat'),row=document.getElementById('qorderRow');
+  var GENERAL=['회원정보','교재·교과서 문의','부가서비스 문의','자료요청','사이트이용','이벤트','영업 및 제휴문의','의견,제안','기타'];
+  var ORDER=['주문/결제','취소/환불','배송'];
+  var ERRATA=['교재내용이상','문법오류','오/탈자','기타오류'];
+  function fill(list){cat.innerHTML='<option>문의분류를 선택해 주세요</option>'+list.map(function(x){return '<option>'+x+'</option>';}).join('');}
+  document.querySelectorAll('input[name="qt"]').forEach(function(r){r.addEventListener('change',function(){fill(r.value==='order'?ORDER:(r.value==='errata'?ERRATA:GENERAL));row.style.display='none';});});
+  cat.addEventListener('change',function(){row.style.display=(ORDER.indexOf(cat.value)>=0)?'block':'none';});
+  // 비회원 폼 분기 (주문번호/상품 UI 없음)
+  var gcat=document.getElementById('gcat');
+  function fillG(list){gcat.innerHTML='<option>문의분류를 선택해 주세요</option>'+list.map(function(x){return '<option>'+x+'</option>';}).join('');}
+  document.querySelectorAll('input[name="gqt"]').forEach(function(r){r.addEventListener('change',function(){fillG(r.value==='order'?ORDER:(r.value==='errata'?ERRATA:GENERAL));});});
+  var ORDERS={'20260610-001 · 능률 VOCA 외 1건':['능률 VOCA 고등 기본','내신백신 100 English 중1'],'20260520-002 · 내신백신 100':['내신백신 100 English 중2','그래머존 중등 필수']};
+  var osel=document.getElementById('qorderSel'),psel=document.getElementById('qprodSel');
+  osel.addEventListener('change',function(){var prods=ORDERS[osel.value]||null;psel.innerHTML='<option value="">상품 선택 (선택)</option>';if(prods){psel.disabled=false;prods.forEach(function(p){var o=document.createElement('option');o.textContent=p;psel.appendChild(o);});}else{psel.disabled=true;}});
+})();
+// 푸터 사업자정보 펼침
+(function(){
+  var t=document.getElementById('bizToggle'),info=document.getElementById('bizInfo'),c=document.getElementById('bizCaret');
+  t.addEventListener('click',function(){var open=info.style.display!=='none';info.style.display=open?'none':'block';c.textContent=open?'▼':'▲';});
+})();
+</script>
+</body></html>

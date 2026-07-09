@@ -1,0 +1,467 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NE_Books 메인 (모바일)</title>
+<style>
+  :root{--ink:#222732;--line:#d7dbe2;--line2:#e6e9ee;--fill:#eef0f3;--fill2:#f7f8fa;--muted:#8b909c;--bar2:#dde1e7;
+    --new:#1f9d72;--red:#e23b3b;--orange:#e8852b;--blue:#3a78f2;--bluebg:#eaf1ff;--pp:#6a4fb0;}
+  *{box-sizing:border-box}
+  body{margin:0;background:#dfe2e7;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Apple SD Gothic Neo","Malgun Gothic",sans-serif;padding:24px 0 50px}
+  a{color:inherit;text-decoration:none}.spacer{flex:1}
+  .phone{width:390px;margin:0 auto;background:#fff;border-radius:30px;box-shadow:0 20px 60px rgba(20,25,40,.22);overflow:hidden;position:relative}
+  .statusbar{height:30px;background:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 20px;font-size:11px;font-weight:700}
+  .scr{height:720px;overflow-y:auto;overflow-x:hidden}
+  .scr::-webkit-scrollbar{width:0}
+
+  /* 헤더 (sticky) */
+  .mhd{position:sticky;top:0;z-index:30;background:#fff;display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line2)}
+  .ham{font-size:21px;cursor:pointer}
+  .logo{font-size:19px;font-weight:800}.logo .r{color:var(--red)}
+  .hicons{display:flex;gap:16px;font-size:19px;margin-left:auto}.hicons span{cursor:pointer}
+  .gnb{position:sticky;top:55px;z-index:29;display:flex;gap:20px;overflow-x:auto;padding:11px 16px;background:#fff;border-bottom:2px solid var(--ink);font-size:14px;font-weight:700;color:#8b8f98;white-space:nowrap}
+  .gnb::-webkit-scrollbar{height:0}
+  .gnb .on{color:var(--ink);position:relative}
+  .gnb .on::after{content:"";position:absolute;left:0;right:0;bottom:-13px;height:2px;background:var(--ink)}
+
+  /* HERO : 풀블리드 통배너 + 도트 + 스와이프 */
+  .hero{position:relative;overflow:hidden}
+  .hslides{display:flex;transition:transform .42s cubic-bezier(.4,0,.2,1);touch-action:pan-y}
+  .hcard{flex:0 0 100%;display:grid;grid-template-columns:1.3fr .7fr;gap:14px;align-items:center;padding:22px 18px 38px;min-height:210px;cursor:pointer}
+  .htxt{display:flex;flex-direction:column;align-items:flex-start}
+  .btag{display:inline-block;align-self:flex-start;font-size:10px;font-weight:800;letter-spacing:1px;padding:5px 12px;border-radius:6px;color:#fff;margin-bottom:11px}
+  .btag.promo{background:var(--red)}.btag.newt{background:var(--new)}.btag.event{background:var(--orange)}
+  .htitle{font-size:20px;font-weight:800;line-height:1.26;margin:0 0 9px;letter-spacing:-.02em;color:var(--ink)}
+  .hdesc{font-size:12.5px;color:#4a5568;line-height:1.55;margin:0}
+  .hvis{height:130px;background:rgba(255,255,255,.55);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#6b7686;font-size:11.5px;font-weight:800;text-align:center;padding:0 6px}
+  .pager{position:absolute;left:0;right:0;bottom:16px;display:flex;gap:6px;justify-content:center;z-index:2}
+  .pd{width:7px;height:7px;border-radius:50%;background:rgba(34,39,50,.25)}.pd.on{width:20px;border-radius:4px;background:var(--ink)}
+
+  .sec{padding:22px 16px;border-bottom:8px solid #f1f3f6}
+  .sttl{font-size:18px;font-weight:800;margin:0 0 14px;display:flex;align-items:center}
+  .sttl .more{margin-left:auto;font-size:12px;color:var(--muted);font-weight:600}
+
+  /* 바로가기 (즐겨찾는 메뉴) - 가로 스크롤 */
+  .quick{display:grid;grid-template-columns:repeat(4,1fr);gap:18px 4px}
+  .qk{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
+  .qi{width:54px;height:54px;border-radius:17px;background:var(--fill);display:flex;align-items:center;justify-content:center;font-size:24px}
+  .qt{font-size:11px;font-weight:700;color:#3d4756;line-height:1.25}
+
+  /* 베스트셀러 */
+  .ptabs{display:flex;gap:7px;overflow-x:auto;padding-bottom:4px;margin-bottom:14px;white-space:nowrap}
+  .ptabs::-webkit-scrollbar{height:0}
+  .ptab{flex:0 0 auto;background:var(--fill);border:1px solid var(--line2);border-radius:20px;padding:8px 15px;font-size:12.5px;color:#5a606c;font-weight:700;cursor:pointer}
+  .ptab.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .bpmain{font-size:22px;font-weight:800;color:#3a4a8c;line-height:1.25;margin:2px 0 6px;letter-spacing:-.02em}
+  .bpsub{font-size:13px;color:#5a606c;margin:0 0 14px;line-height:1.5}
+  .cards{display:flex;gap:12px;overflow-x:auto;padding-bottom:6px;margin-bottom:6px}
+  .cards::-webkit-scrollbar{height:0}
+  .bcard{flex:0 0 128px;border:1px solid var(--line2);border-radius:11px;padding:9px;position:relative;background:#fff}
+  .cards .cover{margin-bottom:9px}
+  .bact{display:flex;gap:6px}
+  .bbtn{flex:1;border:1px solid var(--line2);border-radius:8px;padding:8px 0;text-align:center;font-size:15px;background:var(--fill2);cursor:pointer}
+  .bbtn.cart{background:var(--blue);color:#fff;border-color:var(--blue)}
+  .chk{position:absolute;top:9px;left:9px;width:20px;height:20px;border-radius:6px;border:1.5px solid var(--blue);background:var(--bluebg);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--blue);font-weight:800;z-index:2;cursor:pointer}
+  .chk.off{background:#fff;border-color:var(--line);color:transparent}
+  .cover{aspect-ratio:3/4;background:var(--fill);border-radius:7px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:10px;margin-bottom:8px;position:relative}
+  .dk{position:absolute;top:6px;right:6px;color:#fff;border-radius:4px;font-size:8px;padding:1px 6px;font-weight:800}
+  .gtag{display:inline-block;font-size:9.5px;color:#5a606c;background:var(--fill2);border:1px solid var(--line2);border-radius:4px;padding:1px 7px;font-weight:700;margin-bottom:6px}
+  .bname{height:8px;width:90%;background:var(--bar2);border-radius:3px;margin:0 0 5px}.bname.s{width:60%}
+  .price{display:flex;align-items:baseline;gap:5px;margin:8px 0 0;flex-wrap:wrap}
+  .ori{font-size:9.5px;color:#b6bcc6;text-decoration:line-through}.dis{font-size:14px;font-weight:800}.rate{font-size:9.5px;color:var(--red);font-weight:800}
+  /* 선택 교재 체크리스트(묶음) */
+  .cl{border:1px solid var(--line2);border-radius:12px;background:var(--fill2);padding:6px 14px;margin-bottom:12px}
+  .clr{display:flex;align-items:center;gap:9px;padding:9px 0;border-bottom:1px solid var(--line2);font-size:12.5px}
+  .clr:last-child{border-bottom:0}
+  .clr .cc{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--blue);background:var(--bluebg);color:var(--blue);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer}
+  .clr .cc.off{background:#fff;border-color:var(--line);color:transparent}
+  .clr .nm{font-weight:600;color:#3d4756;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .clr .pp2{font-weight:800;white-space:nowrap}.clr .pp2 s{color:#b6bcc6;font-weight:400;font-size:10.5px;margin-right:4px}
+  .cartbtn{display:flex;align-items:center;justify-content:center;gap:6px;background:var(--blue);color:#fff;border-radius:10px;padding:13px;font-size:13.5px;font-weight:800}
+
+  /* 큐레이션 - 탭 + 가로 스와이프 카드 */
+  .ctabs{display:flex;gap:7px;overflow-x:auto;padding-bottom:4px;margin-bottom:14px;white-space:nowrap}
+  .ctabs::-webkit-scrollbar{height:0}
+  .ctab2{flex:0 0 auto;background:var(--fill);border:1px solid var(--line2);border-radius:20px;padding:8px 15px;font-size:12.5px;color:#5a606c;font-weight:700;cursor:pointer}
+  .ctab2.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .pcards{display:flex;gap:12px;overflow-x:auto;padding-bottom:6px}.pcards::-webkit-scrollbar{height:0}
+  .pcard{flex:0 0 230px;border:1px solid var(--line2);border-radius:12px;overflow:hidden;background:#fff}
+  .pimg{height:124px;background:var(--fill);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:11px;font-weight:600}
+  .ptext{padding:12px 14px}.plabel{font-size:9.5px;font-weight:800;color:var(--red);letter-spacing:1px;margin-bottom:6px}
+  .pmain{font-size:14px;font-weight:800;margin:0 0 5px}.psub{font-size:11.5px;color:#6b7280;line-height:1.5;margin:0}
+
+  /* NE Tutor */
+  .tutor{background:linear-gradient(135deg,#f1f3f6,#eef1f6);padding:22px 16px;border-bottom:8px solid #f1f3f6}
+  .tglab{font-size:12px;font-weight:800;color:#3d4756;margin:16px 0 9px}.tglab:first-of-type{margin-top:14px}
+  .tgrid{display:grid;gap:10px;margin-top:0;grid-template-columns:repeat(3,1fr)}
+  .tgrid.one{grid-template-columns:1fr}.tgrid.two{grid-template-columns:1fr 1fr}
+  .trow{display:flex;gap:10px;align-items:flex-start}
+  .trow .tgcol1{flex:1;min-width:0}.trow .tgcol2{flex:2;min-width:0}
+  .trow .tglab{margin-top:0}
+  .hswipe{cursor:grab}.hswipe.drag{cursor:grabbing}
+  .ttile{background:#fff;border:1px solid var(--line2);border-radius:13px;padding:16px 8px;display:flex;flex-direction:column;align-items:center;gap:9px;text-align:center}
+  .tic{width:44px;height:44px;border-radius:12px;background:var(--fill);display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0}
+  .ttile .tnm{font-size:11.5px;font-weight:800;color:#3d4756;line-height:1.25}
+
+  .noti{display:flex;justify-content:space-between;gap:10px;font-size:12.5px;color:#3d4756;padding:11px 0;border-bottom:1px solid var(--line2)}
+  .noti .nd{color:var(--muted);font-size:11px;white-space:nowrap}
+  .snsrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+  .chip{font-size:11.5px;color:#5a606c;background:#fff;border:1px solid var(--line2);border-radius:8px;padding:8px 12px;font-weight:600;display:inline-flex;align-items:center;gap:7px}
+  .si{width:18px;height:18px;border-radius:5px;display:inline-flex;align-items:center;justify-content:center;font-size:10px;color:#fff;font-weight:800}
+  .csbox{background:var(--fill2);border:1px solid var(--line2);border-radius:14px;padding:14px 16px;margin-bottom:10px;display:flex;align-items:flex-end;gap:10px}
+  .csL{flex:1;min-width:0}
+  .cn{font-size:13px;font-weight:800;margin-bottom:5px;white-space:nowrap}
+  .csln{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+  .tel{font-size:20px;font-weight:800;letter-spacing:-.5px}.ct{font-size:11px;color:var(--muted)}
+  .csbtn2{flex-shrink:0;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:11.5px;font-weight:700;color:#3d4756;white-space:nowrap;cursor:pointer}
+
+  .ftr{background:#2a2f3a;color:#9aa0ac;font-size:11px;line-height:1.9;padding:18px 16px}
+  .ftr .fnav{color:#cdd2db;font-weight:600;margin-bottom:10px;font-size:11px}
+  .fnav2{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:11px;margin-bottom:14px}
+  .fnav2 a{color:#cdd2db;font-weight:600}.fnav2 a.b{color:#fff;font-weight:800}.fsep{color:#555c69}
+  .bizrow{display:flex;align-items:center;gap:8px;font-size:12px;color:#cdd2db;font-weight:700;cursor:pointer;padding:6px 0}.bizrow .caret{font-size:9px}
+  .bizinfo{font-size:11px;line-height:1.85;color:#9aa0ac;margin:4px 0 2px}
+  .familybar{border:1px solid #555c69;border-radius:9px;padding:11px 14px;font-size:12px;color:#cdd2db;display:flex;align-items:center;justify-content:space-between;margin:13px 0 10px}
+  .copyr{font-size:10.5px;color:#7d8390}
+  .fabs{position:absolute;right:14px;bottom:20px;display:flex;flex-direction:column;gap:10px;z-index:40}
+  .fab{width:46px;height:46px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:18px;color:#fff;box-shadow:0 6px 16px rgba(0,0,0,.28);cursor:pointer}
+  .fab.book{background:#e2473b}.fab.chat{background:#f0a020}.fab.top{background:#3a3f4a;font-size:15px;font-weight:800;line-height:1}.fab.top small{font-size:8px;font-weight:700;margin-top:1px}
+
+  .tabbar{position:sticky;bottom:0;display:flex;background:#fff;border-top:1px solid var(--line2);padding:8px 0 10px;z-index:20}
+  .tb{flex:1;text-align:center;font-size:10px;color:var(--muted);font-weight:700;cursor:pointer}
+  .tb .ti{font-size:19px;display:block;margin-bottom:3px}
+  .tb.on{color:var(--ink)}
+  .cap{width:390px;margin:14px auto 0;text-align:center;color:#7a8088;font-size:12px}
+
+  /* 드로어 */
+  .drawer{position:absolute;top:30px;left:0;right:0;bottom:0;z-index:600;display:none}
+  .drawer.open{display:block}
+  .drawer .dim{position:absolute;inset:0;background:rgba(0,0,0,.45)}
+  .drawer .dw{position:absolute;top:0;left:0;bottom:0;width:100%;background:#fff;display:flex;flex-direction:column;transform:translateX(-100%);transition:transform .28s ease}
+  .drawer.open .dw{transform:translateX(0)}
+  .dwtop{display:flex;align-items:center;gap:12px;padding:14px 16px;font-size:14px;font-weight:700;border-bottom:1px solid var(--line2)}
+  .dwtop .x{font-size:20px;cursor:pointer}.dwtop .hm{font-size:18px}
+  .dwic{font-size:18px;cursor:pointer;position:relative}
+  .dwic.cart i{position:absolute;top:-7px;right:-9px;background:var(--orange);color:#fff;font-size:9px;font-weight:800;border-radius:10px;padding:1px 5px;font-style:normal}
+  .dwbanner{background:linear-gradient(135deg,#7b8ef2,#5566e6);color:#fff;padding:15px 16px;font-size:14px;font-weight:800;display:flex;align-items:center;gap:8px}
+  .dwbanner .go{margin-left:auto;font-size:17px}
+  .dwbody{flex:1;display:grid;grid-template-columns:108px 1fr;overflow:hidden}
+  .dwcats{background:var(--fill2);overflow-y:auto;border-right:1px solid var(--line2)}
+  .dwcat{display:flex;align-items:center;justify-content:center;min-height:48px;padding:0 6px;font-size:12px;font-weight:700;color:#7a828f;border-bottom:1px solid var(--line2);cursor:pointer;text-align:center;white-space:nowrap}
+  .dwcat.on{background:#fff;color:var(--pp);font-weight:800}
+  .dwsub{overflow-y:auto}.dwsub a{display:flex;align-items:center;min-height:48px;padding:0 18px;font-size:13.5px;font-weight:600;color:#3d4756;border-bottom:1px solid var(--line2)}
+  .dwbottom{display:flex;justify-content:space-around;padding:14px 8px;border-top:1px solid var(--line2);font-size:12px;font-weight:700;color:#5a606c}
+  .dwbottom span{cursor:pointer}.dwtop .lk{cursor:pointer}.authin b{color:var(--pp)}
+  .authin #logoutBtn{color:var(--muted);text-decoration:underline;font-weight:700;font-size:12.5px}
+
+  /* 검색 오버레이 */
+  .searchov{position:absolute;top:30px;left:0;right:0;bottom:0;background:#fff;z-index:600;display:none;overflow-y:auto}
+  .searchov.open{display:block}
+  .sovtop{display:flex;align-items:center;gap:14px;padding:14px 16px;font-size:20px}.sovtop .x{margin-left:auto;cursor:pointer}
+  .sovbox{display:flex;align-items:center;gap:8px;border-bottom:2px solid var(--ink);margin:0 16px 16px;padding:8px 4px;color:var(--muted);font-size:14px}
+  .sovbanner{margin:0 16px 18px;background:#e6f6ef;border-radius:12px;padding:16px;display:flex;align-items:center}
+  .sovbanner b{font-size:14px}.sovbanner p{margin:4px 0 0;font-size:12px;color:#5a606c}.sovbanner .pk{margin-left:auto;background:#fff;border:1px solid #b9e6cf;border-radius:20px;padding:6px 12px;font-size:11px;font-weight:800;color:#15805c}
+  .povsec{padding:0 16px 18px}.povttl{font-size:13px;font-weight:800;color:#3d4756;margin:0 0 10px}
+  .povchips{display:flex;gap:8px;flex-wrap:wrap}
+  .povrank .prk{display:flex;align-items:center;gap:12px;padding:12px 2px;border-bottom:1px solid var(--line2);font-size:13.5px;color:#3d4756;cursor:pointer}
+  .povrank .prk .n{width:20px;text-align:center;font-weight:800;color:var(--pp)}
+  #sovInput{flex:1;border:0;outline:0;background:transparent;font-size:14px;color:var(--ink);font-family:inherit;min-width:0}#sovInput::placeholder{color:var(--muted)}
+  .sprev{padding:2px 16px 20px}
+  .spi{display:flex;align-items:center;gap:11px;padding:13px 2px;border-bottom:1px solid var(--line2);font-size:14px;color:#3d4756;cursor:pointer}
+  .spi .mg{color:var(--muted)}.spi b{color:var(--pp)}
+  .spnone{padding:34px 0;text-align:center;color:var(--muted);font-size:13px}
+  .povchip{display:flex;align-items:center;gap:6px;font-size:12.5px;color:#3d4756;font-weight:600;background:var(--fill2);border:1px solid var(--line2);border-radius:18px;padding:6px 12px}.povchip .n{color:var(--pp);font-weight:800}
+  .topbadge{display:inline-flex;align-items:center;gap:8px;margin-bottom:12px}.topbadge .tb10{background:var(--pp);color:#fff;font-size:12px;font-weight:800;border-radius:20px;padding:5px 12px}.topbadge b{font-size:15px;font-weight:800}
+  .subtabs2{display:flex;gap:18px;border-bottom:1px solid var(--line2);margin-bottom:12px}
+  .st2{padding:8px 0;font-size:14px;font-weight:800;color:#9aa0ac;border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer}.st2.on{color:var(--ink);border-bottom-color:var(--ink)}
+  .povnote{font-size:11.5px;color:var(--muted);margin:0 0 12px;line-height:1.5}.povnote b{color:var(--pp)}
+  .povsel{display:flex;gap:8px;margin-bottom:12px}.povsel select{flex:1;border:1px solid var(--line);border-radius:8px;padding:9px 11px;font-size:12.5px}
+  .rk{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--line2);font-size:13.5px}
+  .rkn{width:22px;text-align:center;font-weight:800;color:var(--muted)}.rkn.top{color:var(--pp)}
+</style></head>
+<body>
+  <div class="phone">
+    <div class="statusbar"><span>9:41</span><span>📶 🔋</span></div>
+    <div class="scr">
+      <div class="mhd">
+        <span class="logo"><span class="r">NE_</span>Books</span>
+        <span class="hicons"><span id="searchBtn">🔍</span><span>🛒</span><span class="ham" id="hamBtn">☰</span></span>
+      </div>
+      <!-- HERO : 풀블리드 통배너(파스텔, 배경색 활성 배너 기준) -->
+      <div class="hero">
+        <div class="hslides" id="hslides">
+          <a class="hcard" style="background:#bfe6f7"><div class="htxt"><span class="btag promo">PROMOTION</span><h2 class="htitle">성적이 달라지는<br>방학 특강 조합</h2><p class="hdesc">문법 개념 정리 + 리스닝 훈련으로 방학 대비 끝!</p></div><div class="hvis">홍보 이미지 영역</div></a>
+          <a class="hcard" style="background:#d9eda3"><div class="htxt"><span class="btag newt">NEW</span><h2 class="htitle">신간 출시<br>지금 만나보세요</h2><p class="hdesc">새롭게 출간된 교재를 가장 먼저 확인하세요.</p></div><div class="hvis">홍보 이미지 영역</div></a>
+          <a class="hcard" style="background:#fbd6dd"><div class="htxt"><span class="btag event">EVENT</span><h2 class="htitle">이벤트·세미나<br>한눈에 보기</h2><p class="hdesc">진행 중인 이벤트와 세미나 일정을 확인하세요.</p></div><div class="hvis">홍보 이미지 영역</div></a>
+          <a class="hcard" style="background:#c9d6f6"><div class="htxt"><span class="btag promo">PROMOTION</span><h2 class="htitle">온라인 영어<br>레벨테스트 NELT</h2><p class="hdesc">우리 아이 실력을 정확하게 진단해보세요.</p></div><div class="hvis">홍보 이미지 영역</div></a>
+          <a class="hcard" style="background:#fce9bd"><div class="htxt"><span class="btag event">EVENT</span><h2 class="htitle">7월 혼강 세미나<br>신청 접수 중</h2><p class="hdesc">수업이 달라지는 기준, 지금 참여하세요.</p></div><div class="hvis">홍보 이미지 영역</div></a>
+        </div>
+        <div class="pager" id="pager"><span class="pd on"></span><span class="pd"></span><span class="pd"></span><span class="pd"></span><span class="pd"></span></div>
+      </div>
+
+      <!-- 바로가기 (4×2 전체 노출) -->
+      <div class="sec">
+        <div class="quick">
+          <a class="qk"><span class="qi">🛍️</span><span class="qt">교재 구매</span></a>
+          <a class="qk"><span class="qi">📊</span><span class="qt">레벨차트</span></a>
+          <a class="qk"><span class="qi">📁</span><span class="qt">학습자료실</span></a>
+          <a class="qk"><span class="qi">📄</span><span class="qt">정답·MP3</span></a>
+          <a class="qk"><span class="qi">✨</span><span class="qt">맞춤형 교재추천</span></a>
+          <a class="qk"><span class="qi">🧇</span><span class="qt">NE Waffle</span></a>
+          <a class="qk"><span class="qi">🧑‍🏫</span><span class="qt">영어 선생님</span></a>
+          <a class="qk"><span class="qi">➗</span><span class="qt">수학 선생님</span></a>
+        </div>
+      </div>
+
+      <!-- 베스트셀러 -->
+      <div class="sec">
+        <h2 class="sttl">베스트셀러</h2>
+        <div class="ptabs"><span class="ptab on">중등 여름방학 추천 코스</span><span class="ptab">쉬운 암기 중등 필수 VOCA</span><span class="ptab">스스로 읽는 파닉스</span><span class="ptab">고등 독해 완성</span></div>
+        <p class="bpmain">성적이 달라지는 방학 특강 조합</p>
+        <p class="bpsub">문법 개념 정리 + 리스닝 훈련으로 방학 대비 끝!</p>
+        <div class="cards">
+          <div class="bcard"><div class="cover"><span class="dk" style="background:var(--red)">HOT</span>표지</div><div class="bact"><span class="bbtn" title="상세 보기">🔍</span><span class="bbtn cart" title="장바구니 담기">🛒</span></div></div>
+          <div class="bcard"><div class="cover"><span class="dk" style="background:var(--new)">NEW</span>표지</div><div class="bact"><span class="bbtn" title="상세 보기">🔍</span><span class="bbtn cart" title="장바구니 담기">🛒</span></div></div>
+          <div class="bcard"><div class="cover">표지</div><div class="bact"><span class="bbtn" title="상세 보기">🔍</span><span class="bbtn cart" title="장바구니 담기">🛒</span></div></div>
+          <div class="bcard"><div class="cover">표지</div><div class="bact"><span class="bbtn" title="상세 보기">🔍</span><span class="bbtn cart" title="장바구니 담기">🛒</span></div></div>
+        </div>
+        <div class="cl">
+          <div class="clr"><span class="cc">✓</span><span class="nm">Listening Stage Plus 1</span><span class="pp2"><s>15,000</s>13,500원</span></div>
+          <div class="clr"><span class="cc">✓</span><span class="nm">Listening Stage Plus 2</span><span class="pp2"><s>15,000</s>13,500원</span></div>
+          <div class="clr"><span class="cc">✓</span><span class="nm">중학영문법 총정리 모의고사 L1</span><span class="pp2"><s>12,000</s>10,800원</span></div>
+        </div>
+        <a class="cartbtn">🛒 장바구니 담기</a>
+      </div>
+
+      <!-- 큐레이션 & 이벤트 (탭 + 가로 스와이프) -->
+      <div class="sec">
+        <h2 class="sttl">큐레이션 &amp; 이벤트</h2>
+        <div class="ctabs"><span class="ctab2 on">전체</span><span class="ctab2">이벤트</span><span class="ctab2">신간·개정</span><span class="ctab2">세미나</span></div>
+        <div class="pcards">
+          <div class="pcard"><div class="pimg">홍보 이미지</div><div class="ptext"><p class="plabel">세미나</p><p class="pmain">7월 혼강 세미나</p><p class="psub">수업이 달라지는 기준</p></div></div>
+          <div class="pcard"><div class="pimg">홍보 이미지</div><div class="ptext"><p class="plabel">이벤트</p><p class="pmain">중등영어 방학 특강</p><p class="psub">문법 개념 정리 + 리스닝</p></div></div>
+          <div class="pcard"><div class="pimg">홍보 이미지</div><div class="ptext"><p class="plabel">신간</p><p class="pmain">Read It! 120 출시</p><p class="psub">단계별 독해력 향상 시리즈</p></div></div>
+        </div>
+      </div>
+
+      <!-- NE Tutor -->
+      <div class="tutor">
+        <h2 class="sttl">선생님을 위한 티칭 플랫폼 NE Tutor</h2>
+        <div class="trow">
+          <div class="tgcol1">
+            <p class="tglab">수업자료</p>
+            <div class="tgrid one"><div class="ttile"><span class="tic">📘</span><span class="tnm">E/book 교재자료</span></div></div>
+          </div>
+          <div class="tgcol2">
+            <p class="tglab">평가서비스</p>
+            <div class="tgrid two">
+              <div class="ttile"><span class="tic">📊</span><span class="tnm">NELT</span></div>
+              <div class="ttile"><span class="tic">📝</span><span class="tnm">성취 TEST</span></div>
+            </div>
+          </div>
+        </div>
+        <p class="tglab">디지털 문제뱅크</p>
+        <div class="tgrid">
+          <div class="ttile"><span class="tic">🪄</span><span class="tnm">어휘 문제 마법사</span></div>
+          <div class="ttile"><span class="tic">🏦</span><span class="tnm">문법 문제뱅크</span></div>
+          <div class="ttile"><span class="tic">🔎</span><span class="tnm">문법 예문 검색</span></div>
+        </div>
+      </div>
+
+      <!-- 공지/SNS -->
+      <div class="sec">
+        <h2 class="sttl">공지사항</h2>
+        <div class="noti"><span>[안내] 절판(예정포함) 국어교재 (1/7 기준)</span><span class="nd">12.29</span></div>
+        <div class="noti"><span>[안내] 2026학년도 교과서·자습서 구매 안내</span><span class="nd">12.29</span></div>
+        <div class="noti"><span>[자료] 2026년 NE능률 영어 교재 카달로그</span><span class="nd">12.22</span></div>
+        <h2 class="sttl" style="margin-top:20px">공식 SNS</h2>
+        <div class="snsrow">
+          <span class="chip"><span class="si" style="background:#03c75a">N</span>Lounge 카페</span>
+          <span class="chip"><span class="si" style="background:#e1306c">📷</span>인스타그램</span>
+          <span class="chip"><span class="si" style="background:#ff0000">▶</span>유튜브</span>
+        </div>
+      </div>
+
+      <!-- 고객센터 -->
+      <div class="sec">
+        <h2 class="sttl">고객센터</h2>
+        <div class="csbox">
+          <div class="csL"><div class="cn">NE능률 고객센터</div><div class="csln"><span class="tel">1833-8368</span><span class="ct">평일 9~16시 · 점심 12~13시</span></div></div>
+          <a class="csbtn2">모바일 고객센터 ›</a>
+        </div>
+        <div class="csbox">
+          <div class="csL"><div class="cn">AI 디지털 교육자료 공동 CS센터</div><div class="csln"><span class="tel">1661-0777</span><span class="ct">평일 9~18시</span></div></div>
+          <a class="csbtn2">AI 디지털 교육자료 1:1문의 ›</a>
+        </div>
+      </div>
+
+      <!-- 푸터 -->
+      <div class="ftr">
+        <div class="fnav2"><a>개인정보처리방침</a><span class="fsep">|</span><a class="b">이용약관</a><span class="fsep">|</span><a>PC버전</a><span class="fsep">|</span><a>찾아오시는 길</a></div>
+        <div class="bizrow" id="bizToggle"><span>㈜NE능률 사업자정보</span><span class="caret" id="bizCaret">▼</span></div>
+        <div class="bizinfo" id="bizInfo" style="display:none">㈜NE능률 (03925) 서울 특별시 마포구 월드컵북로 396(상암동) 누리꿈스퀘어 비즈니스타워 10층<br>사업자등록번호 : 105-81-65267 &nbsp;|&nbsp; 대표이사 : 이정진<br>대표번호 : 1833-8368 / 02-2014-7260<br>팩스 : 02-337-4956<br>통신판매신고번호 : 제2004-02120호 [정보조회]<br>개인정보 보호책임자(CPO) : 선민재(necpo@neungyule.com)</div>
+        <div class="familybar">FAMILY SITE <span>▾</span></div>
+        <div class="copyr">Copyright © NE Neungyule, Inc. All Rights Reserved</div>
+      </div>
+    </div><!-- /scr -->
+
+      <!-- 햄버거 카테고리 드로어 -->
+      <div class="drawer" id="drawer">
+        <div class="dim" id="drawerDim"></div>
+        <div class="dw">
+          <div class="dwtop"><span class="hm">🏠</span><span class="authout" id="authOut"><span class="lk" id="loginBtn">로그인</span><span style="color:var(--muted)">&nbsp;|&nbsp;</span><span>회원가입</span></span><span class="authin" id="authIn" style="display:none"><b>김능률님</b>, 반갑습니다 <span class="lk" id="logoutBtn">로그아웃</span></span><span class="spacer"></span><span class="dwic">🔍</span><span class="dwic cart">🛒<i>0</i></span><span class="x" id="drawerX">✕</span></div>
+          <div class="dwbanner">맞춤형 교재 추천 받기<span class="go">›</span></div>
+          <div class="dwbody">
+            <div class="dwcats" id="dwcats">
+              <div class="dwcat on" data-c="ELT">ELT</div>
+              <div class="dwcat" data-c="초·중등">초·중등</div>
+              <div class="dwcat" data-c="고등">고등</div>
+              <div class="dwcat" data-c="교과서·자습서">교과서·자습서</div>
+              <div class="dwcat" data-c="수험·일반">수험·일반</div>
+              <div class="dwcat" data-c="수학·국어">수학·국어</div>
+              <div class="dwcat" data-c="학습자료실">학습자료실</div>
+              <div class="dwcat" data-c="도서몰">도서몰</div>
+              <div class="dwcat cscat" data-c="고객센터">고객센터</div>
+              <div class="dwcat mycat" data-c="마이페이지" style="display:none">마이페이지</div>
+            </div>
+            <div class="dwsub" id="dwsub"></div>
+          </div>
+          <div class="dwbottom"><span>공지사항</span><span>FAQ</span><span>교재오류 정정</span><span>1:1 문의</span></div>
+        </div>
+      </div>
+
+      <!-- 검색 오버레이 -->
+      <div class="searchov" id="searchov">
+        <div class="sovtop"><span class="logo" id="sovHome"><span class="r">NE_</span>Books</span><span class="spacer"></span><span class="x" id="sovX">✕</span></div>
+        <div class="sovbox">🔎 <input id="sovInput" placeholder="검색어를 입력해주세요"> <span>🔍</span></div>
+        <!-- 검색 전 기본 -->
+        <div id="sovDefault">
+          <div class="sovbanner"><div><b>맞춤형 교재 추천 서비스</b><p>다양한 조건에 맞는 최적의 교재를 찾아드립니다.</p></div><span class="pk">NE Pick!</span></div>
+          <div class="povsec">
+            <p class="povttl">인기 검색어</p>
+            <div class="povrank">
+              <div class="prk"><span class="n">1</span>능률 voca</div>
+              <div class="prk"><span class="n">2</span>course book</div>
+              <div class="prk"><span class="n">3</span>Ebook</div>
+              <div class="prk"><span class="n">4</span>단어장</div>
+              <div class="prk"><span class="n">5</span>영어문법</div>
+              <div class="prk"><span class="n">6</span>중등문법</div>
+              <div class="prk"><span class="n">7</span>리딩튜터</div>
+              <div class="prk"><span class="n">8</span>중등 독해</div>
+              <div class="prk"><span class="n">9</span>주니어 리딩튜터</div>
+              <div class="prk"><span class="n">10</span>grammar</div>
+            </div>
+          </div>
+        </div>
+        <!-- 검색어 입력 시 미리보기 (이외 영역 숨김) -->
+        <div id="sovPreview" class="sprev" style="display:none"></div>
+      </div>
+  </div>
+  <p class="cap">NE_Books 메인 · 모바일 와이어프레임 (390px)</p>
+
+<script>
+// 히어로 슬라이더 (풀블리드 + 스와이프 + 도트)
+(function(){
+  var t=document.getElementById('hslides'),dots=[].slice.call(document.querySelectorAll('#pager .pd'));
+  var i=0,n=t.children.length,sx=null,timer;
+  function go(k){i=(k%n+n)%n;t.style.transform='translateX('+(-i*100)+'%)';dots.forEach(function(d,x){d.classList.toggle('on',x===i);});reset();}
+  t.addEventListener('touchstart',function(e){sx=e.touches[0].clientX;},{passive:true});
+  t.addEventListener('touchend',function(e){if(sx===null)return;var dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>40)go(i+(dx<0?1:-1));sx=null;});
+  t.addEventListener('pointerdown',function(e){sx=e.clientX;clearInterval(timer);});
+  window.addEventListener('pointerup',function(e){if(sx===null)return;var dx=e.clientX-sx;if(Math.abs(dx)>40)go(i+(dx<0?1:-1));sx=null;});
+  function reset(){clearInterval(timer);timer=setInterval(function(){go(i+1);},4500);}
+  go(0);
+})();
+// 탭/체크 토글
+(function(){
+  document.querySelectorAll('.ptab').forEach(function(t){t.addEventListener('click',function(){document.querySelectorAll('.ptab').forEach(function(x){x.classList.remove('on');});t.classList.add('on');});});
+  document.querySelectorAll('.ctab2').forEach(function(t){t.addEventListener('click',function(){document.querySelectorAll('.ctab2').forEach(function(x){x.classList.remove('on');});t.classList.add('on');});});
+  document.querySelectorAll('.chk,.cc').forEach(function(c){c.addEventListener('click',function(){c.classList.toggle('off');c.textContent=c.classList.contains('off')?'':'✓';});});
+  document.querySelectorAll('.tabbar .tb').forEach(function(t){if(t.id)return;t.addEventListener('click',function(){document.querySelectorAll('.tabbar .tb').forEach(function(x){x.classList.remove('on');});t.classList.add('on');});});
+})();
+// 카테고리 드로어
+(function(){
+  var SUB={
+    'ELT':['Coursebook','Phonics','Readers','Reading','Listening','Speaking','Writing','Grammar','Vocabulary'],
+    '초·중등':['중학내신','고등선행','어휘','Phonics','쓰기','독해','듣기','문법/구문','TOEFL/TEPS/NELT'],
+    '고등':['어휘','독해','듣기','문법/구문','수능대비','고교내신','단기특강','TOEFL/TEPS/NELT'],
+    '교과서·자습서':['중등영어 교과서','고등영어 교과서','수학 교과서','중국어/일본어'],
+    '수험·일반':['TOEIC','TOEIC Speaking/Writing','TOEFL/OPIC/TEPS','FLEX','일반영어'],
+    '수학·국어':['유아','초등','중등','고등'],
+    '학습자료실':['ELT자료','초/중등교재 자료','고등교재 자료','교과서/자습서 자료','수험/일반 자료','수학/국어 자료'],
+    '도서몰':['ELT','초/중등','고등','교과서/자습서','수험/일반','교과/부가상품','세트/패키지','온라인 서비스/이용권'],
+    '고객센터':['공지사항','이용가이드','FAQ','이벤트 / 신간·개정 / 세미나','교재 오류정정','1:1 문의','교재 후기','지사안내'],
+    '마이페이지':['홈','주문내역','포인트/쿠폰','학습자료실','찜','문의/답변','교재 후기','이벤트/세미나']
+  };
+  var MYPANEL={'홈':'home','주문내역':'orders','포인트/쿠폰':'point','학습자료실':'lib','찜':'wish','문의/답변':'qna','교재 후기':'review','이벤트/세미나':'event'};
+  var sub=document.getElementById('dwsub'),cats=document.getElementById('dwcats');
+  function render(c){
+    if(c==='마이페이지'){sub.innerHTML=SUB[c].map(function(s){return '<a href="NE_Books_마이페이지_모바일_v1.html#'+MYPANEL[s]+'">'+s+'</a>';}).join('');}
+    else if(c==='고객센터'){sub.innerHTML=SUB[c].map(function(s){return '<a href="NE_Books_고객센터_상용_v1.html">'+s+'</a>';}).join('');}
+    else{sub.innerHTML=(SUB[c]||[]).map(function(s){return '<a>'+s+'</a>';}).join('');}
+  }
+  cats.querySelectorAll('.dwcat').forEach(function(el){el.addEventListener('click',function(){cats.querySelectorAll('.dwcat').forEach(function(x){x.classList.remove('on');});el.classList.add('on');render(el.getAttribute('data-c'));});});
+  render('ELT');
+  var dr=document.getElementById('drawer');
+  document.getElementById('hamBtn').addEventListener('click',function(){dr.classList.add('open');});
+  var ct=document.getElementById('catTab');if(ct)ct.addEventListener('click',function(){dr.classList.add('open');});
+  document.getElementById('drawerX').addEventListener('click',function(){dr.classList.remove('open');});
+  document.getElementById('drawerDim').addEventListener('click',function(){dr.classList.remove('open');});
+  // 로그인/로그아웃 상태 전환 (하단 메뉴는 고정, 마이페이지 카테고리만 노출/숨김)
+  var authOut=document.getElementById('authOut'),authIn=document.getElementById('authIn');
+  var mycat=cats.querySelector('.mycat');
+  function setLogin(on){
+    authOut.style.display=on?'none':'';authIn.style.display=on?'':'none';
+    if(mycat)mycat.style.display=on?'flex':'none';
+    cats.querySelectorAll('.dwcat').forEach(function(x){x.classList.remove('on');});
+    if(on){mycat.classList.add('on');render('마이페이지');}
+    else{var elt=cats.querySelector('[data-c="ELT"]');if(elt)elt.classList.add('on');render('ELT');}
+  }
+  var lo=document.getElementById('loginBtn');if(lo)lo.addEventListener('click',function(){setLogin(true);});
+  var lg=document.getElementById('logoutBtn');if(lg)lg.addEventListener('click',function(){setLogin(false);});
+})();
+// 가로 스크롤 영역 마우스 드래그 스와이프 (터치는 기본 동작)
+(function(){
+  document.querySelectorAll('.ptabs,.cards,.ctabs,.pcards').forEach(function(el){
+    el.classList.add('hswipe');
+    var down=false,moved=false,sx=0,sl=0;
+    el.addEventListener('pointerdown',function(e){down=true;moved=false;sx=e.clientX;sl=el.scrollLeft;});
+    el.addEventListener('pointermove',function(e){if(!down)return;var dx=e.clientX-sx;if(Math.abs(dx)>4){moved=true;el.classList.add('drag');}el.scrollLeft=sl-dx;});
+    function up(){down=false;el.classList.remove('drag');}
+    el.addEventListener('pointerup',up);el.addEventListener('pointerleave',up);el.addEventListener('pointercancel',up);
+    el.addEventListener('click',function(e){if(moved){e.preventDefault();e.stopPropagation();}},true);
+  });
+})();
+// 검색 오버레이 + 실시간 검색 미리보기
+(function(){
+  var ov=document.getElementById('searchov');
+  var inp=document.getElementById('sovInput'),def=document.getElementById('sovDefault'),pv=document.getElementById('sovPreview');
+  function reset(){if(inp)inp.value='';if(def)def.style.display='block';if(pv){pv.style.display='none';pv.innerHTML='';}}
+  function open(){ov.classList.add('open');reset();setTimeout(function(){if(inp)inp.focus();},120);}
+  document.getElementById('searchBtn').addEventListener('click',open);
+  var st=document.getElementById('searchTab');if(st)st.addEventListener('click',open);
+  document.getElementById('sovX').addEventListener('click',function(){ov.classList.remove('open');reset();});
+  var sh=document.getElementById('sovHome');if(sh)sh.addEventListener('click',function(){ov.classList.remove('open');reset();window.scrollTo({top:0});});
+  // 실시간 미리보기
+  var DATA=['능률 VOCA 어원편','능률 VOCA 수능완성','능률 중학영어 1-1','course book 1','course book 2','Reading Sense 3','주니어 리딩튜터 1','리딩튜터 기본','그래머존 중등 필수','중등 영문법 3800제','Easy Link 1','Read It! 40','Listening Stage Plus 1','단어장 마스터 중등'];
+  function esc(s){return s.replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
+  function render(q){
+    var ql=q.toLowerCase();
+    var hits=DATA.filter(function(x){return x.toLowerCase().indexOf(ql)>=0;});
+    if(!hits.length){pv.innerHTML='<div class="spnone">\''+esc(q)+'\'에 대한 검색 결과가 없습니다.</div>';return;}
+    pv.innerHTML=hits.map(function(x){
+      var i=x.toLowerCase().indexOf(ql);
+      var h=esc(x.slice(0,i))+'<b>'+esc(x.slice(i,i+q.length))+'</b>'+esc(x.slice(i+q.length));
+      return '<div class="spi"><span class="mg">🔎</span><span>'+h+'</span></div>';
+    }).join('');
+  }
+  if(inp)inp.addEventListener('input',function(){
+    var q=this.value.trim();
+    if(q){def.style.display='none';pv.style.display='block';render(q);}
+    else{def.style.display='block';pv.style.display='none';pv.innerHTML='';}
+  });
+})();
+// 푸터 사업자정보 펼침
+(function(){
+  var t=document.getElementById('bizToggle'),info=document.getElementById('bizInfo'),c=document.getElementById('bizCaret');
+  if(t)t.addEventListener('click',function(){var open=info.style.display!=='none';info.style.display=open?'none':'block';c.textContent=open?'▼':'▲';});
+})();
+</script>
+</body></html>

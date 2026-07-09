@@ -1,0 +1,133 @@
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+/* NE Design.md Baseline Components (v0.11.5-alpha)              */
+/*                                                                 */
+/* Minimum baseline component CSS. PoC fork target.                */
+/* No raw rgba. No legacy .btn-primary / .btn-on-dark.             */
+/* No --ff-base / --ff-display (canonical: --font-primary).        */
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+body {
+  background: var(--ne-surface-base);
+  color: var(--ne-text-body);
+  font-family: var(--font-primary);
+  margin: 0;
+}
+
+/* ── Buttons — ne-btn family only ────────────────────────── */
+.ne-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  height: 44px;
+  padding: 12px 20px;
+  border: 1px solid transparent;
+  border-radius: var(--rounded-md);
+  font-family: var(--font-primary);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s, border-color 0.18s, transform 0.12s;
+  white-space: nowrap;
+}
+.ne-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--ne-primary-focus-ring);
+}
+
+.ne-btn-primary {
+  background: var(--ne-primary);
+  color: var(--ne-on-primary);
+}
+.ne-btn-primary:hover { background: var(--ne-primary-hover); }
+.ne-btn-primary:active { background: var(--ne-primary-active); transform: translateY(1px); }
+.ne-btn-primary:disabled { background: var(--ne-primary-disabled); color: var(--ne-on-primary); cursor: not-allowed; }
+
+.ne-btn-neutral {
+  background: var(--ne-mono);
+  color: var(--ne-on-mono);
+}
+.ne-btn-neutral:hover { background: var(--ne-mono-hover); }
+.ne-btn-neutral:active { background: var(--ne-mono-active); transform: translateY(1px); }
+.ne-btn-neutral:focus-visible { box-shadow: 0 0 0 3px var(--ne-mono-focus-ring); }
+.ne-btn-neutral:disabled { background: var(--ne-mono-disabled); color: var(--ne-on-mono); cursor: not-allowed; }
+
+.ne-btn-neutral-subtle {
+  background: transparent;
+  color: var(--ne-text-heading);
+  border-color: var(--ne-mono);
+}
+.ne-btn-neutral-subtle:hover { background: var(--ne-mono-overlay-hover); border-color: var(--ne-mono-hover); }
+.ne-btn-neutral-subtle:active { background: var(--ne-mono-overlay-active); border-color: var(--ne-mono-active); transform: translateY(1px); }
+.ne-btn-neutral-subtle:focus-visible { box-shadow: 0 0 0 3px var(--ne-mono-focus-ring); }
+
+.ne-btn-inverse {
+  background: var(--ne-mono-surface-base);
+  color: var(--ne-text-heading);
+}
+.ne-btn-inverse:hover { background: var(--ne-mono-overlay-hover); }
+.ne-btn-inverse:active { background: var(--ne-mono-overlay-active); transform: translateY(1px); }
+
+/* size modifiers */
+.ne-btn-sm  { height: 36px; }
+.ne-btn-lg  { height: 52px; }
+.ne-btn-xl  { height: 60px; }
+.ne-btn-2xl { height: 68px; }
+
+/* ── Card — composition primitive ────────────────────────── */
+.ne-card {
+  background: var(--ne-surface-base);
+  border: 1px solid var(--ne-boundary);
+  border-radius: var(--rounded-lg);
+  padding: var(--space-lg);
+}
+.ne-card--muted {
+  background: var(--ne-surface-section);
+}
+.ne-card--compact {
+  padding: 0;
+}
+
+/* ── Badge — DESIGN.md §8 (rounded pill / padding 4px 12px / caption / border 없음) ── */
+/* v0.11.5: §8 계약대로 baseline 어댑터 구현 (이전엔 미구현 silent dead class). 신규 token 0, §8 derive. */
+.ne-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xxs);
+  border-radius: var(--rounded-pill);
+  padding: var(--space-xxs) var(--space-sm);   /* 4px 12px */
+  font-size: 13px;            /* typography.scale.caption */
+  line-height: 1.4;
+  font-weight: 500;           /* medium */
+  white-space: nowrap;
+}
+.ne-badge-category-mono    { background: var(--ne-surface-card);            color: var(--ne-text-heading); }
+.ne-badge-category-color   { background: var(--ne-surface-emphasis-soft);   color: var(--ne-text-heading); }
+.ne-badge-level-1          { background: var(--ne-status-success-bg);       color: var(--ne-status-success); }
+.ne-badge-level-2          { background: var(--ne-status-warning-bg);       color: var(--ne-status-warning); }
+.ne-badge-level-3          { background: var(--ne-status-danger-bg);        color: var(--ne-status-danger); }
+.ne-badge-status-success   { background: var(--ne-status-success-bg);       color: var(--ne-status-success); }
+.ne-badge-status-warning   { background: var(--ne-status-warning-bg);       color: var(--ne-status-warning); }
+.ne-badge-status-danger    { background: var(--ne-status-danger-bg);        color: var(--ne-status-danger); }
+.ne-badge-status-neutral   { background: var(--ne-surface-card);            color: var(--ne-text-heading); }
+.ne-badge-result-correct   { background: var(--ne-assessment-correct-bg);   color: var(--ne-assessment-correct); }
+.ne-badge-result-incorrect { background: var(--ne-assessment-incorrect-bg); color: var(--ne-assessment-incorrect); }
+/* count — 별도 micro-geometry (18px pill / 11px, DESIGN.md §8 count contract — body-sm 아님) */
+.ne-badge-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 6px;
+  border-radius: var(--rounded-pill);
+  background: var(--ne-primary);
+  color: var(--ne-on-primary);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+/* ── Global selection ───────────────────────────────────── */
+::selection { background: var(--ne-primary-focus-ring); color: var(--ne-text-heading); }

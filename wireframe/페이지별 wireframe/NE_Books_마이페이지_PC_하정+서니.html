@@ -1,0 +1,876 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=1280">
+<title>NE_Books 마이페이지</title>
+<style>
+  :root{--ink:#222732;--line:#d7dbe2;--line2:#e6e9ee;--fill:#eef0f3;--fill2:#f7f8fa;--muted:#8b909c;--bar2:#dde1e7;
+    --new:#1f9d72;--newbg:#e6f6ef;--red:#e23b3b;--orange:#e8852b;--blue:#3a78f2;--bluebg:#eaf1ff;}
+  *{box-sizing:border-box}
+  body{margin:0;background:#fff;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Apple SD Gothic Neo","Malgun Gothic",sans-serif}
+  a{color:inherit;text-decoration:none}
+  .container{max-width:1280px;margin:0 auto;padding:0 24px}
+  .spacer{flex:1}
+
+  /* ===== 공통 헤더 (메인과 동일) ===== */
+  .utilbar{background:#f4f5f7;border-bottom:1px solid var(--line2);font-size:12px;color:#5a606c}
+  .utilbar .container{display:flex;align-items:center;gap:14px;height:38px;font-weight:600;flex-wrap:wrap}
+  .utilbar .sep{color:#cfd3da}
+  .header .container{display:flex;align-items:center;gap:24px;padding-top:22px;padding-bottom:22px}
+  .logo{font-size:26px;font-weight:800}.logo .r{color:var(--red)}
+  .srch{flex:1;max-width:900px;display:flex;align-items:center;gap:12px}
+  .srchwrap{position:relative;flex:1}
+  .recobtn{flex-shrink:0;background:var(--ink);color:#fff;border-radius:9px;padding:13px 18px;font-size:13.5px;font-weight:800;white-space:nowrap;cursor:pointer}
+  .srchbox{height:48px;border:2px solid var(--ink);border-radius:8px;display:flex;align-items:center;padding:0 18px;color:var(--muted);font-size:14px;cursor:text}
+  .srchpop{position:absolute;top:calc(100% + 8px);left:0;right:0;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 16px 38px rgba(20,25,40,.16);padding:18px 20px;z-index:200;display:none}
+  .srchpop.open{display:block}
+  .srchpop .pht{font-size:13px;font-weight:800;color:#3d4756;margin:0 0 14px}
+  .popgrid{display:grid;grid-template-rows:repeat(5,auto);grid-auto-flow:column;gap:10px 36px}
+  .popitem{display:flex;align-items:center;gap:11px;font-size:14px;color:#3d4756;font-weight:600;cursor:pointer;padding:3px 0}
+  .popno{width:24px;height:24px;border-radius:50%;background:var(--ink);color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .popfoot{font-size:12px;color:var(--muted);margin:14px 0 0;border-top:1px solid var(--line2);padding-top:11px}
+  .uicons{display:flex;align-items:center;gap:22px;margin-left:auto}
+  .uic{display:flex;flex-direction:column;align-items:center;gap:5px;font-size:11px;color:#5a606c;font-weight:700}
+  .uic .ci{width:34px;height:34px;border-radius:50%;background:var(--fill);border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;font-size:17px}
+  .uic.on .ci{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .gnb{border-top:1px solid var(--line2);border-bottom:2px solid var(--ink)}
+  .gnb .container{display:flex;align-items:center;justify-content:space-between;height:54px;font-size:15px;font-weight:700}
+  .gnb a{color:#444b57}
+
+  /* ===== 마이페이지 본문 ===== */
+  .crumb{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);padding:18px 0 0}
+  .crumb .hm{color:#5a606c}.crumb .sep{color:#cfd3da}
+  .ptitle{font-size:28px;font-weight:800;margin:14px 0 22px;letter-spacing:-.02em}
+
+  /* 탭 */
+  .mtabs{display:grid;grid-template-columns:repeat(8,1fr);gap:8px;margin-bottom:30px;border-bottom:2px solid var(--line2);padding-bottom:0}
+  .mtab{position:relative;display:flex;flex-direction:column;align-items:center;gap:9px;padding:16px 6px 15px;border:1px solid transparent;border-bottom:none;border-radius:12px 12px 0 0;background:var(--fill2);cursor:pointer;transition:.15s;margin-bottom:-2px}
+  .mtab .ti{width:38px;height:38px;border-radius:11px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;color:#9aa0ac}
+  .mtab .tl{font-size:13px;font-weight:700;color:#7a828f;text-align:center;line-height:1.25}
+  .mtab:hover{background:#eef0f4}
+  .mtab.on{background:#fff;border-color:var(--ink);border-bottom:2px solid #fff}
+  .mtab.on .ti{background:var(--ink);color:#fff}
+  .mtab.on .tl{color:var(--ink)}
+
+  .nbadge{display:inline-block;font-size:10px;font-weight:800;color:#fff;background:var(--new);border-radius:5px;padding:2px 7px;margin-left:8px;vertical-align:middle}
+
+  /* 카드 공통 */
+  .card{background:#fff;border:1px solid var(--line2);border-radius:16px;padding:24px 26px}
+  .card .ch{display:flex;align-items:center;margin:0 0 18px}
+  .card .ch h3{font-size:17px;font-weight:800;margin:0}
+  .more{font-size:12.5px;color:var(--muted);font-weight:600;cursor:pointer;margin-left:auto}
+  .grid2{display:grid;grid-template-columns:1.15fr 1fr;gap:20px}
+  .sec{margin-bottom:20px}
+
+  /* 나의 정보 */
+  .me{display:flex;align-items:center;gap:18px}
+  .avatar{width:64px;height:64px;border-radius:50%;background:var(--fill);display:flex;align-items:center;justify-content:center;font-size:30px;flex-shrink:0}
+  .mename{font-size:18px;font-weight:800;margin:0 0 6px}
+  .mename b{color:var(--blue)}
+  .mrole{display:inline-block;font-size:11.5px;font-weight:700;color:#3d4756;background:var(--fill2);border:1px solid var(--line2);border-radius:20px;padding:3px 11px}
+  .editbtn{margin-left:auto;font-size:12px;font-weight:700;color:#5a606c;border:1px solid var(--line);border-radius:8px;padding:9px 14px;cursor:pointer;align-self:flex-start}
+  .acts{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:22px;border:1px solid var(--line2);border-radius:12px;overflow:hidden}
+  .act{padding:14px 6px;text-align:center;border-right:1px solid var(--line2);cursor:pointer}
+  .act:last-child{border-right:0}
+  .act .al{font-size:12px;color:var(--muted);margin:0 0 6px}
+  .act .av{font-size:18px;font-weight:800;margin:0}.act .av span{font-size:12px;color:var(--muted);font-weight:600;margin-left:2px}
+
+  /* 주문 현황 */
+  .ordercard{display:flex;flex-direction:column}
+  .orders{flex:1;display:grid;grid-template-columns:repeat(4,1fr);align-content:center;border:1px solid var(--line2);border-radius:12px;background:var(--fill2);padding:8px 0}
+  .ostep{text-align:center;padding:18px 4px;cursor:pointer;border-right:1px solid var(--line2)}
+  .ostep:last-child{border-right:0}
+  .ostep .ov{font-size:34px;font-weight:800;line-height:1}
+  .ostep .ol{font-size:13px;color:#5a606c;margin-top:10px;font-weight:600}
+
+  /* 포인트/쿠폰 */
+  .benefit{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .bcell{border:1px solid var(--line2);border-radius:13px;padding:20px 18px;background:var(--fill2)}
+  .bcell .bl{font-size:12.5px;color:var(--muted);margin:0 0 9px;font-weight:600}
+  .bcell .bv{font-size:26px;font-weight:800;margin:0;letter-spacing:-.02em}
+  .bcell .bv .u{font-size:14px;color:#5a606c;font-weight:700;margin-left:2px}
+  .bcell .bd{font-size:11.5px;color:var(--red);font-weight:700;margin:7px 0 0}
+  .bcell .bd.soft{color:var(--muted);font-weight:600}
+
+  /* 학습자료 리스트 */
+  .lrow{display:grid;grid-template-columns:80px 1fr 1.2fr 90px;gap:12px;align-items:center;padding:14px 4px;border-bottom:1px solid var(--line2);font-size:13.5px}
+  .lrow:last-child{border-bottom:0}
+  .ltag{font-size:11px;font-weight:700;color:#5a606c;background:var(--fill2);border:1px solid var(--line2);border-radius:6px;padding:3px 0;text-align:center}
+  .lname{font-weight:700}.lbook{color:#6b7280}
+  .ldown{font-size:12px;font-weight:700;color:var(--blue);text-align:right;cursor:pointer}
+
+  /* 찜/최근 카드 */
+  .bcards{display:flex;gap:16px;overflow-x:auto;padding-bottom:6px}
+  .bcard{flex:0 0 188px;border:1px solid var(--line2);border-radius:12px;padding:12px;background:#fff}
+  .cover{aspect-ratio:3/4;background:var(--fill);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:11px;margin-bottom:11px}
+  .gtag{display:inline-block;font-size:11px;color:#5a606c;background:var(--fill2);border:1px solid var(--line2);border-radius:5px;padding:2px 8px;font-weight:700;margin-bottom:8px}
+  .bname{height:9px;width:90%;background:var(--bar2);border-radius:4px;margin:0 0 6px}.bname.s{width:60%}
+  .price{display:flex;align-items:baseline;gap:7px;margin:10px 0 10px;flex-wrap:wrap}
+  .ori{font-size:11px;color:#b6bcc6;text-decoration:line-through}.dis{font-size:16px;font-weight:800}.rate{font-size:11px;color:var(--red);font-weight:800}
+  .cartbtn{display:block;text-align:center;background:var(--blue);color:#fff;border-radius:8px;padding:9px;font-size:12.5px;font-weight:800;cursor:pointer}
+  .empty{text-align:center;color:var(--muted);font-size:14px;padding:46px 0;border:1px dashed var(--line);border-radius:14px;background:var(--fill2)}
+
+  /* ===== 탭 패널 전환 ===== */
+  .panel{display:none}
+  .panel.on{display:block}
+  .subtabs{display:flex;gap:6px;border-bottom:2px solid var(--line2);margin-bottom:24px}
+  .subtab{padding:12px 24px;font-size:15px;font-weight:800;color:#9aa0ac;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px}
+  .subtab.on{color:var(--ink);border-bottom-color:var(--ink)}
+  .filters{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:18px}
+  .fpill{background:var(--fill);border:1px solid var(--line2);border-radius:20px;padding:8px 16px;font-size:12.5px;color:#5a606c;font-weight:700;cursor:pointer}
+  .fpill.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .fsel{margin-left:auto;border:1px solid var(--line);border-radius:8px;padding:9px 12px;font-size:12.5px;color:#5a606c;background:#fff}
+  .sumrow{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:22px}
+  .tbl{width:100%;border-collapse:collapse;font-size:13.5px}
+  .tbl th{background:var(--fill2);color:#5a606c;font-weight:700;font-size:12.5px;padding:13px 10px;border-top:1px solid var(--line2);border-bottom:1px solid var(--line2);text-align:center}
+  .tbl td{padding:15px 10px;border-bottom:1px solid var(--line2);text-align:center;color:#3d4756}
+  .tbl td.l{text-align:left}
+  .badge{display:inline-block;font-size:11px;font-weight:800;border-radius:6px;padding:3px 9px}
+  .badge.done{color:var(--new);background:var(--newbg)}
+  .badge.wait{color:var(--orange);background:#fdf0e2}
+  .badge.exp{color:var(--muted);background:var(--fill)}
+  .plus{color:var(--blue);font-weight:800}.minus{color:var(--red);font-weight:800}
+  .policy{background:var(--fill2);border:1px solid var(--line2);border-radius:12px;padding:18px 20px;margin-top:20px;font-size:13px;color:#5a606c;line-height:1.75}
+  .policy h4{font-size:13.5px;font-weight:800;color:#3d4756;margin:0 0 8px;display:flex;align-items:center}
+  .moreguide{margin-left:auto;font-size:12px;font-weight:800;color:#fff;background:var(--blue);border-radius:7px;padding:7px 13px;cursor:pointer}
+  .pager2{display:flex;gap:6px;justify-content:center;margin-top:22px}
+  .pg{min-width:30px;height:30px;padding:0 8px;border:1px solid var(--line2);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:12.5px;color:#5a606c;cursor:pointer}
+  .pg.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  /* 쿠폰 */
+  .regbox{display:flex;gap:10px;align-items:center;background:var(--fill2);border:1px solid var(--line2);border-radius:12px;padding:14px 16px;margin-bottom:20px}
+  .regbox .rl{font-size:13px;font-weight:800;color:#3d4756}
+  .regbox input{flex:1;border:1px solid var(--line);border-radius:8px;padding:11px 14px;font-size:13px}
+  .regbtn{background:var(--ink);color:#fff;border-radius:8px;padding:11px 22px;font-size:13px;font-weight:800;cursor:pointer}
+  .coupons{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  .coupon{display:flex;border:1px solid var(--line2);border-radius:12px;overflow:hidden;background:#fff}
+  .coupon .cv{flex:0 0 128px;background:var(--bluebg);color:#1f4fb0;display:flex;flex-direction:column;align-items:center;justify-content:center;border-right:1px dashed #b9d0f5}
+  .coupon .cv .cvn{font-size:24px;font-weight:800}.coupon .cv .cvu{font-size:12px;font-weight:700;margin-top:2px}
+  .coupon .ci2{padding:16px 18px;flex:1}
+  .coupon .cn2{font-size:14px;font-weight:800;margin:0 0 7px}
+  .coupon .cmeta{font-size:12px;color:#6b7280;margin:0 0 3px}
+  .coupon .cdday{font-size:12px;color:var(--red);font-weight:800;margin:7px 0 0}
+  .coupon.dim{opacity:.55}.coupon.dim .cv{background:var(--fill);color:#9aa0ac;border-right-color:var(--line2)}
+  /* 찜 */
+  .wishhead{display:flex;align-items:center;margin-bottom:18px}
+  .wishhead .wc{font-size:14px;font-weight:700;color:#5a606c}.wishhead .wc b{color:var(--blue)}
+  .delall{margin-left:auto;font-size:12.5px;font-weight:700;color:#5a606c;border:1px solid var(--line);border-radius:8px;padding:9px 15px;cursor:pointer}
+  .wishgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px}
+  .wcard{position:relative;border:1px solid var(--line2);border-radius:12px;padding:12px;background:#fff}
+  .wx{position:absolute;top:9px;right:9px;width:24px;height:24px;border-radius:50%;background:rgba(20,25,35,.5);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer;z-index:2}
+  .ph{font-size:13px;color:#3d4756;font-weight:700;margin:6px 0 10px;line-height:1.35;min-height:34px}
+  /* 문의 */
+  .qnatop{display:flex;gap:8px;align-items:center;margin-bottom:16px;flex-wrap:wrap}
+  .searchbar{display:flex;gap:8px;align-items:center}
+  .searchbar input{border:1px solid var(--line);border-radius:8px;padding:9px 12px;font-size:12.5px;width:210px}
+  .qbtn{background:var(--ink);color:#fff;border-radius:8px;padding:10px 18px;font-size:12.5px;font-weight:800;cursor:pointer}
+  .qnote{font-size:12px;color:var(--muted);margin-top:14px}
+  #qna-list tbody tr.qrow{cursor:pointer}
+  #qna-list tbody tr.qrow:hover td{background:var(--fill2)}
+  #qna-detail .frow .fl{width:160px}
+  /* 날짜 선택기 */
+  .dater{display:flex;align-items:center;gap:8px;margin-left:auto}
+  .dater .dlab{font-size:12.5px;color:#5a606c;font-weight:700}
+  .din{border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:12.5px;color:#3d4756;font-family:inherit}
+  .dater .fsel{margin-left:0}
+  /* 1:1 문의 작성 폼 */
+  .preinfo{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--fill2);border:1px solid var(--line2);border-radius:12px;padding:16px 18px;margin-bottom:16px}
+  .pinote{font-size:13px;color:#5a606c;font-weight:600;margin-right:auto}
+  .reqd{font-size:12px;color:#5a606c;margin:0 0 14px}.reqd i,.fl i{color:var(--red);font-style:normal}
+  .form{padding:0;overflow:hidden}
+  .frow{display:grid;grid-template-columns:160px 1fr;border-bottom:1px solid var(--line2)}
+  .frow:last-child{border-bottom:0}
+  .frow .fl{background:var(--fill2);padding:18px 20px;font-size:13.5px;font-weight:700;color:#3d4756}
+  .frow .ff{padding:16px 20px;font-size:13.5px;color:#3d4756}
+  .frow .ff label{font-size:13.5px;cursor:pointer}
+  .finput{border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:13px;color:#3d4756;font-family:inherit;background:#fff}
+  .finput.sm{width:170px}.finput.xs{width:84px}
+  select.finput{min-width:300px}select.finput.sm{min-width:0}
+  textarea.finput{width:100%;resize:vertical;min-width:300px}
+  .fnote{font-size:11.5px;color:var(--muted);margin:8px 0 0}
+  .guidebox{background:var(--fill2);border:1px solid var(--line2);border-radius:8px;padding:14px 16px;font-size:12.5px;color:#5a606c;line-height:1.7;margin-bottom:10px}
+  .filebtn{background:#a9936b;color:#fff;border-radius:7px;padding:10px 16px;font-size:12.5px;font-weight:700;cursor:pointer}
+  .formbtns{display:flex;justify-content:flex-end;gap:10px;margin-top:22px}
+  .btn-ghost{border:1px solid var(--line);border-radius:8px;padding:12px 26px;font-size:13px;font-weight:700;color:#5a606c;cursor:pointer}
+  .btn-ghost.solid{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+  /* 온라인 엽서 바로가기 */
+  .postcard{display:flex;align-items:center;gap:18px;background:var(--fill2);border:1px solid var(--line2);border-radius:16px;padding:22px 26px}
+  .postcard .pi{width:48px;height:48px;border-radius:13px;background:#fff;border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;font-size:24px}
+  .postcard .pt{font-size:16px;font-weight:800;margin:0 0 4px}
+  .postcard .ps{font-size:13px;color:#6b7280;margin:0}
+  .postcard .go{margin-left:auto;width:36px;height:36px;border-radius:50%;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:#5a606c}
+
+  .secttl{font-size:20px;font-weight:800;margin:36px 0 16px;display:flex;align-items:center}
+  .secttl .more{margin-left:auto}
+
+  /* footer */
+  .ftr{background:#2a2f3a;color:#aeb4c0;font-size:13px;line-height:2;margin-top:48px}
+  .ftr .container{padding-top:26px;padding-bottom:30px}
+  .ftr .fnav{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+  .ftr .fnav a{color:#cdd2db;font-weight:600}.ftr .fnav .b{color:#fff;font-weight:800}
+  .ftr .fnav .sep{color:#555c69}
+  .ftr .family{float:right;border:1px solid #555c69;border-radius:22px;padding:9px 20px;color:#cdd2db}
+  .ftr .fco{color:#8b909c}.ftr .fco b{color:#aeb4c0}
+  .ftr .flogo{float:right;font-weight:800;color:#7d8390;font-size:17px;margin-top:8px}
+
+  /* ===== 주문내역 패널 ===== */
+  .ordlist{display:flex;flex-direction:column;gap:16px}
+  .ordc{border:1px solid var(--line2);border-radius:14px;overflow:hidden}
+  .ordc-h{display:flex;align-items:center;gap:12px;padding:15px 18px;background:var(--fill2);border-bottom:1px solid var(--line2);font-size:13px}
+  .ordc-h .ono{font-weight:800}.ordc-h .odt{color:var(--muted);font-weight:600}
+  .ordc-h .odetail{margin-left:auto;font-size:12.5px;font-weight:700;color:#5a606c;cursor:pointer}
+  .ostat{font-size:11.5px;font-weight:800;border-radius:6px;padding:4px 10px}
+  .ostat.wait{color:var(--orange);background:#fdf0e2}.ostat.pay{color:var(--blue);background:var(--bluebg)}
+  .ostat.ship{color:#1f6fb2;background:#e7f1f9}.ostat.done{color:var(--new);background:var(--newbg)}
+  .ostat.confirm{color:#5a606c;background:var(--fill)}.ostat.cancel{color:var(--red);background:#fdeceb}
+  .oitem{display:grid;grid-template-columns:62px 1fr auto;gap:14px;align-items:center;padding:15px 18px;border-bottom:1px solid var(--line2)}
+  .ordc .oitem:last-of-type{border-bottom:0}
+  .ocover{width:62px;aspect-ratio:3/4;background:var(--fill);border-radius:7px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:10px}
+  .oname{font-size:14px;font-weight:700;margin:0 0 5px}.ometa{font-size:12.5px;color:#6b7280;margin:0}
+  .oprice{font-size:14px;font-weight:800;text-align:right;white-space:nowrap}
+  .ordc-f{display:flex;align-items:center;gap:12px;padding:14px 18px;border-top:1px solid var(--line2);flex-wrap:wrap}
+  .osum{font-size:13px;color:#5a606c}.osum b{font-size:15.5px;color:var(--ink)}
+  .obtns{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+  .obtn3{border:1px solid var(--line);border-radius:8px;padding:9px 15px;font-size:12.5px;font-weight:700;color:#3d4756;background:#fff;cursor:pointer}
+  .obtn3.dark{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .obtn3.blue{background:var(--blue);color:#fff;border-color:var(--blue)}
+  .ordnote{background:var(--fill2);border:1px solid var(--line2);border-radius:12px;padding:16px 18px;margin-top:20px;font-size:12.5px;color:#5a606c;line-height:1.8}
+
+  /* ===== 학습자료실 패널 ===== */
+  #panel-lib .libdesc{font-size:13.5px;color:#6b7280;margin:0 0 18px;line-height:1.6}
+  #panel-lib .libsearch{display:flex;gap:10px;margin-bottom:16px}
+  #panel-lib .libsearch .inp{flex:1;height:46px;border:2px solid var(--ink);border-radius:10px;display:flex;align-items:center;padding:0 16px;color:var(--muted);font-size:13.5px;cursor:text}
+  #panel-lib .libsearch .sb{background:var(--ink);color:#fff;border-radius:10px;padding:0 26px;font-size:13.5px;font-weight:800;display:flex;align-items:center;cursor:pointer}
+  #panel-lib .libfilter{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:16px}
+  #panel-lib .libbar{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+  #panel-lib .libbar .cnt{font-size:13px;color:#5a606c;font-weight:700}#panel-lib .libbar .cnt b{color:var(--ink)}
+  #panel-lib .libbar .barbtns{margin-left:auto;display:flex;gap:8px}
+  #panel-lib .obtn{border:1px solid var(--line);border-radius:8px;padding:9px 15px;font-size:12.5px;font-weight:800;color:#3d4756;background:#fff;cursor:pointer}
+  #panel-lib .obtn.primary{background:var(--blue);color:#fff;border-color:var(--blue)}
+  .matgroup{border:1px solid var(--line2);border-radius:14px;overflow:hidden;margin-bottom:16px}
+  .mghead{display:grid;grid-template-columns:64px 1fr auto;gap:14px;align-items:center;padding:14px 16px;background:var(--fill2);border-bottom:1px solid var(--line2)}
+  .mgcover{width:64px;aspect-ratio:3/4;background:var(--fill);border-radius:7px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:10px}
+  .mgmeta{font-size:12px;color:#7a828f;font-weight:700;margin-bottom:5px}.mgmeta b{color:#3d4756}.mgmeta .sep{color:var(--line);margin:0 7px}
+  .mgname{font-size:16px;font-weight:800;margin:0}
+  .mglink{display:flex;gap:8px;flex-wrap:wrap}
+  .lk{font-size:12px;font-weight:700;color:#3d4756;border:1px solid var(--line);border-radius:8px;padding:8px 12px;cursor:pointer;background:#fff}
+  .mtbl{width:100%;border-collapse:collapse;font-size:13px}
+  .mtbl th{background:#fff;color:#8b909c;font-weight:700;font-size:12px;padding:10px 14px;border-bottom:1px solid var(--line2);text-align:left}
+  .mtbl th.c,.mtbl td.c{text-align:center;width:42px}
+  .mtbl th.r,.mtbl td.r{text-align:center;width:74px}
+  .mtbl td{padding:12px 14px;border-bottom:1px solid var(--line2);color:#3d4756;vertical-align:middle}
+  .mtbl tr:last-child td{border-bottom:0}
+  .cb{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--line);background:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:12px;color:#fff;font-weight:800;cursor:pointer}
+  .cb.on{background:var(--blue);border-color:var(--blue)}
+  .mtag{display:inline-block;font-size:11px;font-weight:700;color:#5a606c;background:var(--fill2);border:1px solid var(--line2);border-radius:6px;padding:3px 9px}
+  .matname{font-weight:700}.fmt{color:var(--muted);font-size:12px}
+  .tgt{font-size:11px;font-weight:800;border-radius:5px;padding:2px 8px}
+  .tgt.all{color:var(--new);background:var(--newbg)}.tgt.mem{color:var(--orange);background:#fdf0e2}.tgt.tea{color:var(--blue);background:var(--bluebg)}
+  .dlico{font-size:18px;cursor:pointer}
+  .toast{position:fixed;left:50%;bottom:40px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;font-size:13.5px;font-weight:700;padding:14px 22px;border-radius:10px;opacity:0;pointer-events:none;transition:.25s;z-index:999;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+  .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+</style></head>
+<body>
+
+  <div class="utilbar"><div class="container">
+    <span>NE능률</span><span class="sep">|</span><span>교과서</span><span class="sep">|</span><span>영어·수학교재</span><span class="sep">|</span><span>ELT교재</span><span class="sep">|</span><span>영자신문</span><span class="sep">|</span><span>아이챌린지</span><span class="sep">|</span><span>유아교육</span><span class="sep">|</span><span>영어레벨테스트</span><span class="sep">|</span><span>초중등영어학원</span>
+    <span class="spacer"></span><span>👤 통합회원가입</span>
+  </div></div>
+
+  <header class="header"><div class="container">
+    <a class="logo"><span class="r">NE_</span>Books</a>
+    <div class="srch"><div class="srchwrap">
+      <div class="srchbox" id="srchBox">🔎 교재명 또는 검색어를 입력해 주세요.<span class="spacer"></span>🔍</div>
+      <div class="srchpop" id="srchPop">
+        <p class="pht">인기 검색어</p>
+        <div class="popgrid">
+          <div class="popitem"><span class="popno">1</span>능률 voca</div>
+          <div class="popitem"><span class="popno">2</span>course book</div>
+          <div class="popitem"><span class="popno">3</span>Ebook</div>
+          <div class="popitem"><span class="popno">4</span>단어장</div>
+          <div class="popitem"><span class="popno">5</span>영어문법</div>
+          <div class="popitem"><span class="popno">6</span>중등문법</div>
+          <div class="popitem"><span class="popno">7</span>리딩튜터</div>
+          <div class="popitem"><span class="popno">8</span>중등 독해</div>
+          <div class="popitem"><span class="popno">9</span>주니어 리딩튜터</div>
+          <div class="popitem"><span class="popno">10</span>grammar</div>
+        </div>
+        <p class="popfoot">* 최근 10일간 인기 검색어입니다.</p>
+      </div>
+    </div><span class="recobtn">맞춤형 교재추천</span></div>
+    <div class="uicons">
+      <a class="uic"><span class="ci">↩</span>로그아웃</a>
+      <a class="uic"><span class="ci">🛒</span>장바구니</a>
+      <a class="uic on"><span class="ci">📋</span>MY페이지</a>
+      <a class="uic"><span class="ci">🎧</span>고객센터</a>
+    </div>
+  </div></header>
+
+  <nav class="gnb"><div class="container">
+    <a>ELT</a><a>초·중등</a><a>고등</a><a>교과서·자습서</a><a>수험·일반</a><a>수학·국어</a><a>학습자료실</a><a>도서몰</a>
+  </div></nav>
+
+  <main class="container">
+    <div class="crumb"><span class="hm">🏠 홈</span><span class="sep">›</span><span class="hm">마이페이지</span><span class="sep">›</span><span>홈</span></div>
+    <h1 class="ptitle">마이페이지</h1>
+
+    <!-- 탭 (홈 제외 건수 표기) -->
+    <div class="mtabs">
+      <div class="mtab on" data-panel="home"><span class="ti">🏠</span><span class="tl">홈</span></div>
+      <div class="mtab" data-panel="orders"><span class="ti">🧾</span><span class="tl">주문내역</span></div>
+      <div class="mtab" data-panel="point"><span class="ti">🎟️</span><span class="tl">포인트/쿠폰</span></div>
+      <div class="mtab" data-panel="lib"><span class="ti">📁</span><span class="tl">학습자료실</span></div>
+      <div class="mtab" data-panel="wish"><span class="ti">❤️</span><span class="tl">찜</span></div>
+      <div class="mtab" data-panel="qna"><span class="ti">💬</span><span class="tl">문의/답변</span></div>
+      <div class="mtab" data-panel="review"><span class="ti">⭐</span><span class="tl">교재 후기</span></div>
+      <div class="mtab" data-panel="event"><span class="ti">📅</span><span class="tl">이벤트/세미나</span></div>
+    </div>
+
+    <!-- ===================== 홈 패널 ===================== -->
+    <div class="panel on" id="panel-home">
+    <!-- 나의 정보 + 주문 현황 -->
+    <div class="grid2 sec">
+      <div class="card">
+        <div class="ch"><h3>나의 정보</h3></div>
+        <div class="me">
+          <span class="avatar">🧑‍🏫</span>
+          <div>
+            <p class="mename"><b>김능률</b> 선생님 환영합니다</p>
+            <span class="mrole">회원구분 · 선생님</span>
+          </div>
+          <span class="editbtn">회원정보수정</span>
+        </div>
+        <div class="acts">
+          <div class="act" data-go="qna"><p class="al">문의</p><p class="av">2<span>건</span></p></div>
+          <div class="act" data-go="qna"><p class="al">답변</p><p class="av">1<span>건</span></p></div>
+          <div class="act"><p class="al">세미나</p><p class="av">0<span>건</span></p></div>
+          <div class="act"><p class="al">후기</p><p class="av">0<span>건</span></p></div>
+        </div>
+      </div>
+
+      <div class="card ordercard">
+        <div class="ch"><h3>주문 현황</h3><span class="more" data-go="orders">주문내역 보기 ›</span></div>
+        <div class="orders">
+          <div class="ostep"><div class="ov">0</div><div class="ol">입금대기</div></div>
+          <div class="ostep"><div class="ov">0</div><div class="ol">결제완료</div></div>
+          <div class="ostep"><div class="ov">0</div><div class="ol">배송중</div></div>
+          <div class="ostep"><div class="ov">0</div><div class="ol">배송완료</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 포인트 / 쿠폰 -->
+    <div class="card sec">
+      <div class="ch"><h3>포인트 / 쿠폰</h3><span class="more" data-go="point">포인트·쿠폰 내역 ›</span></div>
+      <div class="benefit">
+        <div class="bcell" data-go="point"><p class="bl">사용 가능 포인트 (NE Point)</p><p class="bv">700<span class="u">P</span></p><p class="bd soft">포인트 이용내역 ›</p></div>
+        <div class="bcell" data-go="point"><p class="bl">소멸 예정 포인트</p><p class="bv">200<span class="u">P</span></p><p class="bd">30일 이내 소멸 예정</p></div>
+        <div class="bcell" data-go="point"><p class="bl">보유 쿠폰</p><p class="bv">2<span class="u">장</span></p><p class="bd soft">쿠폰함 바로가기 ›</p></div>
+        <div class="bcell" data-go="point"><p class="bl">소멸 예정 쿠폰</p><p class="bv">1<span class="u">장</span></p><p class="bd">D-7 임박 쿠폰</p></div>
+      </div>
+    </div>
+
+    <!-- 온라인 엽서 바로가기 (포인트/쿠폰 ~ 최근 본 학습자료 사이) -->
+    <a class="postcard sec" style="display:flex">
+      <span class="pi">✉️</span>
+      <div>
+        <p class="pt">온라인 엽서</p>
+        <p class="ps">교재에 관한 여러분의 소중한 의견은 더 나은 교재를 만드는 데 반영됩니다.</p>
+      </div>
+      <span class="go">›</span>
+    </a>
+
+    <!-- 최근 본 학습자료 -->
+    <div class="card sec">
+      <div class="ch"><h3>최근 본 학습자료</h3><span class="more">전체보기 ›</span></div>
+      <div class="lrow"><span class="ltag">중등</span><span class="lname">유형 더블 체크</span><span class="lbook">유형 더블 중1-1</span><span class="ldown">다운로드</span></div>
+      <div class="lrow"><span class="ltag">초등</span><span class="lname">교사용 본문 PDF</span><span class="lbook">달곰한 계산력 4-2</span><span class="ldown">다운로드</span></div>
+      <div class="lrow"><span class="ltag">유아</span><span class="lname">진단평가</span><span class="lbook">사고셈 6세 2호 (2014년)</span><span class="ldown">다운로드</span></div>
+    </div>
+
+    <!-- 찜한 교재 (구 책갈피) -->
+    <h2 class="secttl">찜한 교재<span class="more" data-go="wish">전체보기 ›</span></h2>
+    <div class="bcards">
+      <div class="bcard"><div class="cover">표지</div><span class="gtag">고1·독해</span><div class="bname"></div><div class="bname s"></div><div class="price"><span class="ori">15,000</span><span class="dis">13,500</span><span class="rate">10%</span></div><a class="cartbtn">🛒 장바구니</a></div>
+      <div class="bcard"><div class="cover">표지</div><span class="gtag">중등·VOCA</span><div class="bname"></div><div class="bname s"></div><div class="price"><span class="ori">12,000</span><span class="dis">10,800</span><span class="rate">10%</span></div><a class="cartbtn">🛒 장바구니</a></div>
+      <div class="bcard"><div class="cover">표지</div><span class="gtag">중1·내신</span><div class="bname"></div><div class="bname s"></div><div class="price"><span class="ori">14,000</span><span class="dis">12,600</span><span class="rate">10%</span></div><a class="cartbtn">🛒 장바구니</a></div>
+      <div class="bcard"><div class="cover">표지</div><span class="gtag">중2·내신</span><div class="bname"></div><div class="bname s"></div><div class="price"><span class="ori">14,000</span><span class="dis">12,600</span><span class="rate">10%</span></div><a class="cartbtn">🛒 장바구니</a></div>
+      <div class="bcard"><div class="cover">표지</div><span class="gtag">고등·문법</span><div class="bname"></div><div class="bname s"></div><div class="price"><span class="ori">16,000</span><span class="dis">14,400</span><span class="rate">10%</span></div><a class="cartbtn">🛒 장바구니</a></div>
+    </div>
+
+    <!-- 최근 본 교재 -->
+    <h2 class="secttl">최근 본 교재<span class="more">전체보기 ›</span></h2>
+    <div class="empty">최근 본 교재가 없습니다.</div>
+    </div><!-- /panel-home -->
+
+    <!-- ===================== 포인트/쿠폰 패널 ===================== -->
+    <div class="panel" id="panel-point">
+      <div class="subtabs"><span class="subtab on" data-sub="pt">포인트</span><span class="subtab" data-sub="cp">쿠폰</span></div>
+
+      <!-- 포인트 -->
+      <div class="subpanel" data-sub="pt">
+        <div class="sumrow">
+          <div class="bcell"><p class="bl">누적 포인트</p><p class="bv">2,500<span class="u">P</span></p></div>
+          <div class="bcell"><p class="bl">사용 가능 포인트 (NE Point)</p><p class="bv">700<span class="u">P</span></p><p class="bd soft">교재 구매 시 사용 가능</p></div>
+          <div class="bcell"><p class="bl">소멸 예정 포인트</p><p class="bv">200<span class="u">P</span></p><p class="bd">30일 이내 소멸 예정 (~2026.07.15)</p></div>
+        </div>
+        <div class="filters" data-filter="pt">
+          <span class="fpill on" data-f="all">전체</span><span class="fpill" data-f="적립">적립</span><span class="fpill" data-f="사용">사용</span><span class="fpill" data-f="소멸">소멸</span>
+          <span class="dater">
+            <span class="dlab">· 등록일</span>
+            <input type="date" class="din" value="2026-06-01"><span>~</span><input type="date" class="din" value="2026-06-22">
+            <select class="fsel preset"><option value="1m">최근 1개월</option><option value="3m">최근 3개월</option><option value="6m">최근 6개월</option><option value="1y">최근 1년</option><option value="custom">직접 입력</option></select>
+          </span>
+        </div>
+        <table class="tbl">
+          <thead><tr><th>일자</th><th>구분</th><th class="l">내용</th><th>포인트</th><th>잔액</th></tr></thead>
+          <tbody>
+            <tr data-type="사용"><td>2026.06.10</td><td>사용</td><td class="l">교재 구매 사용 (주문 20260610-001)</td><td class="minus">-300</td><td>700</td></tr>
+            <tr data-type="적립"><td>2026.06.01</td><td>적립</td><td class="l">구매 적립 — 능률 VOCA</td><td class="plus">+500</td><td>1,000</td></tr>
+            <tr data-type="적립"><td>2026.05.20</td><td>적립</td><td class="l">교재 후기 작성 적립 (최초 1회)</td><td class="plus">+500</td><td>500</td></tr>
+            <tr data-type="소멸"><td>2026.05.31</td><td>소멸</td><td class="l">유효기간 만료 포인트 소멸</td><td class="minus">-100</td><td>0</td></tr>
+          </tbody>
+        </table>
+        <div class="pager2"><span class="pg on">1</span><span class="pg">2</span><span class="pg">3</span><span class="pg">›</span></div>
+        <div class="policy"><h4>포인트 안내 <span class="moreguide" id="ptGuideBtn">상세안내 보기 ›</span></h4>
+          적립: 마케팅 SMS 또는 전화 수신 동의 최초 1회 2,000P · 구매 교재 후기 교재별 최초 1회 500P · 온라인 엽서 교재당 1회 500P · 교재 구매 확정 시 상품 정가 기준 적립 · 상시 이벤트별 포인트 지급<br>
+          사용: NE Books 교재 구매 시 100P 단위로 사용 가능<br>
+          차감/유효기간: 유효기간 임박 포인트 우선 차감 · 구매 적립 포인트 유효기간 1년 · 이벤트 포인트는 이벤트별 정책 적용
+        </div>
+      </div>
+
+      <!-- 쿠폰 -->
+      <div class="subpanel" data-sub="cp" style="display:none">
+        <div class="sumrow" style="grid-template-columns:repeat(2,1fr)">
+          <div class="bcell"><p class="bl">사용 가능 쿠폰</p><p class="bv">2<span class="u">장</span></p></div>
+          <div class="bcell"><p class="bl">7일 이내 만료 예정</p><p class="bv">1<span class="u">장</span></p><p class="bd">D-7 임박 쿠폰</p></div>
+        </div>
+        <div class="filters" data-filter="cp">
+          <span class="fpill on" data-f="all">전체</span><span class="fpill" data-f="사용가능">사용가능</span><span class="fpill" data-f="사용완료">사용완료</span><span class="fpill" data-f="만료">만료</span>
+          <span class="dater">
+            <span class="dlab">· 등록일</span>
+            <input type="date" class="din" value="2026-06-01"><span>~</span><input type="date" class="din" value="2026-06-22">
+            <select class="fsel preset"><option value="1m">최근 1개월</option><option value="3m">최근 3개월</option><option value="6m">최근 6개월</option><option value="1y">최근 1년</option><option value="custom">직접 입력</option></select>
+          </span>
+        </div>
+        <div class="coupons">
+          <div class="coupon" data-state="사용가능"><div class="cv"><span class="cvn">10%</span><span class="cvu">할인</span></div><div class="ci2"><p class="cn2">신규 회원 10% 할인 쿠폰</p><p class="cmeta">최소 사용금액 15,000원 이상</p><p class="cmeta">사용기간 ~2026.06.29</p><p class="cdday">D-7 만료 임박</p></div></div>
+          <div class="coupon" data-state="사용가능"><div class="cv"><span class="cvn">3,000</span><span class="cvu">원</span></div><div class="ci2"><p class="cn2">방학 특강 3,000원 할인</p><p class="cmeta">최소 사용금액 30,000원 이상</p><p class="cmeta">사용기간 ~2026.08.31</p></div></div>
+          <div class="coupon dim" data-state="사용완료"><div class="cv"><span class="cvn">5%</span><span class="cvu">할인</span></div><div class="ci2"><p class="cn2">5% 할인 쿠폰 <span class="badge wait">사용완료</span></p><p class="cmeta">사용일 2026.05.20</p></div></div>
+          <div class="coupon dim" data-state="만료"><div class="cv"><span class="cvn">2,000</span><span class="cvu">원</span></div><div class="ci2"><p class="cn2">웰컴 2,000원 할인 <span class="badge exp">만료</span></p><p class="cmeta">만료일 2026.04.30</p></div></div>
+        </div>
+        <div class="policy"><h4>쿠폰 안내</h4>
+          주문당 1개 사용 · 포인트와 동시 사용 가능 / 주문 취소 시 사용기간이 남은 쿠폰만 사용 가능 상태로 복원<br>
+          만료 쿠폰은 사용 가능 목록에서 비노출되며 내역(만료) 탭에서만 확인됩니다.
+        </div>
+      </div>
+    </div><!-- /panel-point -->
+
+    <!-- ===================== 찜 패널 ===================== -->
+    <div class="panel" id="panel-wish">
+      <div class="wishhead"><span class="wc"><b>5</b> / 50 BOOKS</span><span class="delall">전체 삭제</span></div>
+      <div class="wishgrid">
+        <div class="wcard"><span class="wx">✕</span><div class="cover">표지</div><p class="ph">다빈출 코드 학평기출문제집 고1 독해</p><div class="price"><span class="ori">15,000</span><span class="dis">13,500</span><span class="rate">10%</span></div><a class="cartbtn">🛒 장바구니</a></div>
+        <div class="wcard"><span class="wx">✕</span><div class="cover">표지</div><p class="ph">능률 VOCA 고등 기본</p><div class="price"><span class="ori">12,000</span><span class="dis">10,800</span><span class="rate">10%</span></div><a class="cartbtn">🛒 장바구니</a></div>
+        <div class="wcard"><span class="wx">✕</span><div class="cover">표지</div><p class="ph">내신백신 100 English 중1 기말</p><div class="price"><span class="ori">14,000</span><span class="dis">12,600</span><span class="rate">10%</span></div><a class="cartbtn">🛒 장바구니</a></div>
+        <div class="wcard"><span class="wx">✕</span><div class="cover">표지</div><p class="ph">내신백신 100 English 중2 중간</p><div class="price"><span class="ori">14,000</span><span class="dis">12,600</span><span class="rate">10%</span></div><a class="cartbtn">🛒 장바구니</a></div>
+        <div class="wcard"><span class="wx">✕</span><div class="cover">표지</div><p class="ph">그래머존 중등 필수</p><div class="price"><span class="ori">16,000</span><span class="dis">14,400</span><span class="rate">10%</span></div><a class="cartbtn">🛒 장바구니</a></div>
+      </div>
+    </div><!-- /panel-wish -->
+
+    <!-- ===================== 문의/답변 패널 ===================== -->
+    <div class="panel" id="panel-qna">
+      <!-- 목록 보기 -->
+      <div class="qnaview" id="qna-list">
+        <div class="filters" data-filter="qna">
+          <span class="fpill on" data-f="all">전체</span><span class="fpill" data-f="done">답변완료</span><span class="fpill" data-f="wait">답변대기</span>
+          <span class="dater">
+            <span class="dlab">· 등록일</span>
+            <input type="date" class="din" value="2026-06-01"><span>~</span><input type="date" class="din" value="2026-06-22">
+            <select class="fsel preset"><option value="1m">최근 1개월</option><option value="3m">최근 3개월</option><option value="6m">최근 6개월</option><option value="1y">최근 1년</option><option value="custom">직접 입력</option></select>
+          </span>
+        </div>
+        <div class="qnatop">
+          <span class="searchbar"><input placeholder="제목·내용 검색"><span class="qbtn">검색</span></span>
+          <span class="qbtn" id="qnaWriteBtn" style="margin-left:auto">1:1 문의하기</span>
+        </div>
+        <table class="tbl">
+          <thead><tr><th style="width:60px">NO</th><th style="width:120px">분류</th><th class="l">제목</th><th style="width:120px">등록일</th><th style="width:110px">답변여부</th></tr></thead>
+          <tbody>
+            <tr data-status="done" class="qrow"
+                data-cat="주문/결제" data-title="결제 취소 관련 문의드립니다" data-date="2026.06.12"
+                data-content="6월 10일 주문(20260610-001) 결제를 취소하고 싶은데 절차가 궁금합니다. 빠른 확인 부탁드립니다."
+                data-atitle="[답변] 결제 취소 관련 안내드립니다" data-adate="2026.06.13"
+                data-acontent="안녕하세요, 고객님. NE Books를 이용해 주셔서 감사합니다.&#10;배송 준비 전 단계의 주문은 마이페이지 &gt; 주문내역에서 직접 [주문취소]가 가능합니다.&#10;결제 수단에 따라 환불까지 영업일 기준 3~5일이 소요될 수 있습니다. 감사합니다.">
+              <td>2</td><td>주문/결제</td><td class="l">결제 취소 관련 문의드립니다</td><td>2026.06.12</td><td><span class="badge done">답변완료</span></td></tr>
+            <tr data-status="wait" class="qrow"
+                data-cat="교재 오류신고" data-title="본문 8쪽 오타 발견 신고" data-date="2026.06.05"
+                data-content="본문 8쪽 3번 문제 지문에 오타가 있는 것 같습니다. 확인 부탁드립니다.">
+              <td>1</td><td>교재 오류신고</td><td class="l">본문 8쪽 오타 발견 신고</td><td>2026.06.05</td><td><span class="badge wait">답변대기</span></td></tr>
+          </tbody>
+        </table>
+        <p class="qnote">* 등록일 기준 3년 이내 문의만 제공됩니다. / 반품·교환 신청은 주문내역에서 1:1 문의로 연계되어 접수됩니다.</p>
+        <div class="pager2"><span class="pg on">1</span></div>
+      </div>
+
+      <!-- 1:1 문의 작성 -->
+      <div class="qnaview" id="qna-form" style="display:none">
+        <h2 class="secttl" style="margin-top:0">1:1 문의<span style="font-size:13px;font-weight:600;color:var(--muted);margin-left:10px">문의하신 내용은 빠른 시일 안에 답변드리겠습니다.</span></h2>
+        <div class="preinfo">
+          <span class="pinote">ⓘ 문의 전에 먼저 확인하여 주시면 문의를 쉽고 빠르게 해결하실 수 있습니다.</span>
+          <span class="fpill">도움말(FAQ)</span><span class="fpill">교재정오 알림</span><span class="fpill">교과서 콘텐츠 FAQ</span>
+        </div>
+        <p class="reqd"><i>*</i> 표시는 필수 입력 사항 입니다.</p>
+        <div class="card form">
+          <div class="frow"><div class="fl">상담유형</div><div class="ff">
+            <label><input type="radio" name="qtype" value="general" checked> 일반 문의</label>
+            <label style="margin-left:20px"><input type="radio" name="qtype" value="errata"> 교재 오류신고</label>
+            <label style="margin-left:20px"><input type="radio" name="qtype" value="order"> 주문·배송 관련 문의</label>
+          </div></div>
+          <div class="frow"><div class="fl">상담분류 <i>*</i></div><div class="ff">
+            <select class="finput" id="qcat"><option>문의분류를 선택해 주세요</option><option>회원정보</option><option>교재·교과서 문의</option><option>부가서비스 문의</option><option>자료요청</option><option>사이트이용</option><option>이벤트</option><option>영업 및 제휴문의</option><option>의견,제안</option><option>기타</option></select>
+          </div></div>
+          <div class="frow" id="qorderRow" style="display:none"><div class="fl">주문번호 / 상품</div><div class="ff">
+            <select class="finput sm" id="qorderSel" style="min-width:260px"><option value="">주문번호 선택 (선택)</option><option>20260610-001 · 능률 VOCA 외 1건</option><option>20260520-002 · 내신백신 100</option></select>
+            <select class="finput sm" id="qprodSel" style="min-width:240px;margin-left:8px" disabled><option value="">상품 선택 (선택)</option></select>
+            <p class="fnote">* 주문 관련 문의 시 관련 주문번호 혹은 상품을 선택해서 문의해주시면 더 빠른 답변이 가능합니다.</p>
+          </div></div>
+          <div class="frow"><div class="fl">작성자 <i>*</i></div><div class="ff"><b>김능률</b> (neungyule)</div></div>
+          <div class="frow"><div class="fl">이메일 <i>*</i></div><div class="ff">
+            <input class="finput sm" value="neungyule"> @ <input class="finput sm" value="naver.com">
+            <select class="finput sm"><option>naver.com</option><option>gmail.com</option><option>daum.net</option><option>직접입력</option></select>
+            <p class="fnote">* Yahoo, Hotmail, MSN 계정은 메일 수신이 안 될 수 있으니 다른 메일 계정을 이용해 주시기 바랍니다.</p>
+          </div></div>
+          <div class="frow"><div class="fl">연락처</div><div class="ff">
+            <input class="finput xs"> - <input class="finput xs"> - <input class="finput xs">
+            <label style="margin-left:14px"><input type="checkbox"> 답변여부 SMS 알림받기</label>
+            <p class="fnote">* 단문메시지(무료SMS)로 답변 메일 도착 알림만 제공해 드리며, 답변 내용은 직접 메일로 접속하시거나 마이페이지 내 1:1 문의에서 확인하실 수 있습니다.</p>
+          </div></div>
+          <div class="frow"><div class="fl">제목 <i>*</i></div><div class="ff"><input class="finput" style="width:100%;min-width:0" placeholder="제목을 입력해 주세요."></div></div>
+          <div class="frow"><div class="fl">내용 <i>*</i></div><div class="ff">
+            <div class="guidebox">■ 안내사항 ■<br>· 교강사용 자료요청 시, 재직중인 학교 또는 학원(학원명, 주소) 정보와 거래 지사(총판)명을 같이 기재해 주시면 좀 더 빠른 확인 및 답변이 가능합니다.<br>· 샘플 및 교사용 교재는 지사를 통해 제공되고 있습니다. [지사안내] 페이지를 확인해주시기 바랍니다.</div>
+            <textarea class="finput" rows="6" placeholder="내용을 입력해 주세요."></textarea>
+          </div></div>
+          <div class="frow"><div class="fl">첨부파일</div><div class="ff">
+            <span class="filebtn">파일첨부</span> <input class="finput" style="width:340px;min-width:0" readonly> <span class="fnote" style="display:inline-block;margin:0 0 0 8px">(첨부파일의 용량은 5MB까지 가능합니다.)</span>
+          </div></div>
+        </div>
+        <div class="formbtns"><span class="btn-ghost" id="qnaCancelBtn">목록</span><span class="btn-ghost solid">등록</span></div>
+      </div>
+
+      <!-- 문의 상세 -->
+      <div class="qnaview" id="qna-detail" style="display:none">
+        <h2 class="secttl" style="margin-top:0">1:1 문의 상세</h2>
+        <div class="card form">
+          <div class="frow"><div class="fl">문의분류</div><div class="ff" id="qdCat">-</div></div>
+          <div class="frow"><div class="fl">제목</div><div class="ff" id="qdTitle">-</div></div>
+          <div class="frow"><div class="fl">등록일</div><div class="ff" id="qdDate">-</div></div>
+          <div class="frow"><div class="fl">내용</div><div class="ff" id="qdContent" style="white-space:pre-line;line-height:1.8">-</div></div>
+        </div>
+        <h2 class="secttl">답변</h2>
+        <div class="card form" id="qdAnswer"></div>
+        <div class="formbtns"><span class="btn-ghost" id="qnaBackBtn">목록</span></div>
+      </div>
+    </div><!-- /panel-qna -->
+
+    <!-- ===================== 기타 탭(연계 페이지) ===================== -->
+    <div class="panel" id="panel-orders">
+      <div class="filters" data-filter="ord">
+        <span class="fpill on" data-f="all">전체</span>
+        <span class="fpill" data-f="wait">입금대기</span>
+        <span class="fpill" data-f="pay">결제완료</span>
+        <span class="fpill" data-f="ship">배송중</span>
+        <span class="fpill" data-f="done">배송완료</span>
+        <span class="fpill" data-f="confirm">구매확정</span>
+        <span class="fpill" data-f="cancel">취소</span>
+        <span class="dater">
+          <span class="dlab">· 주문일</span>
+          <input type="date" class="din" value="2026-05-01"><span>~</span><input type="date" class="din" value="2026-06-22">
+          <select class="fsel preset"><option value="1m">최근 1개월</option><option value="3m">최근 3개월</option><option value="6m">최근 6개월</option><option value="1y">최근 1년</option><option value="custom">직접 입력</option></select>
+        </span>
+      </div>
+      <div class="ordlist">
+        <!-- 배송중 -->
+        <div class="ordc" data-ostat="ship">
+          <div class="ordc-h"><span class="ono">주문번호 20260622-001</span><span class="odt">2026.06.22</span><span class="ostat ship">배송중</span><span class="odetail">주문상세 ›</span></div>
+          <div class="oitem"><div class="ocover">표지</div><div><p class="oname">능률 VOCA 고등 기본</p><p class="ometa">13,500원 · 수량 1</p></div><div class="oprice">13,500원</div></div>
+          <div class="oitem"><div class="ocover">표지</div><div><p class="oname">내신백신 100 English 중1 기말</p><p class="ometa">12,600원 · 수량 1</p></div><div class="oprice">12,600원</div></div>
+          <div class="ordc-f"><span class="osum">총 결제금액 <b>25,800원</b> · 신용카드 · NE Point 300P 사용</span>
+            <div class="obtns"><span class="obtn3">배송조회</span><span class="obtn3 blue">구매확정</span><span class="obtn3" data-go="qna">반품/교환 문의</span></div></div>
+        </div>
+        <!-- 배송완료 -->
+        <div class="ordc" data-ostat="done">
+          <div class="ordc-h"><span class="ono">주문번호 20260612-002</span><span class="odt">2026.06.12</span><span class="ostat done">배송완료</span><span class="odetail">주문상세 ›</span></div>
+          <div class="oitem"><div class="ocover">표지</div><div><p class="oname">주니어 리딩튜터 Level 3</p><p class="ometa">11,700원 · 수량 1</p></div><div class="oprice">11,700원</div></div>
+          <div class="ordc-f"><span class="osum">총 결제금액 <b>11,700원</b> · 배송완료 06.15 · <b style="color:var(--orange)">자동 구매확정 D-2</b></span>
+            <div class="obtns"><span class="obtn3">배송조회</span><span class="obtn3 blue">구매확정</span><span class="obtn3" data-go="qna">반품/교환 문의</span></div></div>
+        </div>
+        <!-- 결제완료 -->
+        <div class="ordc" data-ostat="pay">
+          <div class="ordc-h"><span class="ono">주문번호 20260610-003</span><span class="odt">2026.06.10</span><span class="ostat pay">결제완료</span><span class="odetail">주문상세 ›</span></div>
+          <div class="oitem"><div class="ocover">표지</div><div><p class="oname">그래머 존 BASIC 1</p><p class="ometa">12,600원 · 수량 1</p></div><div class="oprice">12,600원</div></div>
+          <div class="ordc-f"><span class="osum">총 결제금액 <b>15,600원</b> · 신용카드 · 배송 준비 전</span>
+            <div class="obtns"><span class="obtn3">주문취소</span></div></div>
+        </div>
+        <!-- 입금대기 -->
+        <div class="ordc" data-ostat="wait">
+          <div class="ordc-h"><span class="ono">주문번호 20260609-004</span><span class="odt">2026.06.09</span><span class="ostat wait">입금대기</span><span class="odetail">주문상세 ›</span></div>
+          <div class="oitem"><div class="ocover">표지</div><div><p class="oname">올클리어 중등 영문법 1</p><p class="ometa">13,500원 · 수량 1</p></div><div class="oprice">13,500원</div></div>
+          <div class="ordc-f"><span class="osum">총 입금예정 <b>16,500원</b> · 무통장입금(가상계좌) · 입금기한 06.16</span>
+            <div class="obtns"><span class="obtn3 dark">입금정보</span><span class="obtn3">주문취소</span></div></div>
+        </div>
+        <!-- 구매확정 -->
+        <div class="ordc" data-ostat="confirm">
+          <div class="ordc-h"><span class="ono">주문번호 20260520-005</span><span class="odt">2026.05.20</span><span class="ostat confirm">구매확정</span><span class="odetail">주문상세 ›</span></div>
+          <div class="oitem"><div class="ocover">표지</div><div><p class="oname">능률 VOCA 어원편 (개정판)</p><p class="ometa">10,800원 · 수량 1</p></div><div class="oprice">10,800원</div></div>
+          <div class="ordc-f"><span class="osum">총 결제금액 <b>10,800원</b> · 구매확정 05.27 · 적립 <b style="color:var(--blue)">500P</b></span>
+            <div class="obtns"><span class="obtn3 dark">후기쓰기</span><span class="obtn3">배송조회</span><span class="obtn3" data-go="qna">반품/교환 문의</span></div></div>
+        </div>
+        <!-- 취소 -->
+        <div class="ordc" data-ostat="cancel">
+          <div class="ordc-h"><span class="ono">주문번호 20260515-006</span><span class="odt">2026.05.15</span><span class="ostat cancel">결제취소</span><span class="odetail">주문상세 ›</span></div>
+          <div class="oitem"><div class="ocover">표지</div><div><p class="oname">내신백신 100 English 중2 중간</p><p class="ometa">12,600원 · 수량 1</p></div><div class="oprice">12,600원</div></div>
+          <div class="ordc-f"><span class="osum">취소완료 05.16 · 환불 12,600원 · 사용 포인트 복원 완료</span>
+            <div class="obtns"><span class="obtn3">재주문</span></div></div>
+        </div>
+      </div>
+      <div class="ordnote">
+        · 배송 준비 전(<b>입금대기 · 결제완료</b>) 주문은 <b>[주문취소]</b>로 직접 취소할 수 있습니다. 배송 준비중 이후에는 <b>1:1 문의</b>로 취소 · 반품 · 교환을 접수합니다.<br>
+        · <b>배송완료 후 5일</b>이 지나면 자동 구매확정되며, <b>[구매확정]</b> 버튼으로 즉시 확정할 수 있습니다. 구매확정 시 NE Point가 적립됩니다.<br>
+        · 등록일 기준 3년 이내 주문내역을 제공합니다.
+      </div>
+    </div>
+    <div class="panel" id="panel-lib">
+      <p class="libdesc">구매·관심 교재에 연계된 MP3·정답·Test Sheet·Lesson Plan 등 학습자료를 검색하고 개별·선택·전체 다운로드할 수 있습니다. 교강사 전용 자료는 NE Tutor로 연결됩니다.</p>
+      <div class="libsearch"><div class="inp">🔎 교재명 · 시리즈 · 자료유형으로 검색</div><div class="sb">검색</div></div>
+      <div class="libfilter">
+        <span class="fpill on">전체</span><span class="fpill">MP3</span><span class="fpill">Answer Keys</span><span class="fpill">Test Sheet</span><span class="fpill">Lesson Plan</span><span class="fpill">Word List</span><span class="fpill">Worksheet</span>
+      </div>
+      <div class="libbar">
+        <span class="cnt">전체 <b>12</b>건</span>
+        <span class="fpill on" style="cursor:default">정렬: 최신순 ▾</span>
+        <div class="barbtns"><span class="obtn" id="libSelDl">선택 다운로드</span><span class="obtn primary" id="libAllDl">전체 다운로드</span></div>
+      </div>
+
+      <div class="matgroup">
+        <div class="mghead">
+          <div class="mgcover">표지</div>
+          <div><div class="mgmeta"><b>NE능률</b><span class="sep">|</span>주니어 리딩튜터<span class="sep">|</span>중등</div><p class="mgname">주니어 리딩튜터 Level 3</p></div>
+          <div class="mglink"><span class="lk">🔍 교재상세</span><span class="lk">📖 E-Book</span><span class="lk">🧇 Waffle</span></div>
+        </div>
+        <table class="mtbl">
+          <thead><tr><th class="c"><span class="cb gall"></span></th><th style="width:130px">자료유형</th><th>자료명</th><th style="width:120px">형식 · 용량</th><th style="width:90px">대상</th><th class="r">다운로드</th></tr></thead>
+          <tbody>
+            <tr><td class="c"><span class="cb mc"></span></td><td><span class="mtag">Answer Keys</span></td><td class="matname">본책 정답 및 해설</td><td class="fmt">PDF · 2.4MB</td><td><span class="tgt all">전체</span></td><td class="r"><span class="dlico">⬇️</span></td></tr>
+            <tr><td class="c"><span class="cb mc"></span></td><td><span class="mtag">MP3</span></td><td class="matname">Unit 01~05 듣기 음원</td><td class="fmt">ZIP · 48MB</td><td><span class="tgt all">전체</span></td><td class="r"><span class="dlico">⬇️</span></td></tr>
+            <tr><td class="c"><span class="cb mc"></span></td><td><span class="mtag">Word List</span></td><td class="matname">Chapter별 단어 정리</td><td class="fmt">PDF · 1.1MB</td><td><span class="tgt mem">회원</span></td><td class="r"><span class="dlico">⬇️</span></td></tr>
+            <tr><td class="c"><span class="cb mc"></span></td><td><span class="mtag">Test Sheet</span></td><td class="matname">단원평가 시험지 (교강사용)</td><td class="fmt">NE Tutor 연계</td><td><span class="tgt tea">교강사</span></td><td class="r"><span class="dlico">↗️</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="matgroup">
+        <div class="mghead">
+          <div class="mgcover">표지</div>
+          <div><div class="mgmeta"><b>NE능률</b><span class="sep">|</span>능률 VOCA<span class="sep">|</span>중등</div><p class="mgname">능률 VOCA 어원편 (개정판)</p></div>
+          <div class="mglink"><span class="lk">🔍 교재상세</span><span class="lk">📱 모바일 학습지원</span></div>
+        </div>
+        <table class="mtbl">
+          <thead><tr><th class="c"><span class="cb gall"></span></th><th style="width:130px">자료유형</th><th>자료명</th><th style="width:120px">형식 · 용량</th><th style="width:90px">대상</th><th class="r">다운로드</th></tr></thead>
+          <tbody>
+            <tr><td class="c"><span class="cb mc"></span></td><td><span class="mtag">Word List</span></td><td class="matname">Day 01~30 단어 리스트</td><td class="fmt">PDF · 1.8MB</td><td><span class="tgt all">전체</span></td><td class="r"><span class="dlico">⬇️</span></td></tr>
+            <tr><td class="c"><span class="cb mc"></span></td><td><span class="mtag">MP3</span></td><td class="matname">표제어 발음 음원</td><td class="fmt">ZIP · 32MB</td><td><span class="tgt all">전체</span></td><td class="r"><span class="dlico">⬇️</span></td></tr>
+            <tr><td class="c"><span class="cb mc"></span></td><td><span class="mtag">Test Sheet</span></td><td class="matname">단어 시험지 자동 생성</td><td class="fmt">URL</td><td><span class="tgt mem">회원</span></td><td class="r"><span class="dlico">🔗</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="matgroup">
+        <div class="mghead">
+          <div class="mgcover">표지</div>
+          <div><div class="mgmeta"><b>NE능률</b><span class="sep">|</span>그래머 존<span class="sep">|</span>고등</div><p class="mgname">그래머 존 BASIC 1</p></div>
+          <div class="mglink"><span class="lk">🔍 교재상세</span><span class="lk">📖 E-Book</span></div>
+        </div>
+        <table class="mtbl">
+          <thead><tr><th class="c"><span class="cb gall"></span></th><th style="width:130px">자료유형</th><th>자료명</th><th style="width:120px">형식 · 용량</th><th style="width:90px">대상</th><th class="r">다운로드</th></tr></thead>
+          <tbody>
+            <tr><td class="c"><span class="cb mc"></span></td><td><span class="mtag">Answer Keys</span></td><td class="matname">본책 정답</td><td class="fmt">PDF · 1.5MB</td><td><span class="tgt all">전체</span></td><td class="r"><span class="dlico">⬇️</span></td></tr>
+            <tr><td class="c"><span class="cb mc"></span></td><td><span class="mtag">Lesson Plan</span></td><td class="matname">교사용 지도안</td><td class="fmt">NE Tutor 연계</td><td><span class="tgt tea">교강사</span></td><td class="r"><span class="dlico">↗️</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="pager2"><span class="pg">‹</span><span class="pg on">1</span><span class="pg">2</span><span class="pg">3</span><span class="pg">›</span></div>
+    </div>
+    <div class="panel" id="panel-review"><div class="empty">[교재 후기 페이지 - 이전과 기능/UI 모두 동일]</div></div>
+    <div class="panel" id="panel-event"><div class="empty">[이벤트/세미나 페이지 - 이전과 기능/UI 모두 동일]</div></div>
+  </main>
+
+  <footer class="ftr"><div class="container">
+    <span class="family">FAMILY SITE ▾</span>
+    <div class="fnav">
+      <a>개인정보처리방침</a><span class="sep">|</span><a>이용약관</a><span class="sep">|</span><a>이메일무단수집거부</a><span class="sep">|</span><a>지사안내</a><span class="sep">|</span><a>찾아오시는 길</a><span class="sep">|</span><a class="b">학원/도서관 대량구매</a>
+    </div>
+    <div class="flogo">NE능률</div>
+    <div class="fco">
+      ㈜NE능률 (03925) 서울 특별시 마포구 월드컵북로 396(상암동) 누리꿈스퀘어 비즈니스타워 10층 &nbsp;|&nbsp; 대표이사 : 이정진<br>
+      고객센터 : 1833-8368 / 02-2014-7260 [사업별 고객센터 안내]<br>
+      팩스 : 02-337-4956 &nbsp;|&nbsp; 사업자등록번호 : 105-81-65267 &nbsp;|&nbsp; 통신판매신고번호 : 제2004-02120호 [정보조회]<br>
+      개인정보 보호책임자(CPO) : 선민재(necpo@neungyule.com)<br>
+      Copyright © NE Neungyule, Inc. All Rights Reserved
+    </div>
+  </div></footer>
+
+  <div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  var box=document.getElementById('srchBox'),pop=document.getElementById('srchPop');
+  if(box&&pop){
+    box.addEventListener('click',function(e){e.stopPropagation();pop.classList.toggle('open');});
+    pop.addEventListener('click',function(e){e.stopPropagation();});
+    document.addEventListener('click',function(){pop.classList.remove('open');});
+  }
+})();
+(function(){
+  var tabs=Array.prototype.slice.call(document.querySelectorAll('.mtab'));
+  var panels=Array.prototype.slice.call(document.querySelectorAll('.panel'));
+  function activate(name){
+    tabs.forEach(function(x){x.classList.toggle('on',x.getAttribute('data-panel')===name);});
+    panels.forEach(function(p){p.classList.toggle('on',p.id==='panel-'+name);});
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  tabs.forEach(function(t){t.addEventListener('click',function(){activate(t.getAttribute('data-panel'));});});
+  // 홈 위젯 → 탭 연동
+  document.querySelectorAll('[data-go]').forEach(function(el){
+    el.style.cursor='pointer';
+    el.addEventListener('click',function(e){e.preventDefault();activate(el.getAttribute('data-go'));});
+  });
+})();
+// 포인트/쿠폰 서브탭
+(function(){
+  var subs=Array.prototype.slice.call(document.querySelectorAll('#panel-point .subtab'));
+  var sps=Array.prototype.slice.call(document.querySelectorAll('#panel-point .subpanel'));
+  subs.forEach(function(s){s.addEventListener('click',function(){
+    subs.forEach(function(x){x.classList.remove('on');});s.classList.add('on');
+    var k=s.getAttribute('data-sub');
+    sps.forEach(function(p){p.style.display=(p.getAttribute('data-sub')===k)?'block':'none';});
+  });});
+})();
+// 상태 필터 탭 (포인트/쿠폰/문의)
+(function(){
+  function apply(sel,attr,f){document.querySelectorAll(sel).forEach(function(el){el.style.display=(f==='all'||el.getAttribute(attr)===f)?'':'none';});}
+  document.querySelectorAll('.filters[data-filter]').forEach(function(g){
+    var kind=g.getAttribute('data-filter');
+    var pills=g.querySelectorAll('.fpill[data-f]');
+    pills.forEach(function(p){p.addEventListener('click',function(){
+      pills.forEach(function(x){x.classList.remove('on');});p.classList.add('on');
+      var f=p.getAttribute('data-f');
+      if(kind==='pt') apply('#panel-point tbody tr','data-type',f);
+      else if(kind==='cp') apply('#panel-point .coupons .coupon','data-state',f);
+      else if(kind==='qna') apply('#panel-qna tbody tr','data-status',f);
+      else if(kind==='ord') apply('#panel-orders .ordc','data-ostat',f);
+    });});
+  });
+})();
+// 날짜 직접 선택 시 드롭다운 '직접 입력'으로 전환
+(function(){
+  document.querySelectorAll('.dater').forEach(function(d){
+    var sel=d.querySelector('select');
+    d.querySelectorAll('.din').forEach(function(inp){inp.addEventListener('change',function(){if(sel)sel.value='custom';});});
+  });
+})();
+// 1:1 문의하기 → 작성 폼 전환 / 상담분류 주문연계
+(function(){
+  var list=document.getElementById('qna-list'),form=document.getElementById('qna-form');
+  var w=document.getElementById('qnaWriteBtn'),c=document.getElementById('qnaCancelBtn');
+  if(w)w.addEventListener('click',function(){list.style.display='none';form.style.display='block';window.scrollTo({top:0,behavior:'smooth'});});
+  if(c)c.addEventListener('click',function(){form.style.display='none';list.style.display='block';window.scrollTo({top:0,behavior:'smooth'});});
+  var cat=document.getElementById('qcat'),row=document.getElementById('qorderRow');
+  var GENERAL=['회원정보','교재·교과서 문의','부가서비스 문의','자료요청','사이트이용','이벤트','영업 및 제휴문의','의견,제안','기타'];
+  var ORDER=['주문/결제','취소/환불','배송'];
+  function fillCat(list){cat.innerHTML='<option>문의분류를 선택해 주세요</option>'+list.map(function(x){return '<option>'+x+'</option>';}).join('');}
+  document.querySelectorAll('input[name="qtype"]').forEach(function(r){
+    r.addEventListener('change',function(){fillCat(r.value==='order'?ORDER:GENERAL);row.style.display='none';});
+  });
+  if(cat)cat.addEventListener('change',function(){
+    row.style.display=(ORDER.indexOf(cat.value)>=0)?'grid':'none';
+  });
+  // 주문번호 → 상품 연동 (상품은 주문번호 하위, 단독 선택 불가 / 둘 다 선택)
+  var ORDERS={
+    '20260610-001 · 능률 VOCA 외 1건':['능률 VOCA 고등 기본','내신백신 100 English 중1'],
+    '20260520-002 · 내신백신 100':['내신백신 100 English 중2','그래머존 중등 필수']
+  };
+  var osel=document.getElementById('qorderSel'),psel=document.getElementById('qprodSel');
+  if(osel)osel.addEventListener('change',function(){
+    var prods=ORDERS[osel.value]||null;
+    psel.innerHTML='<option value="">상품 선택 (선택)</option>';
+    if(prods){psel.disabled=false;prods.forEach(function(p){var o=document.createElement('option');o.textContent=p;psel.appendChild(o);});}
+    else{psel.disabled=true;}
+  });
+})();
+// 문의/답변 목록 → 상세
+(function(){
+  var list=document.getElementById('qna-list'),form=document.getElementById('qna-form'),detail=document.getElementById('qna-detail');
+  if(!list||!detail)return;
+  function open(tr){
+    document.getElementById('qdCat').textContent=tr.getAttribute('data-cat')||'-';
+    document.getElementById('qdTitle').textContent=tr.getAttribute('data-title')||'-';
+    document.getElementById('qdDate').textContent=tr.getAttribute('data-date')||'-';
+    document.getElementById('qdContent').textContent=tr.getAttribute('data-content')||'';
+    var ans=document.getElementById('qdAnswer');
+    if(tr.getAttribute('data-status')==='done'){
+      ans.innerHTML='<div class="frow"><div class="fl">답변 제목</div><div class="ff">'+(tr.getAttribute('data-atitle')||'')+'</div></div>'+
+        '<div class="frow"><div class="fl">답변 등록일</div><div class="ff">'+(tr.getAttribute('data-adate')||'')+'</div></div>'+
+        '<div class="frow"><div class="fl">답변 내용</div><div class="ff" style="white-space:pre-line;line-height:1.8">'+(tr.getAttribute('data-acontent')||'')+'</div></div>';
+    }else{
+      ans.innerHTML='<div style="padding:38px 24px;text-align:center;line-height:1.9;color:#5a606c"><b style="color:var(--orange)">답변대기 상태입니다.</b><br>빠르게 답변드릴 수 있도록 하겠습니다.</div>';
+    }
+    list.style.display='none';form.style.display='none';detail.style.display='block';
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  list.querySelectorAll('tr.qrow').forEach(function(tr){tr.addEventListener('click',function(){open(tr);});});
+  var back=document.getElementById('qnaBackBtn');
+  if(back)back.addEventListener('click',function(){detail.style.display='none';list.style.display='block';window.scrollTo({top:0,behavior:'smooth'});});
+})();
+// 포인트 상세안내 → 고객센터 이용가이드(NE Point 안내)로 이동
+(function(){
+  var b=document.getElementById('ptGuideBtn');
+  if(b)b.addEventListener('click',function(){location.href='NE_Books_고객센터_상용_v1.html#guide-point';});
+})();
+// 주문내역 버튼 + 학습자료실 다운로드 동작
+(function(){
+  function toast(m){var t=document.getElementById('toast');if(!t)return;t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(function(){t.classList.remove('on');},1900);}
+  // 주문내역 버튼 (반품/교환 문의는 data-go로 1:1문의 탭 전환)
+  document.querySelectorAll('#panel-orders .obtn3').forEach(function(b){
+    if(b.hasAttribute('data-go'))return;
+    b.addEventListener('click',function(){
+      var t=b.textContent.trim();
+      if(t.indexOf('구매확정')>=0)toast('구매확정 처리되었습니다. 구매확정 시 NE Point가 적립됩니다.');
+      else if(t.indexOf('배송조회')>=0)toast('배송조회 — 스위트트래커 배송조회 팝업이 열립니다.');
+      else if(t.indexOf('주문취소')>=0)toast('주문취소를 진행합니다. (배송 준비 전 주문만 직접 취소 가능)');
+      else if(t.indexOf('입금정보')>=0)toast('가상계좌 입금정보를 확인합니다.');
+      else if(t.indexOf('후기')>=0)toast('교재 후기 작성 화면으로 이동합니다.');
+      else toast(t+' (으)로 이동합니다.');
+    });
+  });
+  // 학습자료실 필터 pill 단일선택
+  document.querySelectorAll('#panel-lib .libfilter').forEach(function(row){
+    row.querySelectorAll('.fpill').forEach(function(p){p.addEventListener('click',function(){
+      row.querySelectorAll('.fpill').forEach(function(x){x.classList.remove('on');});p.classList.add('on');});});
+  });
+  // 학습자료실 체크박스 / 그룹 전체선택
+  function setCb(c,on){c.classList.toggle('on',on);c.textContent=on?'✓':'';}
+  document.querySelectorAll('#panel-lib .mc').forEach(function(c){c.addEventListener('click',function(){setCb(c,!c.classList.contains('on'));});});
+  document.querySelectorAll('#panel-lib .gall').forEach(function(g){g.addEventListener('click',function(){
+    var on=!g.classList.contains('on');setCb(g,on);
+    g.closest('.matgroup').querySelectorAll('.mc').forEach(function(c){setCb(c,on);});});});
+  // 학습자료실 권한별 다운로드 안내
+  document.querySelectorAll('#panel-lib .dlico').forEach(function(d){d.addEventListener('click',function(){
+    var t=d.closest('tr').querySelector('.tgt');
+    if(t&&t.classList.contains('tea'))toast('교강사 전용 자료입니다. NE Tutor 해당 교재 페이지로 이동합니다.');
+    else if(t&&t.classList.contains('mem'))toast('회원 전용 자료입니다. 로그인 후 다운로드됩니다.');
+    else toast('다운로드를 시작합니다.');});});
+  var sd=document.getElementById('libSelDl');if(sd)sd.addEventListener('click',function(){var n=document.querySelectorAll('#panel-lib .mc.on').length;toast(n===0?'선택된 자료가 없습니다.':(n===1?'다운로드를 시작합니다.':n+'개 자료를 멀티 다운로드(zip)합니다.'));});
+  var ad=document.getElementById('libAllDl');if(ad)ad.addEventListener('click',function(){toast('전체 학습자료를 멀티 다운로드(zip)합니다.');});
+  document.querySelectorAll('#panel-lib .lk').forEach(function(l){l.addEventListener('click',function(){toast(l.textContent.trim()+' (으)로 이동합니다.');});});
+})();
+</script>
+</body></html>

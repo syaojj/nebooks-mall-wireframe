@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NE Books — 상단 네비게이션</title>
+<style>
+  :root{
+    --ne-red:#e2231a;
+    --green:#5fa800;
+    --orange:#f47920;
+    --yellow:#ffd200;
+    --line:#e5e5e5;
+    --text:#333;
+    --text-mute:#666;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",sans-serif;color:var(--text);background:#fff;}
+  a{text-decoration:none;color:inherit;}
+
+  /* ── 최상단 유틸 바 ── */
+  .util-bar{border-bottom:1px solid var(--line);font-size:13px;}
+  .util-inner{max-width:1200px;margin:0 auto;height:38px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;}
+  .util-left{display:flex;align-items:center;gap:14px;color:var(--text-mute);}
+  .util-left a{position:relative;}
+  .util-left a:not(:last-child)::after{content:"";position:absolute;right:-8px;top:50%;transform:translateY(-50%);width:1px;height:11px;background:#ddd;}
+  .util-left a.on{color:#111;font-weight:700;}
+  .util-right{display:flex;align-items:center;gap:6px;color:var(--text-mute);font-weight:600;}
+  .util-right .ico{display:inline-block;width:16px;height:16px;border-radius:50%;border:1.5px solid #bbb;}
+
+  /* ── 메인 헤더 ── */
+  .header-main{max-width:1200px;margin:0 auto;padding:22px 20px 18px;display:flex;align-items:center;gap:24px;}
+  .logo{font-size:30px;font-weight:800;letter-spacing:-0.5px;white-space:nowrap;}
+  .logo .red{color:var(--ne-red);}
+  .logo .dark{color:#222;}
+
+  .search{flex:1;max-width:430px;position:relative;}
+  .search input{width:100%;height:30px;border:none;border-bottom:2px solid #222;font-size:16px;padding:0 36px 6px 4px;outline:none;}
+  .search input::placeholder{color:#999;font-weight:400;}
+  .search .search-btn{position:absolute;right:2px;top:0;background:none;border:none;cursor:pointer;color:#222;display:flex;align-items:center;padding:0;}
+
+  .reco{position:relative;align-self:flex-start;margin-top:6px;}
+  .reco .new{position:absolute;top:-16px;left:50%;transform:translateX(-50%);background:var(--yellow);color:#222;font-size:11px;font-weight:800;padding:2px 7px;border-radius:4px;}
+  .reco-btn{position:relative;background:#444;color:#fff;border:none;border-radius:18px;padding:8px 16px;font-size:13px;font-weight:700;cursor:pointer;}
+  .reco-btn::after{content:"";position:absolute;left:18px;bottom:-5px;width:10px;height:10px;background:#444;transform:rotate(45deg);}
+
+  .header-right{margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:10px;}
+  .account{font-size:13px;color:var(--text-mute);}
+  .account a{position:relative;padding:0 8px;}
+  .account a:not(:last-child)::after{content:"";position:absolute;right:-1px;top:50%;transform:translateY(-50%);width:1px;height:11px;background:#ddd;}
+  .account a:first-child{color:#222;font-weight:700;}
+  .teacher-btns{display:flex;flex-direction:column;gap:6px;}
+  .teacher-btn{display:flex;align-items:center;justify-content:space-between;gap:18px;width:180px;border-radius:6px;padding:7px 12px;font-size:14px;font-weight:700;border:1px solid;}
+  .teacher-btn .arr{font-size:11px;}
+  .teacher-btn.math{color:var(--green);border-color:var(--green);}
+  .teacher-btn.eng{color:var(--orange);border-color:var(--orange);}
+
+  /* ── GNB ── */
+  .gnb{border-top:2px solid #222;border-bottom:1px solid var(--line);}
+  .gnb-inner{max-width:1200px;margin:0 auto;padding:0 20px;display:flex;align-items:center;gap:48px;height:54px;}
+  .gnb a{font-size:16px;font-weight:700;color:#333;}
+  .gnb a.on{color:var(--ne-red);}
+</style>
+</head>
+<body>
+  <header class="site-header">
+
+    <!-- 최상단 유틸 바 -->
+    <div class="util-bar">
+      <div class="util-inner">
+        <nav class="util-left">
+          <a class="on">NE능률</a>
+          <a>교과서</a>
+          <a>영어·수학교재</a>
+          <a>ELT교재</a>
+          <a>영자신문</a>
+          <a>아이챌린지</a>
+          <a>유아교육</a>
+          <a>영어레벨테스트</a>
+          <a>초중등영어학원</a>
+        </nav>
+        <a class="util-right"><span class="ico"></span> 통합회원가입</a>
+      </div>
+    </div>
+
+    <!-- 메인 헤더 -->
+    <div class="header-main">
+      <a class="logo"><span class="red">NE</span><span class="red">_</span><span class="dark">Books</span></a>
+
+      <div class="search">
+        <input type="text" placeholder="교재명 또는 검색어를 입력해 주세요.">
+        <button class="search-btn" aria-label="검색"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg></button>
+      </div>
+
+      <div class="reco">
+        <span class="new">NEW</span>
+        <button class="reco-btn">맞춤형 교재추천</button>
+      </div>
+
+      <div class="header-right">
+        <nav class="account">
+          <a>로그인</a><a>MY페이지</a><a>고객센터</a>
+        </nav>
+        <div class="teacher-btns">
+          <a class="teacher-btn math">수학 선생님 바로가기 <span class="arr">&#10095;</span></a>
+          <a class="teacher-btn eng">영어 선생님 바로가기 <span class="arr">&#10095;</span></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- GNB -->
+    <nav class="gnb">
+      <div class="gnb-inner">
+        <a class="on">ELT</a>
+        <a>초/중등교재</a>
+        <a>고등교재</a>
+        <a>교과서 및 자습서</a>
+        <a>수험/일반</a>
+        <a>수학</a>
+        <a>국어</a>
+        <a>학습자료실</a>
+      </div>
+    </nav>
+
+  </header>
+</body>
+</html>

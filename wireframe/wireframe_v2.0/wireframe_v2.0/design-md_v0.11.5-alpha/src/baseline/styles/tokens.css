@@ -1,0 +1,148 @@
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+/* NE Design.md Baseline Tokens (v0.11.5-alpha)                  */
+/*                                                                 */
+/* baseline canonical token layer. source of truth는 DESIGN.md다.  */
+/* 본 파일은 PoC fork target이며 spec contradiction이 없도록        */
+/* DESIGN.md 토큰 값과 정합한다 (source of truth).               */
+/*                                                                 */
+/* 신규 primitive/color token 0건. structural layout spec 4건만    */
+/* v0.11.0-alpha에서 추가됨: spacing.container, spacing.breakpoint,*/
+/* z-index_layers, patterns.section_rhythm.                       */
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+:root {
+  /* ── Primitive — Accent ─────────────────────────────────── */
+  --accent-300: #F6AFA9;
+  --accent-500: #E83828;
+  --accent-600: #C32E20;
+  --accent-700: #911F14;
+
+  /* ── Primitive — Neutral (warm) ─────────────────────────── */
+  --neutral-0: #FFFFFF;
+  --neutral-50: #F4EFE9;
+  --neutral-100: #EDE9DE;
+  --neutral-200: #E6DFD8;
+  --neutral-500: #8E8B82;
+  --neutral-700: #6C6A64;
+  --neutral-800: #3D3D3A;
+  --neutral-900: #1D1717;
+
+  /* ── Primitive — Mono (NE CI single-color grayscale) ────── */
+  --mono-0: #FFFFFF;
+  --mono-20: #E4E4E3;
+  --mono-50: #CBCCCB;
+  --mono-500: #4D4E4D;
+  --mono-900: #1D1717;
+
+  /* ── Primitive — Status / Assessment shared ─────────────── */
+  --positive-700: #1E9245;
+  --positive-900: #024409;
+  --positive-bg: #D1F5DE;
+  --caution-700: #C48F00;
+  --caution-900: #634900;
+  --caution-bg: #FFE8AA;
+  --negative-700: #D64545;
+  --negative-900: #7A1A1A;
+  --negative-bg: #FFE4E4;
+
+  /* ── Semantic — Surface ─────────────────────────────────── */
+  --ne-surface-base: var(--neutral-0);
+  --ne-surface-section: var(--neutral-50);
+  --ne-surface-card: var(--neutral-100);
+  --ne-surface-emphasis-soft: var(--accent-300);   /* v0.11.5: DESIGN.md semantic 누락 배선 (ne-badge-category-color용) */
+  --ne-boundary: var(--neutral-200);
+
+  /* ── Semantic — Text ────────────────────────────────────── */
+  --ne-text-heading: var(--neutral-900);
+  --ne-text-body: var(--neutral-800);
+  --ne-text-tertiary: var(--neutral-700);
+  --ne-text-disabled: var(--neutral-500);
+  --ne-text-on-dark: var(--neutral-0);
+  --ne-text-on-dark-soft: var(--neutral-500);
+
+  /* ── Semantic — Primary brand interaction ───────────────── */
+  --ne-primary: var(--accent-500);
+  --ne-primary-hover: var(--accent-600);
+  --ne-primary-active: var(--accent-700);
+  --ne-primary-disabled: var(--accent-300);
+  --ne-on-primary: var(--neutral-0);
+  --ne-primary-focus-ring: rgba(232, 56, 40, 0.25);
+
+  /* ── Semantic — Mono action (NE CI single-color action gray) ── */
+  --ne-mono: var(--mono-500);
+  --ne-mono-hover: var(--mono-900);
+  --ne-mono-active: var(--mono-900);
+  --ne-mono-disabled: var(--mono-50);
+  --ne-on-mono: var(--mono-0);
+  --ne-mono-focus-ring: var(--mono-50);
+  --ne-mono-overlay-hover: var(--mono-20);
+  --ne-mono-overlay-active: var(--mono-50);
+  --ne-mono-surface-base: var(--mono-0);
+
+  /* ── Semantic — Status ──────────────────────────────────── */
+  --ne-status-success: var(--positive-900);
+  --ne-status-success-bg: var(--positive-bg);
+  --ne-status-success-border: var(--positive-700);
+  --ne-status-success-strong: var(--positive-700);
+  --ne-status-warning: var(--caution-900);
+  --ne-status-warning-bg: var(--caution-bg);
+  --ne-status-warning-border: var(--caution-700);
+  --ne-status-warning-strong: var(--caution-700);
+  --ne-status-danger: var(--negative-900);
+  --ne-status-danger-bg: var(--negative-bg);
+  --ne-status-danger-border: var(--negative-700);
+  --ne-status-danger-strong: var(--negative-700);
+
+  /* ── Semantic — Assessment ──────────────────────────────── */
+  --ne-assessment-correct: var(--positive-900);
+  --ne-assessment-correct-bg: var(--positive-bg);
+  --ne-assessment-correct-border: var(--positive-700);
+  --ne-assessment-incorrect: var(--negative-900);
+  --ne-assessment-incorrect-bg: var(--negative-bg);
+  --ne-assessment-incorrect-border: var(--negative-700);
+
+  /* ── Brand layer (BI/CI signature only) ─────────────────── */
+  --ne-brand-primary: #E83828;
+  --ne-brand-secondary: #1D1717;
+
+  /* ── Spacing — 8px grid ─────────────────────────────────── */
+  --space-xxs: 4px;
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-xxl: 48px;
+  --space-section: 96px;
+
+  /* ── Spacing — Container (v0.11.0-alpha structural layout) ── */
+  --container-narrow: 720px;
+  --container-reading: 880px;
+  --container-default: 1200px;
+  --container-wide: 1440px;
+
+  /* ── Spacing — Breakpoint (v0.11.0-alpha structural layout) ── */
+  --breakpoint-sm: 600px;
+  --breakpoint-md: 900px;
+  --breakpoint-lg: 1200px;
+
+  /* ── Z-Index Layers (v0.11.0-alpha structural layout) ─── */
+  --z-sticky-header: 50;
+  --z-dropdown: 800;
+  --z-dialog-overlay: 900;
+  --z-toast: 1000;
+
+  /* ── Rounded ────────────────────────────────────────────── */
+  --rounded-xs: 4px;
+  --rounded-sm: 6px;
+  --rounded-md: 8px;
+  --rounded-lg: 12px;
+  --rounded-xl: 16px;
+  --rounded-pill: 9999px;
+  --rounded-full: 50%;
+
+  /* ── Typography — Font family aliases (canonical) ──────── */
+  --font-primary: 'Pretendard Variable', 'Pretendard', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-display: 'Paperlogy', 'Pretendard Variable', 'Pretendard', system-ui, sans-serif;
+  /* DESIGN.md token_use_guards.font_alias_policy: 절대 --ff-base / --ff-display를 정의하지 않는다. */
+}

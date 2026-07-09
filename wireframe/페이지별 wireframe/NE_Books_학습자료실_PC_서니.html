@@ -1,0 +1,288 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=1280">
+<title>NE_Books 학습자료실</title>
+<style>
+  :root{--ink:#222732;--line:#d7dbe2;--line2:#e6e9ee;--fill:#eef0f3;--fill2:#f7f8fa;--muted:#8b909c;--bar2:#dde1e7;
+    --new:#1f9d72;--newbg:#e6f6ef;--red:#e23b3b;--orange:#e8852b;--blue:#3a78f2;--bluebg:#eaf1ff;}
+  *{box-sizing:border-box}
+  body{margin:0;background:#fff;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Apple SD Gothic Neo","Malgun Gothic",sans-serif}
+  a{color:inherit;text-decoration:none}
+  .container{max-width:1280px;margin:0 auto;padding:0 24px}
+  .spacer{flex:1}
+
+  .utilbar{background:#f4f5f7;border-bottom:1px solid var(--line2);font-size:12px;color:#5a606c}
+  .utilbar .container{display:flex;align-items:center;gap:14px;height:38px;font-weight:600;flex-wrap:wrap}
+  .utilbar .sep{color:#cfd3da}
+  .header .container{display:flex;align-items:center;gap:24px;padding-top:22px;padding-bottom:22px}
+  .logo{font-size:26px;font-weight:800}.logo .r{color:var(--red)}
+  .srch{flex:1;max-width:900px;display:flex;align-items:center;gap:12px}
+  .srchwrap{position:relative;flex:1}
+  .recobtn{flex-shrink:0;background:var(--ink);color:#fff;border-radius:9px;padding:13px 18px;font-size:13.5px;font-weight:800;white-space:nowrap;cursor:pointer}
+  .srchbox{height:48px;border:2px solid var(--ink);border-radius:8px;display:flex;align-items:center;padding:0 18px;color:var(--muted);font-size:14px;cursor:text}
+  .uicons{display:flex;align-items:center;gap:22px;margin-left:auto}
+  .uic{display:flex;flex-direction:column;align-items:center;gap:5px;font-size:11px;color:#5a606c;font-weight:700}
+  .uic .ci{width:34px;height:34px;border-radius:50%;background:var(--fill);border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;font-size:17px}
+  .gnb{border-top:1px solid var(--line2);border-bottom:2px solid var(--ink)}
+  .gnb .container{display:flex;align-items:center;justify-content:space-between;height:54px;font-size:15px;font-weight:700}
+  .gnb a{color:#444b57}.gnb a.on{color:var(--ink)}
+
+  .crumb{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);padding:18px 0 0}
+  .crumb .hm{color:#5a606c}.crumb .sep{color:#cfd3da}
+  .ptitle{font-size:28px;font-weight:800;margin:14px 0 6px;letter-spacing:-.02em}
+  .pdesc{font-size:14px;color:#6b7280;margin:0 0 22px}
+
+  /* 운영 배너 */
+  .opbanner{display:flex;align-items:center;gap:18px;background:linear-gradient(135deg,#eaf1ff,#e6f6ef);border:1px solid var(--line2);border-radius:16px;padding:22px 26px;margin-bottom:24px}
+  .opbanner .bi{width:52px;height:52px;border-radius:14px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:26px}
+  .opbanner h3{font-size:17px;font-weight:800;margin:0 0 5px}
+  .opbanner p{font-size:13px;color:#5a606c;margin:0}
+  .opbanner .go{margin-left:auto;background:var(--ink);color:#fff;border-radius:9px;padding:12px 20px;font-size:13px;font-weight:800;cursor:pointer}
+
+  /* 검색 */
+  .matsearch{display:flex;gap:10px;margin-bottom:18px}
+  .matsearch .inp{flex:1;height:50px;border:2px solid var(--ink);border-radius:10px;display:flex;align-items:center;padding:0 18px;color:var(--muted);font-size:14px;cursor:text}
+  .matsearch .sb{background:var(--ink);color:#fff;border-radius:10px;padding:0 30px;font-size:14px;font-weight:800;cursor:pointer;display:flex;align-items:center}
+
+  /* 필터 */
+  .filterbox{border:1px solid var(--line2);border-radius:14px;overflow:hidden;margin-bottom:20px}
+  .frow{display:flex;align-items:flex-start;border-bottom:1px solid var(--line2)}
+  .frow:last-child{border-bottom:0}
+  .flabel{flex:0 0 110px;background:var(--fill2);padding:14px 16px;font-size:13px;font-weight:800;color:#3d4756;align-self:stretch;display:flex;align-items:center;border-right:1px solid var(--line2)}
+  .fopts{display:flex;flex-wrap:wrap;gap:8px;padding:12px 16px;flex:1}
+  .fpill{background:#fff;border:1px solid var(--line);border-radius:20px;padding:7px 16px;font-size:12.5px;color:#5a606c;font-weight:700;cursor:pointer}
+  .fpill.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+  /* 상단 바 */
+  .listbar{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+  .listbar .cnt{font-size:13.5px;color:#5a606c;font-weight:700}.listbar .cnt b{color:var(--ink)}
+  .obtn{border:1px solid var(--line);border-radius:8px;padding:10px 16px;font-size:12.5px;font-weight:800;color:#3d4756;background:#fff;cursor:pointer}
+  .obtn.primary{background:var(--blue);color:#fff;border-color:var(--blue)}
+  .barbtns{margin-left:auto;display:flex;gap:8px}
+
+  /* 자료 그룹(교재별) */
+  .matgroup{border:1px solid var(--line2);border-radius:14px;overflow:hidden;margin-bottom:16px}
+  .mghead{display:grid;grid-template-columns:74px 1fr auto;gap:16px;align-items:center;padding:16px 18px;background:var(--fill2);border-bottom:1px solid var(--line2)}
+  .mgcover{width:74px;aspect-ratio:3/4;background:var(--fill);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:10px}
+  .mgmeta{font-size:12px;color:#7a828f;font-weight:700;margin-bottom:6px}.mgmeta b{color:#3d4756}.mgmeta .sep{color:var(--line);margin:0 7px}
+  .mgname{font-size:17px;font-weight:800;margin:0}
+  .mglink{display:flex;gap:8px;flex-wrap:wrap}
+  .lk{font-size:12px;font-weight:700;color:#3d4756;border:1px solid var(--line);border-radius:8px;padding:8px 12px;cursor:pointer;display:inline-flex;gap:5px;align-items:center;background:#fff}
+
+  .mtbl{width:100%;border-collapse:collapse;font-size:13.5px}
+  .mtbl th{background:#fff;color:#8b909c;font-weight:700;font-size:12px;padding:11px 14px;border-bottom:1px solid var(--line2);text-align:left}
+  .mtbl th.c,.mtbl td.c{text-align:center;width:48px}
+  .mtbl th.r,.mtbl td.r{text-align:center;width:80px}
+  .mtbl td{padding:13px 14px;border-bottom:1px solid var(--line2);color:#3d4756;vertical-align:middle}
+  .mtbl tr:last-child td{border-bottom:0}
+  .cb{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--line);background:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:12px;color:#fff;font-weight:800;cursor:pointer}
+  .cb.on{background:var(--blue);border-color:var(--blue)}
+  .ltag{display:inline-block;font-size:11px;font-weight:700;color:#5a606c;background:var(--fill2);border:1px solid var(--line2);border-radius:6px;padding:3px 9px}
+  .matname{font-weight:700}
+  .fmt{color:var(--muted);font-size:12px}
+  .tgt{font-size:11px;font-weight:800;border-radius:5px;padding:2px 8px}
+  .tgt.all{color:var(--new);background:var(--newbg)}
+  .tgt.mem{color:var(--orange);background:#fdf0e2}
+  .tgt.tea{color:var(--blue);background:var(--bluebg)}
+  .dlico{font-size:18px;cursor:pointer}
+
+  .pager{display:flex;align-items:center;justify-content:center;gap:6px;padding:34px 0}
+  .pg{min-width:38px;height:38px;border:1px solid var(--line);border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:13.5px;font-weight:700;color:#5a606c;cursor:pointer;padding:0 6px}
+  .pg.on{background:var(--ink);color:#fff;border-color:var(--ink)}.pg.nav{color:#9aa0ac}
+
+  .ftr{background:#2a2f3a;color:#aeb4c0;font-size:13px;line-height:2;margin-top:20px}
+  .ftr .container{padding-top:26px;padding-bottom:30px}
+  .ftr .fnav{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+  .ftr .fnav a{color:#cdd2db;font-weight:600}.ftr .fnav .b{color:#fff;font-weight:800}.ftr .fnav .sep{color:#555c69}
+  .ftr .family{float:right;border:1px solid #555c69;border-radius:22px;padding:9px 20px;color:#cdd2db}
+  .ftr .fco{color:#8b909c}.ftr .flogo{float:right;font-weight:800;color:#7d8390;font-size:17px;margin-top:8px}
+
+  .toast{position:fixed;left:50%;bottom:40px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;font-size:13.5px;font-weight:700;padding:14px 22px;border-radius:10px;opacity:0;pointer-events:none;transition:.25s;z-index:999;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+  .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+</style></head>
+<body>
+
+  <div class="utilbar"><div class="container">
+    <span>NE능률</span><span class="sep">|</span><span>교과서</span><span class="sep">|</span><span>영어·수학교재</span><span class="sep">|</span><span>ELT교재</span><span class="sep">|</span><span>영자신문</span><span class="sep">|</span><span>아이챌린지</span><span class="sep">|</span><span>유아교육</span><span class="sep">|</span><span>영어레벨테스트</span><span class="sep">|</span><span>초중등영어학원</span>
+    <span class="spacer"></span><span>👤 통합회원가입</span>
+  </div></div>
+
+  <header class="header"><div class="container">
+    <div class="logo"><span class="r">NE_</span>Books</div>
+    <div class="srch"><div class="srchwrap">
+      <div class="srchbox">🔎 교재명 또는 검색어를 입력해 주세요.<span class="spacer"></span>🔍</div>
+    </div><a class="recobtn">🎯 맞춤형 교재추천</a></div>
+    <div class="uicons">
+      <a class="uic"><span class="ci">👤</span>로그인</a>
+      <a class="uic"><span class="ci">🛒</span>장바구니</a>
+      <a class="uic"><span class="ci">📋</span>MY페이지</a>
+      <a class="uic"><span class="ci">🎧</span>고객센터</a>
+    </div>
+  </div></header>
+
+  <nav class="gnb"><div class="container">
+    <a>ELT</a><a>초·중등</a><a>고등</a><a>교과서·자습서</a><a>수험·일반</a><a>수학·국어</a><a class="on">학습자료실</a><a>도서몰</a>
+  </div></nav>
+
+  <main class="container">
+    <div class="crumb"><span class="hm">🏠 홈</span><span class="sep">›</span><span>학습자료실</span></div>
+    <h1 class="ptitle">학습자료실</h1>
+    <p class="pdesc">교재에 연계된 MP3·정답·Test Sheet·Lesson Plan 등 학습자료를 검색하고 개별·선택·전체 다운로드할 수 있습니다.</p>
+
+    <!-- 운영 배너 -->
+    <div class="opbanner">
+      <span class="bi">📢</span>
+      <div><h3>2026 NE능률 학습자료 통합 안내</h3><p>교재별 정답·MP3·워크시트를 한 곳에서 받아보세요. 교강사 전용 자료는 NE Tutor에서 제공됩니다.</p></div>
+      <span class="go">자세히 보기 ›</span>
+    </div>
+
+    <!-- 검색: 교재명·시리즈·자료유형 -->
+    <div class="matsearch">
+      <div class="inp">🔎 교재명 · 시리즈 · 자료유형으로 검색</div>
+      <div class="sb">검색</div>
+    </div>
+
+    <!-- 필터 -->
+    <div class="filterbox">
+      <div class="frow"><div class="flabel">카테고리</div><div class="fopts">
+        <span class="fpill on">전체</span><span class="fpill">ELT</span><span class="fpill">초·중등</span><span class="fpill">고등</span><span class="fpill">교과서·자습서</span><span class="fpill">수험·일반</span><span class="fpill">수학·국어</span>
+      </div></div>
+      <div class="frow"><div class="flabel">자료유형</div><div class="fopts">
+        <span class="fpill on">전체</span><span class="fpill">MP3</span><span class="fpill">Answer Keys</span><span class="fpill">Test Sheet</span><span class="fpill">Lesson Plan</span><span class="fpill">Word List</span><span class="fpill">Worksheet</span>
+      </div></div>
+    </div>
+
+    <!-- 상단 바 -->
+    <div class="listbar">
+      <span class="cnt">전체 <b>86</b>건</span>
+      <span class="fpill on" style="cursor:default">정렬: 최신순 ▾</span>
+      <div class="barbtns">
+        <span class="obtn" id="selDl">선택 다운로드</span>
+        <span class="obtn primary" id="allDl">전체 다운로드</span>
+      </div>
+    </div>
+
+    <!-- 자료 그룹 (교재별) -->
+    <div class="matgroup">
+      <div class="mghead">
+        <div class="mgcover">표지</div>
+        <div>
+          <div class="mgmeta"><b>NE능률</b><span class="sep">|</span>주니어 리딩튜터<span class="sep">|</span>중등</div>
+          <p class="mgname">주니어 리딩튜터 Level 3</p>
+        </div>
+        <div class="mglink">
+          <span class="lk">🔍 교재상세</span>
+          <span class="lk">📖 E-Book</span>
+          <span class="lk">🧇 Waffle</span>
+        </div>
+      </div>
+      <table class="mtbl">
+        <thead><tr><th class="c"><span class="cb gall"></span></th><th style="width:130px">자료유형</th><th>자료명</th><th style="width:120px">형식 · 용량</th><th style="width:90px">대상</th><th class="r">다운로드</th></tr></thead>
+        <tbody>
+          <tr><td class="c"><span class="cb mc"></span></td><td><span class="ltag">Answer Keys</span></td><td class="matname">본책 정답 및 해설</td><td class="fmt">PDF · 2.4MB</td><td><span class="tgt all">전체</span></td><td class="r"><span class="dlico">⬇️</span></td></tr>
+          <tr><td class="c"><span class="cb mc"></span></td><td><span class="ltag">MP3</span></td><td class="matname">Unit 01~05 듣기 음원</td><td class="fmt">ZIP · 48MB</td><td><span class="tgt all">전체</span></td><td class="r"><span class="dlico">⬇️</span></td></tr>
+          <tr><td class="c"><span class="cb mc"></span></td><td><span class="ltag">Word List</span></td><td class="matname">Chapter별 단어 정리</td><td class="fmt">PDF · 1.1MB</td><td><span class="tgt mem">회원</span></td><td class="r"><span class="dlico">⬇️</span></td></tr>
+          <tr><td class="c"><span class="cb mc"></span></td><td><span class="ltag">Test Sheet</span></td><td class="matname">단원평가 시험지 (교강사용)</td><td class="fmt">NE Tutor 연계</td><td><span class="tgt tea">교강사</span></td><td class="r"><span class="dlico">↗️</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="matgroup">
+      <div class="mghead">
+        <div class="mgcover">표지</div>
+        <div>
+          <div class="mgmeta"><b>NE능률</b><span class="sep">|</span>능률 VOCA<span class="sep">|</span>중등</div>
+          <p class="mgname">능률 VOCA 어원편 (개정판)</p>
+        </div>
+        <div class="mglink">
+          <span class="lk">🔍 교재상세</span>
+          <span class="lk">📱 모바일 학습지원</span>
+        </div>
+      </div>
+      <table class="mtbl">
+        <thead><tr><th class="c"><span class="cb gall"></span></th><th style="width:130px">자료유형</th><th>자료명</th><th style="width:120px">형식 · 용량</th><th style="width:90px">대상</th><th class="r">다운로드</th></tr></thead>
+        <tbody>
+          <tr><td class="c"><span class="cb mc"></span></td><td><span class="ltag">Word List</span></td><td class="matname">Day 01~30 단어 리스트</td><td class="fmt">PDF · 1.8MB</td><td><span class="tgt all">전체</span></td><td class="r"><span class="dlico">⬇️</span></td></tr>
+          <tr><td class="c"><span class="cb mc"></span></td><td><span class="ltag">MP3</span></td><td class="matname">표제어 발음 음원</td><td class="fmt">ZIP · 32MB</td><td><span class="tgt all">전체</span></td><td class="r"><span class="dlico">⬇️</span></td></tr>
+          <tr><td class="c"><span class="cb mc"></span></td><td><span class="ltag">Test Sheet</span></td><td class="matname">단어 시험지 자동 생성</td><td class="fmt">URL</td><td><span class="tgt mem">회원</span></td><td class="r"><span class="dlico">🔗</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="matgroup">
+      <div class="mghead">
+        <div class="mgcover">표지</div>
+        <div>
+          <div class="mgmeta"><b>NE능률</b><span class="sep">|</span>그래머 존<span class="sep">|</span>고등</div>
+          <p class="mgname">그래머 존 BASIC 1</p>
+        </div>
+        <div class="mglink">
+          <span class="lk">🔍 교재상세</span>
+          <span class="lk">📖 E-Book</span>
+        </div>
+      </div>
+      <table class="mtbl">
+        <thead><tr><th class="c"><span class="cb gall"></span></th><th style="width:130px">자료유형</th><th>자료명</th><th style="width:120px">형식 · 용량</th><th style="width:90px">대상</th><th class="r">다운로드</th></tr></thead>
+        <tbody>
+          <tr><td class="c"><span class="cb mc"></span></td><td><span class="ltag">Answer Keys</span></td><td class="matname">본책 정답</td><td class="fmt">PDF · 1.5MB</td><td><span class="tgt all">전체</span></td><td class="r"><span class="dlico">⬇️</span></td></tr>
+          <tr><td class="c"><span class="cb mc"></span></td><td><span class="ltag">Lesson Plan</span></td><td class="matname">교사용 지도안</td><td class="fmt">NE Tutor 연계</td><td><span class="tgt tea">교강사</span></td><td class="r"><span class="dlico">↗️</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pager">
+      <span class="pg nav">‹ 이전</span>
+      <span class="pg on">1</span><span class="pg">2</span><span class="pg">3</span><span class="pg">4</span>
+      <span class="pg nav">다음 ›</span>
+    </div>
+  </main>
+
+  <footer class="ftr"><div class="container">
+    <span class="family">FAMILY SITE ▾</span>
+    <div class="fnav">
+      <a>개인정보처리방침</a><span class="sep">|</span><a>이용약관</a><span class="sep">|</span><a>이메일무단수집거부</a><span class="sep">|</span><a>지사안내</a><span class="sep">|</span><a>찾아오시는 길</a><span class="sep">|</span><a class="b">학원/도서관 대량구매</a>
+    </div>
+    <div class="flogo">NE능률</div>
+    <div class="fco">
+      ㈜NE능률 (03925) 서울 특별시 마포구 월드컵북로 396(상암동) 누리꿈스퀘어 비즈니스타워 10층 &nbsp;|&nbsp; 대표이사 : 이정진<br>
+      고객센터 : 1833-8368 / 02-2014-7260 [사업별 고객센터 안내]<br>
+      Copyright © NE Neungyule, Inc. All Rights Reserved
+    </div>
+  </div></footer>
+
+  <div class="toast" id="toast"></div>
+
+<script>
+  function toast(m){var t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(function(){t.classList.remove('on');},1900);}
+
+  /* 필터 pill 단일선택(행별) */
+  document.querySelectorAll('.fopts').forEach(function(row){
+    row.querySelectorAll('.fpill').forEach(function(p){p.addEventListener('click',function(){
+      row.querySelectorAll('.fpill').forEach(function(x){x.classList.remove('on');});p.classList.add('on');
+    });});
+  });
+
+  /* 체크박스 */
+  function setCb(c,on){c.classList.toggle('on',on);c.textContent=on?'✓':'';}
+  document.querySelectorAll('.mc').forEach(function(c){c.addEventListener('click',function(){setCb(c,!c.classList.contains('on'));});});
+  /* 그룹 전체선택 */
+  document.querySelectorAll('.gall').forEach(function(g){g.addEventListener('click',function(){
+    var on=!g.classList.contains('on');setCb(g,on);
+    g.closest('.matgroup').querySelectorAll('.mc').forEach(function(c){setCb(c,on);});
+  });});
+
+  /* 권한별 다운로드 안내 */
+  document.querySelectorAll('.dlico').forEach(function(d){d.addEventListener('click',function(){
+    var t=d.closest('tr').querySelector('.tgt');
+    if(t.classList.contains('tea')){toast('교강사 전용 자료입니다. NE Tutor 해당 교재 페이지로 이동합니다.');}
+    else if(t.classList.contains('mem')){toast('회원 전용 자료입니다. 로그인 후 다운로드됩니다.');}
+    else{toast('다운로드를 시작합니다.');}
+  });});
+
+  document.getElementById('selDl').addEventListener('click',function(){
+    var n=document.querySelectorAll('.mc.on').length;
+    if(n===0){toast('선택된 자료가 없습니다.');return;}
+    toast(n===1?'다운로드를 시작합니다.':n+'개 자료를 멀티 다운로드(zip)합니다.');
+  });
+  document.getElementById('allDl').addEventListener('click',function(){toast('전체 학습자료를 멀티 다운로드(zip)합니다.');});
+  document.querySelectorAll('.lk').forEach(function(l){l.addEventListener('click',function(){toast(l.textContent.trim()+' (으)로 이동합니다.');});});
+</script>
+</body></html>

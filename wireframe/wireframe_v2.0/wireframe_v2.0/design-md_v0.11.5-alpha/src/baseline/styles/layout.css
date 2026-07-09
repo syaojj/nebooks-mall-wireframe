@@ -1,0 +1,63 @@
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+/* NE Design.md Baseline Layout (v0.11.5-alpha)                  */
+/*                                                                 */
+/* Structural layout utilities for PoC fork.                       */
+/* spacing.container / spacing.breakpoint / patterns.section_rhythm */
+/* DESIGN.md spec와 정합.                                          */
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/* ── PageContainer — content width variants ─────────────── */
+.ne-page {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 var(--space-lg);
+}
+.ne-page--narrow  { max-width: var(--container-narrow); }
+.ne-page--reading { max-width: var(--container-reading); }
+.ne-page--default { max-width: var(--container-default); }
+.ne-page--wide    { max-width: var(--container-wide); }
+.ne-page--none    { max-width: none; padding: 0; }
+
+/* ── Section rhythm ─────────────────────────────────────── */
+.ne-section {
+  padding-top: var(--space-xxl);
+  padding-bottom: var(--space-xxl);
+}
+.ne-section-header {
+  margin-bottom: var(--space-lg);
+}
+
+/* ── Stack / Cluster utility primitives ─────────────────── */
+.ne-stack { display: flex; flex-direction: column; gap: var(--space-md); }
+.ne-stack--xs  { gap: var(--space-xs); }
+.ne-stack--sm  { gap: var(--space-sm); }
+.ne-stack--md  { gap: var(--space-md); }
+.ne-stack--lg  { gap: var(--space-lg); }
+.ne-stack--xl  { gap: var(--space-xl); }
+
+.ne-cluster { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-sm); }
+.ne-cluster--xs { gap: var(--space-xs); }
+.ne-cluster--md { gap: var(--space-md); }
+.ne-cluster--lg { gap: var(--space-lg); }
+
+/* ── Grid (v0.11.2-alpha minimum layout utility, not a grid system) ─── */
+/* .ne-grid--auto = 권장 기본(본질적 반응형). --2/--3 = 고정열, 모바일 1열 collapse 내장. */
+.ne-grid { display: grid; gap: var(--space-lg); }
+.ne-grid--auto { grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); }
+.ne-grid--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.ne-grid--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 900px) {
+  .ne-grid--3 { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .ne-grid--2 { grid-template-columns: 1fr; }
+}
+
+/* ── Responsive collapse (minimum baseline) ─────────────── */
+@media (max-width: 900px) {
+  .ne-collapse-md { grid-template-columns: 1fr !important; }
+}
+@media (max-width: 600px) {
+  .ne-collapse-sm { grid-template-columns: 1fr !important; }
+  .ne-page { padding: 0 var(--space-md); }
+}

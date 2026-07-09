@@ -1,0 +1,484 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=1280">
+<title>NE_Books 교재목록</title>
+<style>
+  :root{--ink:#222732;--line:#d7dbe2;--line2:#e6e9ee;--fill:#eef0f3;--fill2:#f7f8fa;--muted:#8b909c;--bar2:#dde1e7;
+    --new:#1f9d72;--newbg:#e6f6ef;--red:#e23b3b;--orange:#e8852b;--blue:#3a78f2;--bluebg:#eaf1ff;}
+  *{box-sizing:border-box}
+  body{margin:0;background:#fff;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Apple SD Gothic Neo","Malgun Gothic",sans-serif}
+  a{color:inherit;text-decoration:none}
+  .container{max-width:1280px;margin:0 auto;padding:0 24px}
+  .spacer{flex:1}
+
+  /* ===== 공통 헤더 ===== */
+  .utilbar{background:#f4f5f7;border-bottom:1px solid var(--line2);font-size:12px;color:#5a606c}
+  .utilbar .container{display:flex;align-items:center;gap:14px;height:38px;font-weight:600;flex-wrap:wrap}
+  .utilbar .sep{color:#cfd3da}
+  .header .container{display:flex;align-items:center;gap:24px;padding-top:22px;padding-bottom:22px}
+  .logo{font-size:26px;font-weight:800}.logo .r{color:var(--red)}
+  .srch{flex:1;max-width:900px;display:flex;align-items:center;gap:12px}
+  .srchwrap{position:relative;flex:1}
+  .recobtn{flex-shrink:0;background:var(--ink);color:#fff;border-radius:9px;padding:13px 18px;font-size:13.5px;font-weight:800;white-space:nowrap;cursor:pointer}
+  .srchbox{height:48px;border:2px solid var(--ink);border-radius:8px;display:flex;align-items:center;padding:0 18px;color:var(--muted);font-size:14px;cursor:text}
+  .uicons{display:flex;align-items:center;gap:22px;margin-left:auto}
+  .uic{display:flex;flex-direction:column;align-items:center;gap:5px;font-size:11px;color:#5a606c;font-weight:700}
+  .uic .ci{width:34px;height:34px;border-radius:50%;background:var(--fill);border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;font-size:17px}
+  .gnb{border-top:1px solid var(--line2);border-bottom:2px solid var(--ink)}
+  .gnb .container{display:flex;align-items:center;justify-content:space-between;height:54px;font-size:15px;font-weight:700}
+  .gnb a{color:#444b57}.gnb a.on{color:var(--ink)}
+
+  /* ===== 페이지 헤더 ===== */
+  .crumb{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);padding:18px 0 0}
+  .crumb .hm{color:#5a606c}.crumb .sep{color:#cfd3da}
+  .phead{display:flex;align-items:flex-end;gap:14px;margin:14px 0 22px;flex-wrap:wrap}
+  .ptitle{font-size:28px;font-weight:800;margin:0;letter-spacing:-.02em}
+  .ghbtn{font-size:12.5px;font-weight:700;color:#3d4756;background:var(--fill2);border:1px solid var(--line);border-radius:8px;padding:9px 15px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+  .ghbtn.dark{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+  /* ===== 목록유형 토글 ===== */
+  .typetabs{display:flex;gap:0;border-bottom:2px solid var(--line2);margin-bottom:22px}
+  .typetab{padding:14px 30px;font-size:16px;font-weight:800;color:#9aa0ac;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px}
+  .typetab.on{color:var(--ink);border-bottom-color:var(--ink)}
+
+  /* ===== 필터 영역 ===== */
+  .filterbox{border:1px solid var(--line2);border-radius:14px;overflow:hidden;margin-bottom:18px}
+  .frow{display:flex;align-items:flex-start;gap:0;border-bottom:1px solid var(--line2)}
+  .frow:last-child{border-bottom:0}
+  .flabel{flex:0 0 96px;background:var(--fill2);padding:14px 16px;font-size:13px;font-weight:800;color:#3d4756;align-self:stretch;display:flex;align-items:center;border-right:1px solid var(--line2)}
+  .fopts{display:flex;flex-wrap:wrap;gap:8px;padding:12px 16px;flex:1}
+  .fpill{background:#fff;border:1px solid var(--line);border-radius:20px;padding:7px 16px;font-size:12.5px;color:#5a606c;font-weight:700;cursor:pointer}
+  .fpill.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+  /* ===== 목록 상단 바 ===== */
+  .listbar{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+  .listbar .cnt{font-size:13.5px;color:#5a606c;font-weight:700}.listbar .cnt b{color:var(--ink)}
+  .chkonly{display:inline-flex;align-items:center;gap:7px;font-size:13px;color:#3d4756;font-weight:700;cursor:pointer}
+  .cb{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--line);background:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:12px;color:#fff;font-weight:800}
+  .cb.on{background:var(--blue);border-color:var(--blue)}
+  .fsel{margin-left:auto;border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-size:12.5px;color:#3d4756;background:#fff;font-weight:700;cursor:pointer}
+
+  /* ===== 상품 리스트 ===== */
+  .plist{display:flex;flex-direction:column;border-top:2px solid var(--ink)}
+  .pitem{display:grid;grid-template-columns:188px 1fr 220px;gap:24px;padding:24px 8px;border-bottom:1px solid var(--line2);position:relative}
+  .pitem.ebook{grid-template-columns:188px 1fr}
+
+  .thumb{position:relative;aspect-ratio:3/4;background:var(--fill);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:12px;overflow:hidden}
+  .thumb .badges{position:absolute;top:8px;left:8px;display:flex;gap:5px;z-index:3}
+  .bdg{font-size:10px;font-weight:800;color:#fff;border-radius:5px;padding:3px 7px}
+  .bdg.new{background:var(--new)}.bdg.hot{background:var(--red)}
+  .soldflag{position:absolute;inset:0;background:rgba(255,255,255,.72);display:none;align-items:center;justify-content:center;z-index:4}
+  .soldflag span{background:#5a606c;color:#fff;font-size:12px;font-weight:800;border-radius:6px;padding:6px 13px}
+  .pitem.sold .soldflag{display:flex}
+  .hover{position:absolute;inset:0;background:rgba(34,39,50,.78);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;opacity:0;transition:.18s;z-index:5}
+  .thumb:hover .hover{opacity:1}
+  .hbtn{width:78%;text-align:center;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.5);color:#fff;border-radius:8px;padding:9px 0;font-size:12px;font-weight:700;cursor:pointer}
+  .hbtn:hover{background:#fff;color:var(--ink)}
+
+  .pinfo{display:flex;flex-direction:column;min-width:0}
+  .meta{font-size:12.5px;color:#7a828f;font-weight:700;margin-bottom:9px}
+  .meta b{color:#3d4756}.meta .sep{color:var(--line);margin:0 7px}
+  .pname{font-size:18px;font-weight:800;letter-spacing:-.02em;margin:0 0 8px;line-height:1.35}
+  .copy{font-size:13.5px;color:#6b7280;line-height:1.5;margin:0 0 14px}
+  .keywords{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto}
+  .kw{font-size:11.5px;color:#5a606c;background:var(--fill2);border:1px solid var(--line2);border-radius:6px;padding:3px 9px;font-weight:600}
+
+  /* 가격/구매 컬럼 */
+  .pbuy{display:flex;flex-direction:column;justify-content:center;gap:6px}
+  .rateline{font-size:12.5px;font-weight:800}
+  .rateline .dc{color:var(--red)}.rateline .pt{color:var(--blue);margin-left:10px}
+  .oriprice{font-size:12.5px;color:#b6bcc6;text-decoration:line-through}
+  .sellprice{font-size:24px;font-weight:800;letter-spacing:-.02em}.sellprice .won{font-size:14px;font-weight:700;margin-left:2px}
+  .buybtns{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+  .btn{text-align:center;border-radius:9px;padding:12px 0;font-size:13.5px;font-weight:800;cursor:pointer;border:1px solid transparent}
+  .btn.cart{background:#fff;border-color:var(--ink);color:var(--ink)}
+  .btn.buy{background:var(--blue);color:#fff}
+  .btn.sold{background:var(--fill);color:var(--muted);cursor:not-allowed}
+  .btn.cart.dis{opacity:.45;cursor:not-allowed}
+
+  /* 찜 */
+  .wish{position:absolute;top:24px;right:8px;display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:800;color:#9aa0ac;border:1px solid var(--line);border-radius:18px;padding:6px 12px;background:#fff;cursor:pointer;z-index:6}
+  .wish .hrt{font-size:13px}
+  .wish.on{color:var(--red);border-color:#f3bcbc;background:#fdf1f1}
+  .pitem.ebook .wish{position:absolute}
+
+  /* E-Book/자료 영역 */
+  .svcwrap{margin-top:4px}
+  .svclabel{font-size:11.5px;font-weight:800;color:#9aa0ac;margin:0 0 8px;letter-spacing:.04em}
+  .svcrow{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px}
+  .svc{flex:0 0 auto;display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-size:12.5px;font-weight:700;color:#3d4756;background:#fff;cursor:pointer;white-space:nowrap}
+  .svc .ic{font-size:15px}
+  .svc .fcnt{color:var(--blue);font-weight:800}
+  .svc.locked{color:#9aa0ac}
+  .svcdiv{height:1px;background:var(--line2);margin:14px 0}
+
+  /* ===== 페이지네이션 ===== */
+  .pager{display:flex;align-items:center;justify-content:center;gap:6px;padding:34px 0}
+  .pg{min-width:38px;height:38px;border:1px solid var(--line);border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:13.5px;font-weight:700;color:#5a606c;cursor:pointer;padding:0 6px}
+  .pg.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .pg.nav{color:#9aa0ac}
+
+  .empty{text-align:center;color:var(--muted);font-size:14px;padding:70px 0;border:1px dashed var(--line);border-radius:14px;background:var(--fill2)}
+
+  /* ===== 푸터 ===== */
+  .ftr{background:#2a2f3a;color:#aeb4c0;font-size:13px;line-height:2;margin-top:20px}
+  .ftr .container{padding-top:26px;padding-bottom:30px}
+  .ftr .fnav{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+  .ftr .fnav a{color:#cdd2db;font-weight:600}.ftr .fnav .b{color:#fff;font-weight:800}.ftr .fnav .sep{color:#555c69}
+  .ftr .family{float:right;border:1px solid #555c69;border-radius:22px;padding:9px 20px;color:#cdd2db}
+  .ftr .fco{color:#8b909c}.ftr .fco b{color:#aeb4c0}
+  .ftr .flogo{float:right;font-weight:800;color:#7d8390;font-size:17px;margin-top:8px}
+
+  /* 안내 토스트 */
+  .toast{position:fixed;left:50%;bottom:40px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;font-size:13.5px;font-weight:700;padding:14px 22px;border-radius:10px;opacity:0;pointer-events:none;transition:.25s;z-index:999;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+  .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+</style></head>
+<body>
+
+  <div class="utilbar"><div class="container">
+    <span>NE능률</span><span class="sep">|</span><span>교과서</span><span class="sep">|</span><span>영어·수학교재</span><span class="sep">|</span><span>ELT교재</span><span class="sep">|</span><span>영자신문</span><span class="sep">|</span><span>아이챌린지</span><span class="sep">|</span><span>유아교육</span><span class="sep">|</span><span>영어레벨테스트</span><span class="sep">|</span><span>초중등영어학원</span>
+    <span class="spacer"></span><span>👤 통합회원가입</span>
+  </div></div>
+
+  <header class="header"><div class="container">
+    <div class="logo"><span class="r">NE_</span>Books</div>
+    <div class="srch"><div class="srchwrap">
+      <div class="srchbox">🔎 교재명 또는 검색어를 입력해 주세요.<span class="spacer"></span>🔍</div>
+    </div><a class="recobtn">🎯 맞춤형 교재추천</a></div>
+    <div class="uicons">
+      <a class="uic"><span class="ci">👤</span>로그인</a>
+      <a class="uic"><span class="ci">🛒</span>장바구니</a>
+      <a class="uic"><span class="ci">📋</span>MY페이지</a>
+      <a class="uic"><span class="ci">🎧</span>고객센터</a>
+    </div>
+  </div></header>
+
+  <nav class="gnb"><div class="container">
+    <a class="on">ELT</a><a>초·중등</a><a>고등</a><a>교과서·자습서</a><a>수험·일반</a><a>수학·국어</a><a>학습자료실</a><a>도서몰</a>
+  </div></nav>
+
+  <main class="container">
+    <div class="crumb"><span class="hm">🏠 홈</span><span class="sep">›</span><span>BOOK</span><span class="sep">›</span><span>교재</span></div>
+
+    <div class="phead">
+      <h1 class="ptitle">교재</h1>
+      <a class="ghbtn dark">🌐 NE Build &amp; Grow English Website</a>
+      <a class="ghbtn">📈 인기교재 NE차트</a>
+    </div>
+
+    <!-- 목록유형 -->
+    <div class="typetabs">
+      <div class="typetab on" data-type="buy">교재구매</div>
+      <div class="typetab" data-type="ebook">E-Book/자료</div>
+    </div>
+
+    <!-- 필터: 교재구매 -->
+    <div class="filterbox" id="filterBuy">
+      <div class="frow"><div class="flabel">시리즈</div><div class="fopts">
+        <span class="fpill on">전체</span><span class="fpill">능률 VOCA</span><span class="fpill">리딩튜터</span><span class="fpill">그래머존</span><span class="fpill">1316</span><span class="fpill">주니어 리딩튜터</span><span class="fpill">파워업</span>
+      </div></div>
+      <div class="frow"><div class="flabel">레벨</div><div class="fopts">
+        <span class="fpill on">전체</span><span class="fpill">유아</span><span class="fpill">초등</span><span class="fpill">중등</span><span class="fpill">고등</span><span class="fpill">성인</span>
+      </div></div>
+      <div class="frow"><div class="flabel">제품</div><div class="fopts">
+        <span class="fpill on">전체</span><span class="fpill">독해</span><span class="fpill">문법</span><span class="fpill">어휘</span><span class="fpill">듣기</span><span class="fpill">쓰기</span><span class="fpill">회화</span>
+      </div></div>
+      <div class="frow"><div class="flabel">브랜드</div><div class="fopts">
+        <span class="fpill on">전체</span><span class="fpill">NE능률</span><span class="fpill">능률교육</span><span class="fpill">리스닝페어</span>
+      </div></div>
+    </div>
+
+    <!-- 필터: E-Book/자료 -->
+    <div class="filterbox" id="filterEbook" style="display:none">
+      <div class="frow"><div class="flabel">시리즈</div><div class="fopts">
+        <span class="fpill on">전체</span><span class="fpill">능률 VOCA</span><span class="fpill">리딩튜터</span><span class="fpill">그래머존</span><span class="fpill">1316</span><span class="fpill">주니어 리딩튜터</span>
+      </div></div>
+      <div class="frow"><div class="flabel">학습자료</div><div class="fopts">
+        <span class="fpill on">전체</span><span class="fpill">정답</span><span class="fpill">MP3</span><span class="fpill">Word List</span><span class="fpill">Worksheet</span><span class="fpill">단어시험지</span><span class="fpill">지도서</span>
+      </div></div>
+      <div class="frow"><div class="flabel">브랜드</div><div class="fopts">
+        <span class="fpill on">전체</span><span class="fpill">NE능률</span><span class="fpill">능률교육</span><span class="fpill">리스닝페어</span>
+      </div></div>
+    </div>
+
+    <!-- 목록 상단 바 -->
+    <div class="listbar">
+      <span class="cnt">전체 <b>128</b>건</span>
+      <span class="chkonly" id="saleOnly"><span class="cb"></span>판매중 교재만 보기</span>
+      <span class="fsel" id="sortSel">최신순 ▾</span>
+    </div>
+
+    <!-- ===== 교재구매 리스트 ===== -->
+    <div class="plist" id="listBuy">
+
+      <div class="pitem">
+        <span class="wish"><span class="hrt">♡</span>찜 12</span>
+        <div class="thumb">표지
+          <div class="badges"><span class="bdg new">NEW</span><span class="bdg hot">HOT</span></div>
+          <div class="soldflag"><span>일시품절</span></div>
+          <div class="hover">
+            <span class="hbtn">📖 E-Book(본책)</span>
+            <span class="hbtn">📘 E-Book(워크북)</span>
+            <span class="hbtn">📁 학습자료</span>
+            <span class="hbtn">🔍 상세보기</span>
+          </div>
+        </div>
+        <div class="pinfo">
+          <div class="meta"><b>NE능률</b><span class="sep">|</span>독해<span class="sep">|</span>중등</div>
+          <h3 class="pname">주니어 리딩튜터 Level 3</h3>
+          <p class="copy">탄탄한 독해 실력을 완성하는 중학 독해서 — 지문 분석과 어휘를 한 번에.</p>
+          <div class="keywords"><span class="kw">#중등독해</span><span class="kw">#리딩</span><span class="kw">#내신대비</span></div>
+        </div>
+        <div class="pbuy">
+          <div class="rateline"><span class="dc">10% 할인</span><span class="pt">5% 적립</span></div>
+          <div class="oriprice">15,000원</div>
+          <div class="sellprice">13,500<span class="won">원</span></div>
+          <div class="buybtns">
+            <span class="btn cart">🛒 장바구니 담기</span>
+            <span class="btn buy">바로구매</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pitem">
+        <span class="wish on"><span class="hrt">♥</span>찜 34</span>
+        <div class="thumb">표지
+          <div class="badges"><span class="bdg hot">HOT</span></div>
+          <div class="soldflag"><span>일시품절</span></div>
+          <div class="hover">
+            <span class="hbtn">📖 E-Book(본책)</span>
+            <span class="hbtn">📘 E-Book(워크북)</span>
+            <span class="hbtn">📁 학습자료</span>
+            <span class="hbtn">🔍 상세보기</span>
+          </div>
+        </div>
+        <div class="pinfo">
+          <div class="meta"><b>NE능률</b><span class="sep">|</span>어휘<span class="sep">|</span>중등</div>
+          <h3 class="pname">능률 VOCA 어원편 (개정판)</h3>
+          <p class="copy">어원으로 외우는 중등 필수 어휘 — 하루 10분 학습 설계.</p>
+          <div class="keywords"><span class="kw">#능률voca</span><span class="kw">#어원</span><span class="kw">#중등어휘</span></div>
+        </div>
+        <div class="pbuy">
+          <div class="rateline"><span class="dc">15% 할인</span><span class="pt">5% 적립</span></div>
+          <div class="oriprice">14,000원</div>
+          <div class="sellprice">11,900<span class="won">원</span></div>
+          <div class="buybtns">
+            <span class="btn cart">🛒 장바구니 담기</span>
+            <span class="btn buy">바로구매</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 일시품절 예시 -->
+      <div class="pitem sold">
+        <span class="wish"><span class="hrt">♡</span>찜 8</span>
+        <div class="thumb">표지
+          <div class="soldflag"><span>일시품절</span></div>
+          <div class="hover">
+            <span class="hbtn">📖 E-Book(본책)</span>
+            <span class="hbtn">📘 E-Book(워크북)</span>
+            <span class="hbtn">📁 학습자료</span>
+            <span class="hbtn">🔍 상세보기</span>
+          </div>
+        </div>
+        <div class="pinfo">
+          <div class="meta"><b>NE능률</b><span class="sep">|</span>문법<span class="sep">|</span>고등</div>
+          <h3 class="pname">그래머 존 BASIC 1</h3>
+          <p class="copy">개념부터 문제 적용까지, 단계별 고등 영문법의 시작.</p>
+          <div class="keywords"><span class="kw">#고등문법</span><span class="kw">#그래머존</span></div>
+        </div>
+        <div class="pbuy">
+          <div class="rateline"><span class="dc">10% 할인</span><span class="pt">5% 적립</span></div>
+          <div class="oriprice">16,500원</div>
+          <div class="sellprice">14,850<span class="won">원</span></div>
+          <div class="buybtns">
+            <span class="btn cart dis">🛒 장바구니 담기</span>
+            <span class="btn sold">일시품절</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pitem">
+        <span class="wish"><span class="hrt">♡</span>찜 5</span>
+        <div class="thumb">표지
+          <div class="badges"><span class="bdg new">NEW</span></div>
+          <div class="soldflag"><span>일시품절</span></div>
+          <div class="hover">
+            <span class="hbtn">📖 E-Book(본책)</span>
+            <span class="hbtn">📘 E-Book(워크북)</span>
+            <span class="hbtn">📁 학습자료</span>
+            <span class="hbtn">🔍 상세보기</span>
+          </div>
+        </div>
+        <div class="pinfo">
+          <div class="meta"><b>NE능률</b><span class="sep">|</span>듣기<span class="sep">|</span>중등</div>
+          <h3 class="pname">1316 Listening Level 2</h3>
+          <p class="copy">실전 유형으로 다지는 중학 듣기평가 대비서.</p>
+          <div class="keywords"><span class="kw">#중등듣기</span><span class="kw">#듣기평가</span></div>
+        </div>
+        <div class="pbuy">
+          <div class="rateline"><span class="dc">10% 할인</span><span class="pt">5% 적립</span></div>
+          <div class="oriprice">13,000원</div>
+          <div class="sellprice">11,700<span class="won">원</span></div>
+          <div class="buybtns">
+            <span class="btn cart">🛒 장바구니 담기</span>
+            <span class="btn buy">바로구매</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ===== E-Book/자료 리스트 ===== -->
+    <div class="plist" id="listEbook" style="display:none">
+
+      <div class="pitem ebook">
+        <span class="wish"><span class="hrt">♡</span>찜 12</span>
+        <div class="thumb">표지
+          <div class="badges"><span class="bdg new">NEW</span><span class="bdg hot">HOT</span></div>
+          <div class="hover">
+            <span class="hbtn">🛒 장바구니 담기</span>
+            <span class="hbtn">🔍 상세보기</span>
+          </div>
+        </div>
+        <div class="pinfo">
+          <div class="meta"><b>NE능률</b><span class="sep">|</span>독해<span class="sep">|</span>중등</div>
+          <h3 class="pname">주니어 리딩튜터 Level 3</h3>
+
+          <div class="svcwrap">
+            <p class="svclabel">부가서비스</p>
+            <div class="svcrow">
+              <span class="svc locked"><span class="ic">📖</span>E-Book(본책) <span style="color:#c2c6cf">🔒</span></span>
+              <span class="svc locked"><span class="ic">📘</span>E-Book(워크북) <span style="color:#c2c6cf">🔒</span></span>
+              <span class="svc"><span class="ic">🧇</span>Waffle</span>
+              <span class="svc"><span class="ic">📱</span>모바일 학습지원</span>
+            </div>
+          </div>
+
+          <div class="svcdiv"></div>
+
+          <div class="svcwrap">
+            <p class="svclabel">학습자료 다운로드</p>
+            <div class="svcrow">
+              <span class="svc"><span class="ic">📦</span>전체 다운로드 <span class="fcnt">(12)</span></span>
+              <span class="svc"><span class="ic">📄</span>정답 <span class="fcnt">(2)</span></span>
+              <span class="svc"><span class="ic">🎧</span>MP3 <span class="fcnt">(5)</span></span>
+              <span class="svc"><span class="ic">📝</span>Word List <span class="fcnt">(3)</span></span>
+              <span class="svc"><span class="ic">📋</span>Worksheet <span class="fcnt">(2)</span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pitem ebook">
+        <span class="wish on"><span class="hrt">♥</span>찜 34</span>
+        <div class="thumb">표지
+          <div class="badges"><span class="bdg hot">HOT</span></div>
+          <div class="hover">
+            <span class="hbtn">🛒 장바구니 담기</span>
+            <span class="hbtn">🔍 상세보기</span>
+          </div>
+        </div>
+        <div class="pinfo">
+          <div class="meta"><b>NE능률</b><span class="sep">|</span>어휘<span class="sep">|</span>중등</div>
+          <h3 class="pname">능률 VOCA 어원편 (개정판)</h3>
+
+          <div class="svcwrap">
+            <p class="svclabel">부가서비스</p>
+            <div class="svcrow">
+              <span class="svc locked"><span class="ic">📖</span>E-Book(본책) <span style="color:#c2c6cf">🔒</span></span>
+              <span class="svc"><span class="ic">🧇</span>Waffle</span>
+              <span class="svc"><span class="ic">📱</span>모바일 학습지원</span>
+            </div>
+          </div>
+
+          <div class="svcdiv"></div>
+
+          <div class="svcwrap">
+            <p class="svclabel">학습자료 다운로드</p>
+            <div class="svcrow">
+              <span class="svc"><span class="ic">📦</span>전체 다운로드 <span class="fcnt">(7)</span></span>
+              <span class="svc"><span class="ic">📝</span>Word List <span class="fcnt">(4)</span></span>
+              <span class="svc"><span class="ic">📋</span>단어시험지 <span class="fcnt">(3)</span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 페이지네이션 -->
+    <div class="pager">
+      <span class="pg nav">‹ 이전</span>
+      <span class="pg on">1</span><span class="pg">2</span><span class="pg">3</span><span class="pg">4</span><span class="pg">5</span>
+      <span class="pg nav">다음 ›</span>
+    </div>
+  </main>
+
+  <footer class="ftr"><div class="container">
+    <span class="family">FAMILY SITE ▾</span>
+    <div class="fnav">
+      <a>개인정보처리방침</a><span class="sep">|</span><a>이용약관</a><span class="sep">|</span><a>이메일무단수집거부</a><span class="sep">|</span><a>지사안내</a><span class="sep">|</span><a>찾아오시는 길</a><span class="sep">|</span><a class="b">학원/도서관 대량구매</a>
+    </div>
+    <div class="flogo">NE능률</div>
+    <div class="fco">
+      ㈜NE능률 (03925) 서울 특별시 마포구 월드컵북로 396(상암동) 누리꿈스퀘어 비즈니스타워 10층 &nbsp;|&nbsp; 대표이사 : 이정진<br>
+      고객센터 : 1833-8368 / 02-2014-7260 [사업별 고객센터 안내]<br>
+      Copyright © NE Neungyule, Inc. All Rights Reserved
+    </div>
+  </div></footer>
+
+  <div class="toast" id="toast"></div>
+
+<script>
+  function toast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(function(){t.classList.remove('on');},1800);}
+
+  /* 목록유형 전환 */
+  document.querySelectorAll('.typetab').forEach(function(tab){
+    tab.addEventListener('click',function(){
+      document.querySelectorAll('.typetab').forEach(function(t){t.classList.remove('on');});
+      tab.classList.add('on');
+      var buy=tab.dataset.type==='buy';
+      document.getElementById('filterBuy').style.display=buy?'':'none';
+      document.getElementById('filterEbook').style.display=buy?'none':'';
+      document.getElementById('listBuy').style.display=buy?'':'none';
+      document.getElementById('listEbook').style.display=buy?'none':'';
+    });
+  });
+
+  /* 필터 pill: 행 단위 단일선택 */
+  document.querySelectorAll('.fopts').forEach(function(row){
+    row.querySelectorAll('.fpill').forEach(function(p){
+      p.addEventListener('click',function(){
+        row.querySelectorAll('.fpill').forEach(function(x){x.classList.remove('on');});
+        p.classList.add('on');
+      });
+    });
+  });
+
+  /* 판매중 교재만 보기 */
+  document.getElementById('saleOnly').addEventListener('click',function(){
+    this.querySelector('.cb').classList.toggle('on');
+  });
+
+  /* 정렬 */
+  document.getElementById('sortSel').addEventListener('click',function(){
+    var opts=['최신순','과거순','인기순','별점순','가나다순','역 가나다순'];
+    var cur=this.textContent.replace(' ▾','').trim();
+    var next=opts[(opts.indexOf(cur)+1)%opts.length];
+    this.textContent=next+' ▾';
+  });
+
+  /* 찜 토글 */
+  document.querySelectorAll('.wish').forEach(function(w){
+    w.addEventListener('click',function(e){
+      e.stopPropagation();
+      w.classList.toggle('on');
+      w.querySelector('.hrt').textContent=w.classList.contains('on')?'♥':'♡';
+    });
+  });
+
+  /* 구매/다운로드/부가서비스 안내 */
+  document.querySelectorAll('.btn.cart:not(.dis)').forEach(function(b){b.addEventListener('click',function(){toast('장바구니에 담았습니다.');});});
+  document.querySelectorAll('.btn.buy').forEach(function(b){b.addEventListener('click',function(){toast('주문결제로 이동합니다. (비회원은 로그인 필요)');});});
+  document.querySelectorAll('.svc.locked').forEach(function(s){s.addEventListener('click',function(){toast('E-Book(본책/워크북)은 교강사만 이용 가능합니다.');});});
+</script>
+</body></html>

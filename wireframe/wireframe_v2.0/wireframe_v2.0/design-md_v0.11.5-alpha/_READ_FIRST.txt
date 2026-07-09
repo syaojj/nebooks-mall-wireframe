@@ -1,0 +1,28 @@
+NE Design.md — Fork-ready Handoff Package (v0.11.5-alpha)
+
+이 zip은 docs + fork-ready baseline을 포함한 handoff package다.
+주의: npm run dev로 바로 뜨는 완성 앱이 아니다. renderer entry(src/App.jsx,
+src/main.jsx)는 제외되어 있으며, PoC는 자체 entry를 작성해 src/baseline/을 fork한다.
+
+AI agent는 AGENTS.md를 진입 훅으로 자동 로드한다 (얇은 read-order/guardrail 포인터).
+
+읽는 순서:
+  1. README.md
+  2. AI_HANDOFF.md
+  3. DESIGN.md
+
+AI agent로 새 PoC를 시작할 때는 코드를 작성하기 전에
+AI_HANDOFF.md ## 2A Pre-implementation Checklist의 질문에 먼저 답한다.
+그 다음 src/baseline/을 fork target으로 사용해 구현을 시작한다.
+
+src/baseline/ — PoC fork target.
+src/_stubs/   — deferred 임시 구현이다. policy source가 아니다.
+
+⚠️ 이 zip은 building blocks 모음이다. `npm run dev`로 즉시 작동하는 완성 앱이 아니다.
+PoC 시작 시 자체 vite entry (src/main.jsx, src/App.jsx)를 작성하고 baseline을 import해 사용한다.
+본 zip은 renderer demo entry (src/App.jsx, src/main.jsx) 와 src/examples/를 의도적으로 제외했다.
+v05 PoC가 이 패턴으로 작동 확인 (2026-05-20).
+
+본 디자인 시스템은 NE능률의 AI-Native 신규 PoC / 서비스 구축을 위한 token foundation이다.
+사람과 AI agent가 동일한 기준으로 UI를 만들고 검토할 수 있도록 토큰·컴포넌트·패턴·AI handoff 기준을 하나의 체계로 연결한다.
+internal alpha baseline이며, 실제 PoC 적용 결과를 매 버전에 반영하면서 점진적으로 안정화해간다.

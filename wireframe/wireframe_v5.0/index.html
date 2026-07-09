@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NE Books 자사몰 개편 — 반응형 프로토타입</title>
+<style>
+  :root{
+    --ink:#152233;
+    --ink-soft:#4B5768;
+    --paper:#F7F6F1;
+    --surface:#FFFFFF;
+    --line:#E1DDD3;
+    --line-strong:#C9C3B4;
+    --brand:#2C55D6;
+    --brand-deep:#1B3A9E;
+    --brand-wash:#EAF0FE;
+    --warm:#E2632B;
+    --warm-wash:#FCEBE0;
+    --sale:#CF3A2A;
+    --teacher:#6E58C9;
+    --teacher-wash:#EFEBFA;
+    --ok:#1E8E5A;
+    --radius:10px;
+    --shadow:0 8px 28px rgba(21,34,51,.10);
+    --header-h:64px;
+    --gnb-h:46px;
+    --mobile-bp:960px;
+    font-variant-numeric: tabular-nums;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretendard","Malgun Gothic","Segoe UI",sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,h4{margin:0;text-wrap:balance;font-weight:800;letter-spacing:-.01em;}
+  p{margin:0;}
+  a{color:inherit;text-decoration:none;}
+  button{font:inherit;cursor:pointer;}
+  ul{margin:0;padding:0;list-style:none;}
+  img{max-width:100%;display:block;}
+  ::selection{background:var(--brand-wash);}
+  :focus-visible{outline:2px solid var(--brand);outline-offset:2px;}
+  .eyebrow{font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);}
+
+  /* ---------- review dock ---------- */
+  #dock{
+    position:fixed;z-index:900;top:0;left:0;right:0;
+    background:var(--ink);color:#EDEFF4;
+    display:flex;align-items:center;gap:14px;
+    padding:7px 14px;font-size:.76rem;
+    flex-wrap:wrap;
+  }
+  #dock b{color:#fff;font-weight:700;}
+  #dock .grp{display:flex;align-items:center;gap:6px;}
+  #dock select, #dock button.dockbtn{
+    background:#26344A;color:#fff;border:1px solid #3A4A65;border-radius:6px;
+    padding:3px 8px;font-size:.76rem;
+  }
+  #dock button.dockbtn.on{background:var(--brand);border-color:var(--brand);}
+  #dock .bp-tag{margin-left:auto;font-weight:700;color:#B9D2FF;}
+  #dock .todo-link{color:#FFD79A;cursor:pointer;text-decoration:underline;text-underline-offset:2px;}
+
+  body.show-uc [data-uc]{position:relative;}
+  body.show-uc [data-uc]::before{
+    content:attr(data-uc);
+    position:absolute;top:2px;left:2px;z-index:40;
+    background:#152233;color:#B9D2FF;
+    font-size:.6rem;font-weight:700;letter-spacing:.03em;
+    padding:2px 6px;border-radius:5px;
+    pointer-events:none;
+    font-family:ui-monospace,Menlo,Consolas,monospace;
+  }
+
+  /* ---------- shell ---------- */
+  #shell{padding-top:34px;} /* dock offset */
+  header#site-header{
+    position:sticky;top:34px;z-index:200;background:var(--surface);
+    border-bottom:1px solid var(--line);
+  }
+  .header-row{
+    height:var(--header-h);
+    max-width:1280px;margin:0 auto;padding:0 24px;
+    display:flex;align-items:center;gap:22px;
+  }
+  .logo{font-size:1.28rem;font-weight:800;letter-spacing:-.02em;flex:0 0 auto;color:var(--brand-deep);}
+  .logo small{display:block;font-size:.56rem;font-weight:700;color:var(--ink-soft);letter-spacing:.1em;}
+  .searchbox{
+    flex:1 1 auto;position:relative;max-width:520px;
+  }
+  .searchbox input{
+    width:100%;height:40px;border:1.5px solid var(--line-strong);border-radius:20px;
+    padding:0 44px 0 16px;font-size:.86rem;background:var(--paper);
+  }
+  .searchbox input:focus{border-color:var(--brand);background:#fff;}
+  .searchbox .go{
+    position:absolute;right:4px;top:4px;width:32px;height:32px;border-radius:50%;
+    border:0;background:var(--brand);color:#fff;display:flex;align-items:center;justify-content:center;
+  }
+  .icon-rail{display:flex;align-items:center;gap:4px;flex:0 0 auto;position:relative;}
+  .icon-btn{
+    display:flex;flex-direction:column;align-items:center;gap:2px;
+    border:0;background:none;color:var(--ink);padding:6px 10px;border-radius:8px;position:relative;
+    font-size:.64rem;font-weight:600;
+  }
+  .icon-btn:hover{background:var(--paper);}
+  .icon-btn .glyph{font-size:1.18rem;line-height:1;}
+  .badge-count{
+    position:absolute;top:2px;right:2px;background:var(--warm);color:#fff;
+    font-size:.6rem;font-weight:800;border-radius:8px;min-width:16px;height:16px;
+    display:flex;align-items:center;justify-content:center;padding:0 3px;
+  }
+  .icon-btn.primary{color:var(--brand);}
+
+  /* mypage flyout */
+  .flyout-wrap{position:relative;}
+  .flyout{
+    display:none;position:absolute;top:100%;right:0;margin-top:6px;
+    background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);
+    width:210px;padding:8px;z-index:210;
+  }
+  .flyout-wrap:hover .flyout, .flyout-wrap.force-open .flyout{display:block;}
+  .flyout a{display:flex;justify-content:space-between;padding:9px 10px;border-radius:7px;font-size:.85rem;font-weight:600;}
+  .flyout a:hover{background:var(--brand-wash);color:var(--brand-deep);}
+  .flyout a.logout{color:var(--sale);border-top:1px solid var(--line);margin-top:4px;padding-top:11px;}
+  .flyout .uid{font-size:.72rem;color:var(--ink-soft);font-weight:600;padding:4px 10px 8px;border-bottom:1px solid var(--line);margin-bottom:4px;}
+
+  /* cs flyout */
+  .cs-flyout{width:180px;}
+
+  /* GNB */
+  nav#gnb{border-top:1px solid var(--line);background:#fff;}
+  .gnb-row{max-width:1280px;margin:0 auto;padding:0 24px;height:var(--gnb-h);display:flex;gap:2px;}
+  .gnb-item{position:relative;}
+  .gnb-item>button{
+    height:var(--gnb-h);border:0;background:none;font-weight:700;font-size:.86rem;color:var(--ink);
+    padding:0 16px;border-bottom:2px solid transparent;
+  }
+  .gnb-item:hover>button, .gnb-item.active>button{color:var(--brand-deep);border-bottom-color:var(--brand);}
+  .gnb-panel{
+    display:none;position:absolute;top:100%;left:0;background:#fff;border:1px solid var(--line);
+    border-radius:0 0 var(--radius) var(--radius);box-shadow:var(--shadow);min-width:190px;padding:10px;z-index:150;
+  }
+  .gnb-item:hover .gnb-panel{display:flex;gap:0;}
+  .gnb-simple-list a{display:block;padding:8px 12px;border-radius:7px;font-size:.85rem;white-space:nowrap;}
+  .gnb-simple-list a:hover{background:var(--brand-wash);color:var(--brand-deep);}
+  .gnb-cascade{display:flex;}
+  .gnb-l2{width:170px;border-right:1px solid var(--line);padding-right:6px;}
+  .gnb-l2 button{
+    width:100%;text-align:left;padding:8px 10px;border:0;background:none;border-radius:7px;font-size:.85rem;font-weight:700;
+    display:flex;justify-content:space-between;color:var(--ink);
+  }
+  .gnb-l2 button:hover, .gnb-l2 button.active{background:var(--brand-wash);color:var(--brand-deep);}
+  .gnb-l3{width:190px;padding-left:10px;}
+  .gnb-l3 a{display:block;padding:7px 10px;border-radius:7px;font-size:.82rem;}
+  .gnb-l3 a:hover{background:var(--brand-wash);color:var(--brand-deep);}
+  .gnb-promo{width:150px;border-left:1px solid var(--line);padding-left:10px;display:flex;flex-direction:column;gap:6px;}
+  .gnb-promo a{font-size:.74rem;font-weight:700;background:var(--paper);padding:8px;border-radius:7px;text-align:center;}
+
+  /* PC hamburger overlay */
+  #pc-mega{
+    position:fixed;inset:0;background:rgba(21,34,51,.45);z-index:400;display:none;
+  }
+  #pc-mega.open{display:flex;align-items:flex-start;justify-content:center;padding-top:98px;}
+  .mega-panel{
+    background:#fff;width:min(880px,92vw);border-radius:14px;box-shadow:var(--shadow);
+    display:flex;max-height:72vh;overflow:hidden;
+  }
+  .mega-groups{width:230px;background:var(--paper);border-right:1px solid var(--line);overflow-y:auto;padding:10px;}
+  .mega-groups button{
+    width:100%;text-align:left;padding:11px 12px;border:0;background:none;border-radius:8px;font-weight:700;font-size:.87rem;
+    display:flex;justify-content:space-between;color:var(--ink);
+  }
+  .mega-groups button:hover,.mega-groups button.active{background:#fff;color:var(--brand-deep);box-shadow:0 1px 0 var(--line) inset;}
+  .mega-groups .grp-tag{font-size:.62rem;color:var(--ink-soft);font-weight:600;}
+  .mega-items{flex:1;padding:18px 22px;overflow-y:auto;}
+  .mega-items h4{font-size:.95rem;margin-bottom:12px;}
+  .mega-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;}
+  .mega-grid button, .mega-grid a{
+    text-align:left;padding:10px 12px;border-radius:8px;border:1px solid var(--line);background:#fff;font-size:.84rem;font-weight:600;
+    display:flex;justify-content:space-between;align-items:center;
+  }
+  .mega-grid button:hover, .mega-grid a:hover{border-color:var(--brand);color:var(--brand-deep);background:var(--brand-wash);}
+  .mega-grid .has3::after{content:"›";font-weight:800;color:var(--brand);}
+  .mega-close{position:absolute;top:64px;right:calc(50% - 440px + 12px);}
+  .mega-note{padding:10px 22px;border-top:1px solid var(--line);font-size:.72rem;color:var(--ink-soft);}
+
+  /* mobile top bar + drawer */
+  #mobile-topbar{display:none;}
+  #drawer-scrim{position:fixed;inset:0;background:rgba(21,34,51,.45);z-index:500;display:none;}
+  #drawer-scrim.open{display:block;}
+  #drawer{
+    position:fixed;top:0;left:0;bottom:0;width:min(340px,88vw);background:#fff;z-index:510;
+    transform:translateX(-105%);transition:transform .22s ease;display:flex;flex-direction:column;
+  }
+  #drawer.open{transform:translateX(0);}
+  .drawer-top{padding:16px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:10px;}
+  .drawer-top .row1{display:flex;justify-content:space-between;align-items:center;}
+  .drawer-cta{background:var(--brand-wash);color:var(--brand-deep);border-radius:9px;padding:10px 12px;font-size:.78rem;font-weight:700;display:flex;justify-content:space-between;}
+  .drawer-body{flex:1;display:flex;overflow:hidden;}
+  .drawer-l1{width:128px;background:var(--paper);overflow-y:auto;flex:0 0 auto;}
+  .drawer-l1 button{
+    width:100%;text-align:left;padding:13px 10px;border:0;background:none;font-size:.78rem;font-weight:700;color:var(--ink-soft);
+    border-left:3px solid transparent;
+  }
+  .drawer-l1 button.active{background:#fff;color:var(--brand-deep);border-left-color:var(--brand);}
+  .drawer-l2{flex:1;overflow-y:auto;padding:8px;}
+  .drawer-l2 a, .drawer-l2 button.acc{
+    display:block;width:100%;text-align:left;padding:11px 12px;border:0;background:none;font-size:.85rem;font-weight:600;border-radius:8px;
+  }
+  .drawer-l2 a:hover, .drawer-l2 button.acc:hover{background:var(--paper);}
+  .acc-kids{padding-left:14px;display:none;}
+  .acc-open .acc-kids{display:block;}
+  .acc-kids a{font-size:.8rem;font-weight:500;color:var(--ink-soft);}
+  .drawer-bottom{border-top:1px solid var(--line);padding:8px;display:flex;flex-wrap:wrap;gap:4px;}
+  .drawer-bottom a{font-size:.72rem;font-weight:700;padding:8px 10px;background:var(--paper);border-radius:7px;}
+  .drawer-close{border:0;background:var(--paper);width:30px;height:30px;border-radius:50%;font-size:1rem;}
+
+  /* content layout */
+  main#app{max-width:1280px;margin:0 auto;padding:26px 24px 60px;min-height:60vh;}
+  .crumb{font-size:.76rem;color:var(--ink-soft);margin-bottom:14px;}
+  .crumb b{color:var(--ink);}
+
+  /* buttons */
+  .btn{border-radius:8px;padding:10px 16px;font-weight:700;font-size:.84rem;border:1.5px solid var(--line-strong);background:#fff;color:var(--ink);}
+  .btn:hover{border-color:var(--ink-soft);}
+  .btn-primary{background:var(--brand);border-color:var(--brand);color:#fff;}
+  .btn-primary:hover{background:var(--brand-deep);border-color:var(--brand-deep);}
+  .btn-ghost{border-color:transparent;background:var(--brand-wash);color:var(--brand-deep);}
+  .btn-sm{padding:6px 10px;font-size:.74rem;border-radius:7px;}
+  .btn-tutor{background:var(--teacher-wash);color:var(--teacher);border-color:var(--teacher);}
+  .btn-tutor:hover{background:var(--teacher);color:#fff;}
+  .btn-block{width:100%;}
+  .btn[disabled]{opacity:.45;cursor:not-allowed;}
+
+  /* home */
+  .hero{position:relative;border-radius:16px;overflow:hidden;height:300px;background:linear-gradient(120deg,#1B3A9E,#2C55D6 55%,#3F6BEF);color:#fff;display:flex;align-items:center;padding:0 48px;margin-bottom:28px;}
+  .hero-copy .eyebrow{color:#CFE0FF;}
+  .hero-copy h1{font-size:2rem;color:#fff;margin:8px 0 10px;max-width:520px;}
+  .hero-copy p{color:#DCE6FF;font-size:.92rem;}
+  .hero-dots{position:absolute;bottom:16px;left:48px;display:flex;gap:6px;}
+  .hero-dots span{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.4);}
+  .hero-dots span.on{background:#fff;}
+  .hero-kw{position:absolute;bottom:16px;right:48px;display:flex;gap:8px;}
+  .hero-kw span{background:rgba(255,255,255,.16);padding:5px 11px;border-radius:14px;font-size:.72rem;font-weight:700;}
+
+  .shortcut-row{display:grid;grid-template-columns:repeat(8,1fr);gap:10px;margin-bottom:32px;}
+  .shortcut{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 8px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px;}
+  .shortcut:hover{border-color:var(--brand);}
+  .shortcut .glyph{font-size:1.4rem;}
+  .shortcut span{font-size:.72rem;font-weight:700;}
+
+  .section-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;}
+  .section-head h2{font-size:1.24rem;}
+  .tabbar{display:flex;gap:4px;}
+  .tabbar button{padding:8px 14px;border-radius:8px;border:1px solid transparent;background:none;font-weight:700;font-size:.84rem;color:var(--ink-soft);}
+  .tabbar button.active{background:var(--ink);color:#fff;}
+  .more-link{font-size:.78rem;font-weight:700;color:var(--brand);}
+
+  .book-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;}
+  .book-card{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;position:relative;}
+  .book-card:hover{box-shadow:var(--shadow);}
+  .thumb{aspect-ratio:3/4;background:linear-gradient(150deg,#DCE6FF,#EFF3FF);display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--brand-deep);font-size:1.5rem;position:relative;}
+  .thumb.sold::after{content:"품절";position:absolute;inset:0;background:rgba(21,34,51,.55);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1rem;}
+  .badges{position:absolute;top:8px;left:8px;display:flex;gap:4px;z-index:2;}
+  .b-tag{font-size:.62rem;font-weight:800;padding:3px 7px;border-radius:5px;color:#fff;}
+  .b-new{background:var(--brand);} .b-hot{background:var(--warm);} .b-limit{background:var(--sale);}
+  .wish{position:absolute;top:8px;right:8px;z-index:2;width:30px;height:30px;border-radius:50%;background:#fff;border:1px solid var(--line);font-size:.95rem;display:flex;align-items:center;justify-content:center;}
+  .wish.on{color:var(--sale);border-color:var(--sale);}
+  .card-body{padding:12px 12px 14px;display:flex;flex-direction:column;gap:6px;flex:1;}
+  .card-series{font-size:.68rem;color:var(--ink-soft);font-weight:700;}
+  .card-title{font-size:.9rem;font-weight:700;line-height:1.35;min-height:2.5em;}
+  .price-row{display:flex;align-items:baseline;gap:6px;margin-top:2px;}
+  .price-off{font-size:.9rem;font-weight:800;color:var(--sale);}
+  .price-now{font-size:1rem;font-weight:800;}
+  .price-was{font-size:.74rem;color:var(--ink-soft);text-decoration:line-through;}
+  .card-actions{display:flex;gap:6px;margin-top:auto;padding-top:8px;}
+  .card-actions .btn{flex:1;}
+  .mat-row{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px;}
+  .mat-chip{font-size:.66rem;font-weight:700;padding:4px 8px;border-radius:6px;border:1px solid var(--line);}
+  .mat-chip.locked{opacity:.5;}
+  .mat-chip.teacher{border-color:var(--teacher);color:var(--teacher);background:var(--teacher-wash);}
+  .tutor-btn{margin-top:4px;}
+
+  .fp-widget{position:fixed;right:20px;bottom:20px;z-index:120;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);width:210px;overflow:hidden;}
+  .fp-head{display:flex;justify-content:space-between;align-items:center;padding:9px 12px;background:var(--ink);color:#fff;font-size:.74rem;font-weight:700;}
+  .fp-body{padding:8px;display:flex;flex-direction:column;gap:6px;max-height:220px;overflow-y:auto;}
+  .fp-body.collapsed{display:none;}
+  .fp-item{display:flex;gap:8px;align-items:center;font-size:.72rem;}
+  .fp-item .fp-thumb{width:30px;height:38px;border-radius:4px;background:var(--brand-wash);flex:0 0 auto;}
+
+  /* list page */
+  .list-layout{display:grid;grid-template-columns:220px 1fr;gap:26px;align-items:start;}
+  .filter-col{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px;position:sticky;top:calc(34px + var(--header-h) + var(--gnb-h) + 16px);}
+  .filter-col h3{font-size:.82rem;margin-bottom:10px;}
+  .filter-group{border-top:1px solid var(--line);padding:12px 0;}
+  .filter-group:first-child{border-top:0;padding-top:0;}
+  .filter-group .fg-title{font-size:.78rem;font-weight:800;margin-bottom:8px;}
+  .filter-opt{display:flex;align-items:center;gap:7px;font-size:.8rem;padding:4px 0;color:var(--ink-soft);}
+  .filter-opt input{accent-color:var(--brand);}
+  .filter-reset{width:100%;margin-top:6px;}
+  .list-toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px;}
+  .listtype-tabs{display:flex;background:var(--paper);border-radius:9px;padding:3px;}
+  .listtype-tabs button{padding:8px 16px;border-radius:7px;font-weight:800;font-size:.82rem;color:var(--ink-soft);}
+  .listtype-tabs button.active{background:#fff;color:var(--brand-deep);box-shadow:0 1px 3px rgba(0,0,0,.12);}
+  .toolbar-right{display:flex;align-items:center;gap:12px;font-size:.8rem;}
+  .toolbar-right select{border:1px solid var(--line-strong);border-radius:7px;padding:6px 8px;}
+  .filter-fab{display:none;}
+  .pager{display:flex;justify-content:center;gap:6px;margin-top:26px;}
+  .pager button{width:32px;height:32px;border-radius:7px;border:1px solid var(--line);background:#fff;font-weight:700;font-size:.8rem;}
+  .pager button.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+  .empty-state{padding:60px 0;text-align:center;color:var(--ink-soft);}
+
+  /* filter sheet (mobile) */
+  #filter-sheet{position:fixed;inset:0;z-index:520;display:none;}
+  #filter-sheet.open{display:block;}
+  #filter-sheet .scrim{position:absolute;inset:0;background:rgba(21,34,51,.45);}
+  #filter-sheet .sheet{position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:16px 16px 0 0;max-height:78vh;overflow-y:auto;padding:18px;}
+
+  /* detail page */
+  .detail-top{display:grid;grid-template-columns:340px 1fr;gap:34px;margin-bottom:38px;}
+  .detail-thumb{aspect-ratio:3/4;border-radius:14px;background:linear-gradient(150deg,#DCE6FF,#EFF3FF);display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--brand-deep);font-size:1.9rem;}
+  .sale-panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px;}
+  .sale-panel h1{font-size:1.34rem;margin-bottom:6px;}
+  .sale-panel .series{font-size:.8rem;color:var(--ink-soft);font-weight:700;margin-bottom:10px;}
+  .price-block{display:flex;align-items:baseline;gap:10px;padding:14px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin:12px 0;}
+  .price-block .now{font-size:1.5rem;font-weight:800;}
+  .qty-row{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
+  .qty-box{display:flex;align-items:center;border:1px solid var(--line-strong);border-radius:8px;}
+  .qty-box button{width:30px;height:32px;border:0;background:none;font-weight:800;}
+  .qty-box input{width:38px;text-align:center;border:0;font-weight:700;}
+  .cta-row{display:flex;gap:8px;}
+  .cta-row .btn{flex:1;}
+  .status-note{font-size:.78rem;padding:9px 12px;border-radius:8px;margin-top:10px;background:var(--warm-wash);color:var(--warm);font-weight:700;}
+  .status-note.limit{background:#FBE7E4;color:var(--sale);}
+
+  .tabnav{display:flex;gap:2px;border-bottom:2px solid var(--line);margin-bottom:20px;position:sticky;top:calc(34px + var(--header-h) + 1px);background:var(--paper);z-index:60;}
+  .tabnav button{padding:12px 18px;font-weight:800;font-size:.86rem;color:var(--ink-soft);border-bottom:2px solid transparent;margin-bottom:-2px;}
+  .tabnav button.active{color:var(--brand-deep);border-color:var(--brand);}
+  .tabpane{display:none;padding-bottom:10px;}
+  .tabpane.active{display:block;}
+  .info-table{width:100%;border-collapse:collapse;font-size:.84rem;}
+  .info-table th,.info-table td{border:1px solid var(--line);padding:9px 12px;text-align:left;}
+  .info-table th{width:130px;background:var(--paper);font-weight:700;}
+
+  .mat-table{width:100%;border-collapse:collapse;margin-bottom:16px;}
+  .mat-table th{background:var(--paper);font-size:.76rem;padding:10px 12px;text-align:left;border-bottom:1px solid var(--line);}
+  .mat-table td{padding:11px 12px;border-bottom:1px solid var(--line);font-size:.84rem;vertical-align:middle;}
+  .flag{font-size:.66rem;font-weight:800;padding:3px 8px;border-radius:5px;}
+  .flag.public{background:var(--brand-wash);color:var(--brand-deep);}
+  .flag.member{background:var(--warm-wash);color:var(--warm);}
+  .flag.teacher{background:var(--teacher-wash);color:var(--teacher);}
+  .tutor-banner{
+    display:flex;justify-content:space-between;align-items:center;gap:16px;
+    background:linear-gradient(90deg,var(--teacher-wash),#fff);border:1px solid var(--teacher);
+    border-radius:12px;padding:16px 20px;margin-bottom:26px;
+  }
+  .tutor-banner b{color:var(--teacher);font-size:.95rem;}
+  .tutor-banner p{font-size:.78rem;color:var(--ink-soft);margin-top:3px;}
+
+  .review-row{border-top:1px solid var(--line);padding:14px 0;}
+  .review-row .stars{color:var(--warm);font-weight:800;}
+  .rel-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;}
+  .rel-card{border:1px solid var(--line);border-radius:10px;padding:10px;text-align:center;font-size:.76rem;font-weight:700;}
+  .rel-card .thumb{aspect-ratio:3/4;margin-bottom:8px;font-size:1rem;}
+
+  /* cart */
+  .cart-layout{display:grid;grid-template-columns:1fr 300px;gap:26px;align-items:start;}
+  .cart-item{display:grid;grid-template-columns:auto 70px 1fr auto auto;gap:14px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:10px;}
+  .cart-item .thumb{width:70px;height:88px;border-radius:6px;font-size:.8rem;}
+  .summary-box{background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px;position:sticky;top:calc(34px + var(--header-h) + 16px);}
+  .summary-row{display:flex;justify-content:space-between;padding:7px 0;font-size:.86rem;}
+  .summary-row.total{border-top:1px solid var(--line);margin-top:6px;padding-top:12px;font-weight:800;font-size:1rem;}
+  .coupon-note{font-size:.72rem;color:var(--ink-soft);background:var(--paper);border-radius:8px;padding:8px 10px;margin:10px 0;}
+
+  /* mypage */
+  .mypage-layout{display:grid;grid-template-columns:190px 1fr;gap:26px;}
+  .mp-nav a{display:block;padding:11px 14px;border-radius:8px;font-weight:700;font-size:.85rem;color:var(--ink-soft);margin-bottom:2px;}
+  .mp-nav a.active{background:var(--ink);color:#fff;}
+  .widget-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px;}
+  .widget{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px;}
+  .widget h4{font-size:.8rem;color:var(--ink-soft);margin-bottom:10px;}
+  .widget .big{font-size:1.5rem;font-weight:800;}
+  .stat-row{display:flex;justify-content:space-between;margin-top:10px;font-size:.82rem;}
+  .profile-card{display:flex;justify-content:space-between;align-items:center;background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:20px;}
+  .profile-card .role{font-size:.7rem;font-weight:800;padding:3px 9px;border-radius:12px;background:var(--brand-wash);color:var(--brand-deep);margin-left:8px;}
+  .profile-card .role.teacher{background:var(--teacher-wash);color:var(--teacher);}
+  .simple-table{width:100%;border-collapse:collapse;}
+  .simple-table th{text-align:left;font-size:.74rem;color:var(--ink-soft);padding:9px 10px;border-bottom:1px solid var(--line);}
+  .simple-table td{padding:11px 10px;border-bottom:1px solid var(--line);font-size:.84rem;}
+
+  /* cs */
+  .cs-tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:20px;flex-wrap:wrap;}
+  .cs-tabs button{padding:11px 16px;font-weight:700;font-size:.85rem;color:var(--ink-soft);border-bottom:2px solid transparent;}
+  .cs-tabs button.active{color:var(--brand-deep);border-color:var(--brand);}
+  .notice-row{display:flex;justify-content:space-between;padding:13px 4px;border-bottom:1px solid var(--line);font-size:.85rem;}
+  .faq-item{border-bottom:1px solid var(--line);}
+  .faq-q{width:100%;text-align:left;padding:13px 4px;font-weight:700;font-size:.85rem;display:flex;justify-content:space-between;border:0;background:none;}
+  .faq-a{display:none;padding:0 4px 14px;font-size:.82rem;color:var(--ink-soft);}
+  .faq-item.open .faq-a{display:block;}
+  .branch-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+  .branch-card{border:1px solid var(--line);border-radius:10px;padding:14px;font-size:.82rem;}
+  .branch-card b{display:block;margin-bottom:4px;}
+
+  /* footer */
+  footer#site-footer{background:#1B2434;color:#B7C0D1;margin-top:40px;}
+  .foot-in{max-width:1280px;margin:0 auto;padding:34px 24px;display:flex;flex-direction:column;gap:14px;}
+  .foot-links{display:flex;gap:16px;font-size:.78rem;font-weight:700;flex-wrap:wrap;}
+  .foot-links a:hover{color:#fff;}
+  .foot-fam{display:flex;gap:10px;flex-wrap:wrap;}
+  .foot-fam a{font-size:.72rem;border:1px solid #384258;padding:5px 10px;border-radius:6px;}
+  .foot-meta{font-size:.72rem;line-height:1.8;color:#8792A6;}
+  .foot-cs{font-size:.76rem;color:#8792A6;border-top:1px solid #2C3547;padding-top:14px;}
+
+  /* modal + toast */
+  #modal-scrim{position:fixed;inset:0;background:rgba(21,34,51,.5);z-index:700;display:none;align-items:center;justify-content:center;}
+  #modal-scrim.open{display:flex;}
+  .modal{background:#fff;border-radius:14px;padding:26px;width:min(360px,88vw);text-align:center;}
+  .modal h3{font-size:1.05rem;margin-bottom:10px;}
+  .modal p{font-size:.84rem;color:var(--ink-soft);margin-bottom:18px;}
+  .modal .row{display:flex;gap:8px;}
+  .modal .row .btn{flex:1;}
+  #toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 20px;border-radius:9px;font-size:.84rem;font-weight:600;z-index:800;opacity:0;pointer-events:none;transition:opacity .2s, transform .2s;}
+  #toast.show{opacity:1;transform:translateX(-50%) translateY(-6px);}
+
+  /* utility notes for gap-hunting */
+  .doc-note{background:#FFF8E8;border:1px solid #EBD79A;border-radius:9px;padding:10px 14px;font-size:.76rem;color:#7A5B00;margin-bottom:18px;}
+  .doc-note b{color:#5C4400;}
+
+  /* ---------------- responsive ---------------- */
+  @media (max-width:960px){
+    .header-row{gap:10px;padding:0 14px;}
+    .logo small{display:none;}
+    .icon-btn span.lbl{display:none;}
+    #gnb, .header-row .searchbox, .header-row .icon-rail .icon-only-pc{display:none !important;}
+    #mobile-topbar{display:flex;align-items:center;gap:10px;height:56px;padding:0 14px;}
+    #mobile-topbar .logo{font-size:1.1rem;}
+    #mobile-topbar .msearch{flex:1;height:36px;border:1px solid var(--line-strong);border-radius:18px;display:flex;align-items:center;padding:0 12px;color:var(--ink-soft);font-size:.8rem;background:var(--paper);}
+    #mobile-topbar .icon-btn{padding:6px;}
+    header#site-header{top:34px;}
+    .shortcut-row{grid-template-columns:repeat(4,1fr);}
+    .book-grid{grid-template-columns:repeat(2,1fr);}
+    .list-layout{grid-template-columns:1fr;}
+    .filter-col{display:none;}
+    .filter-fab{display:inline-flex;}
+    .detail-top{grid-template-columns:1fr;}
+    .detail-thumb{max-width:220px;margin:0 auto;}
+    .cart-layout{grid-template-columns:1fr;}
+    .mypage-layout{grid-template-columns:1fr;}
+    .mp-nav{display:flex;overflow-x:auto;gap:4px;}
+    .mp-nav a{white-space:nowrap;}
+    .widget-grid{grid-template-columns:1fr;}
+    .rel-grid{grid-template-columns:repeat(2,1fr);}
+    .branch-grid{grid-template-columns:1fr;}
+    .mega-close{right:16px;}
+    #dock{font-size:.68rem;gap:8px;}
+    #dock .hide-m{display:none;}
+    .fp-widget{width:170px;right:12px;bottom:12px;}
+  }
+  @media (min-width:961px){
+    #drawer, #drawer-scrim, #filter-sheet{display:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<div id="dock">
+  <b>🔎 검수 모드</b>
+  <span class="hide-m">— README/POL/MAP/PRD 기준 2026-07-09 프로토타입</span>
+  <div class="grp">
+    <label>로그인 상태</label>
+    <select id="authSel">
+      <option value="guest">비로그인</option>
+      <option value="member">일반회원</option>
+      <option value="teacher">교강사</option>
+    </select>
+  </div>
+  <div class="grp hide-m">
+    <button class="dockbtn" id="ucToggle">UC 라벨 표시</button>
+  </div>
+  <div class="grp hide-m">
+    <span class="todo-link" id="todoLink">열린 TODO 4건</span>
+  </div>
+  <span class="bp-tag" id="bpTag">PC 레이아웃</span>
+</div>
+
+<div id="shell">
+<header id="site-header">
+  <div class="header-row">
+    <a href="#/home" class="logo">NE Books<small>NE능률 자사몰</small></a>
+    <div class="searchbox" data-uc="UC-FIND-01">
+      <input type="text" placeholder="교재명, 저자, 키워드로 검색" id="searchInput">
+      <button class="go" aria-label="검색">🔍</button>
+    </div>
+    <div class="icon-rail">
+      <button class="icon-btn icon-only-pc" data-uc="UC-PROMO-10" id="recoBtn"><span class="glyph">🎯</span><span class="lbl">맞춤추천</span></button>
+      <span id="authIconSlot" data-uc="UC-AUTH-01"></span>
+      <button class="icon-btn" data-route="#/cart" data-uc="UC-BUY-06"><span class="glyph">🛒</span><span class="lbl">장바구니</span><span class="badge-count" id="cartCount">0</span></button>
+      <div class="flyout-wrap icon-only-pc" id="csFlyoutWrap" data-uc="UC-CS-06">
+        <button class="icon-btn"><span class="glyph">☎</span><span class="lbl">고객센터</span></button>
+        <div class="flyout cs-flyout">
+          <a href="#/cs?tab=notice">공지사항</a>
+          <a href="#/cs?tab=faq">FAQ</a>
+          <a href="#/cs?tab=event">이벤트/신간·개정/세미나</a>
+          <a href="#/cs?tab=fix">교재 오류정정</a>
+          <a href="#/cs?tab=qna">1:1 문의</a>
+          <a href="#/cs?tab=branch">지사안내</a>
+        </div>
+      </div>
+      <button class="icon-btn icon-only-pc" id="pcHamburger" data-uc="UC-FIND-04"><span class="glyph">☰</span><span class="lbl">전체메뉴</span></button>
+    </div>
+  </div>
+  <nav id="gnb" data-uc="UC-FIND-04"></nav>
+</header>
+
+<div id="mobile-topbar">
+  <button class="icon-btn" id="drawerOpenBtn"><span class="glyph">☰</span></button>
+  <a href="#/home" class="logo">NE Books</a>
+  <div class="msearch">🔍 교재명, 저자, 키워드</div>
+  <button class="icon-btn" data-route="#/cart"><span class="glyph">🛒</span><span class="badge-count" id="cartCountM">0</span></button>
+</div>
+
+<main id="app"></main>
+
+<footer id="site-footer" data-uc="UC-PROMO-11">
+  <div class="foot-in">
+    <div class="foot-links">
+      <a href="#">이용약관</a><a href="#">개인정보처리방침</a><a href="#">청소년보호정책</a><a href="#">이메일무단수집거부</a>
+    </div>
+    <div class="foot-fam">
+      <a href="#">NE능률</a><a href="#">교과서</a><a href="#">영어/수학교재</a><a href="#">ELT교재</a><a href="#">영자신문</a><a href="#">아이챌린지</a><a href="#">유아교육</a><a href="#">영어레벨테스트</a><a href="#">초중등영어학원</a>
+    </div>
+    <div class="foot-meta">
+      (주)NE능률 · 대표 OOO · 사업자등록번호 000-00-00000 · 통신판매업신고 제0000-서울OO-0000호<br>
+      서울특별시 마포구 성지길 000 · 개인정보관리책임자 OOO · Copyright ⓒ NE Neungyule. All rights reserved.
+    </div>
+    <div class="foot-cs">
+      고객센터 1544-0000 (평일 09:00~18:00, 점심 12:30~13:30) · 공동 CS센터 안내 · 문자상담 가능
+    </div>
+  </div>
+</footer>
+</div>
+
+<!-- PC 헤더 햄버거 전체 메뉴 -->
+<div id="pc-mega" data-uc="UC-FIND-04">
+  <button class="btn btn-sm mega-close" id="megaCloseBtn" style="position:absolute;">닫기 ✕</button>
+  <div class="mega-panel">
+    <div class="mega-groups" id="megaGroups"></div>
+    <div class="mega-items" id="megaItems"></div>
+  </div>
+</div>
+
+<!-- mobile drawer -->
+<div id="drawer-scrim"></div>
+<div id="drawer" data-uc="UC-FIND-04">
+  <div class="drawer-top">
+    <div class="row1">
+      <a href="#/home" class="logo" style="font-size:1.05rem;">NE Books</a>
+      <button class="drawer-close" id="drawerCloseBtn">✕</button>
+    </div>
+    <div class="drawer-cta" id="drawerAuthRow"></div>
+    <button class="btn btn-ghost btn-sm btn-block" data-uc="UC-PROMO-10">🎯 맞춤형 교재 추천 받기</button>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-l1" id="drawerL1"></div>
+    <div class="drawer-l2" id="drawerL2"></div>
+  </div>
+  <div class="drawer-bottom">
+    <a href="#/cs?tab=notice">공지사항</a><a href="#/cs?tab=faq">FAQ</a><a href="#/cs?tab=fix">교재오류 정정</a><a href="#/cs?tab=qna">1:1 문의</a>
+  </div>
+</div>
+
+<!-- filter sheet (mobile) -->
+<div id="filter-sheet" data-uc="UC-FIND-05">
+  <div class="scrim" id="filterSheetScrim"></div>
+  <div class="sheet" id="filterSheetBody"></div>
+</div>
+
+<!-- floating recent-viewed widget -->
+<div class="fp-widget" id="fpWidget" style="display:none;" data-uc="UC-CS-15">
+  <div class="fp-head"><span>최근 본 교재</span><button id="fpToggle" style="background:none;border:0;color:#fff;">▾</button></div>
+  <div class="fp-body" id="fpBody"></div>
+</div>
+
+<div id="modal-scrim">
+  <div class="modal" id="modalBox"></div>
+</div>
+<div id="toast"></div>
+
+<script>
+(function(){
+"use strict";
+
+/* ================= DATA ================= */
+var CATS = [
+  {key:"elt", label:"ELT", kids:["Coursebook","Phonics","Readers","Reading","Listening","Speaking","Writing","Grammar","Vocabulary"]},
+  {key:"jm", label:"초·중등", kids:["중학내신","고등선행","어휘","Phonics","쓰기","독해","듣기","문법/구문","TOEFL/TEPS/NELT"]},
+  {key:"hs", label:"고등", kids:["어휘","독해","듣기","문법/구문","수능대비","고교내신","단기특강","TOEFL/TEPS/NELT"]},
+  {key:"tb", label:"교과서·자습서", kids:["중학영어 교과서","고등영어 교과서","수학 교과서","중국어/일본어"]},
+  {key:"exam", label:"수험·일반", kids:["TOEIC","TOEIC Speaking/Writing","TOEFL/OPIC/TEPS","FLEX","일반영어"]},
+  {key:"mk", label:"수학·국어", kids:["유아","초등","중등","고등"]}
+];
+var GNB = CATS.concat([
+  {key:"material", label:"학습자료실", reuse:true, target:"material"},
+  {key:"bookmall", label:"도서몰", reuse:true, target:"buy"}
+]);
+
+function uid(){return "b"+Math.random().toString(36).slice(2,9);}
+var BOOKS = [
+  {id:"1",title:"Grammar Zone Basic",series:"Grammar Zone",cat:"elt/Grammar",price:16000,sale:14400,badge:"new",status:"onsale",
+   mats:[{k:"E-Book 본책",flag:"member"},{k:"E-Book 워크북",flag:"member"},{k:"Waffle",flag:"public"},{k:"교사용 정답지",flag:"teacher"},{k:"교사용 워크시트",flag:"teacher"}]},
+  {id:"2",title:"Reading Power 1",series:"Reading Power",cat:"elt/Reading",price:14000,sale:14000,badge:"",status:"onsale",mats:[]},
+  {id:"3",title:"빠른독해 바른독해 중1",series:"빠른독해 바른독해",cat:"jm/독해",price:13000,sale:11700,badge:"hot",status:"onsale",
+   mats:[{k:"모바일 학습지원",flag:"public"},{k:"MP3",flag:"public"}]},
+  {id:"4",title:"능률 VOCA 어원편",series:"능률 VOCA",cat:"elt/Vocabulary",price:15000,sale:13500,badge:"",status:"soldout",
+   mats:[{k:"E-Book 본책",flag:"member"}]},
+  {id:"5",title:"고교영어 문법 특강",series:"문법특강",cat:"hs/문법/구문",price:17000,sale:17000,badge:"",status:"onsale",
+   mats:[{k:"교사용 정답지",flag:"teacher"},{k:"교사용 시험지",flag:"teacher"}]},
+  {id:"6",title:"수능특강 영어독해연습",series:"수능특강",cat:"hs/수능대비",price:15000,sale:15000,badge:"",status:"limited",mats:[]},
+  {id:"7",title:"중학영어 교과서 자습서 1-1",series:"자습서",cat:"tb/중학영어 교과서",price:18000,sale:16200,badge:"",status:"onsale",
+   mats:[{k:"Waffle",flag:"public"},{k:"MP3",flag:"public"}]},
+  {id:"8",title:"NELT FLEX 실전 모의고사",series:"FLEX 실전",cat:"exam/FLEX",price:16000,sale:16000,badge:"new",status:"onsale",mats:[]},
+  {id:"9",title:"국어 독해 시작 초등 3-4",series:"국어 독해 시작",cat:"mk/초등",price:12000,sale:10800,badge:"",status:"onsale",mats:[]},
+  {id:"10",title:"TOEIC RC 콤팩트",series:"TOEIC 콤팩트",cat:"exam/TOEIC",price:19000,sale:17100,badge:"hot",status:"onsale",
+   mats:[{k:"E-Book 본책",flag:"member"},{k:"모바일 학습지원",flag:"public"}]},
+  {id:"11",title:"Phonics Kids 1",series:"Phonics Kids",cat:"elt/Phonics",price:13000,sale:13000,badge:"",status:"onsale",
+   mats:[{k:"모바일 학습지원",flag:"public"},{k:"교사용 지도서",flag:"teacher"}]},
+  {id:"12",title:"고등 수학의 정석 기본편",series:"수학의 정석",cat:"tb/수학 교과서",price:21000,sale:21000,badge:"",status:"onsale",mats:[]}
+];
+BOOKS.forEach(function(b){
+  b.hasMaterial = b.mats.length>0;
+  b.hasNonTeacherService = b.mats.some(function(m){return m.k.indexOf("교사용")===-1 && m.k!=="E-Book 본책"===false ? true : (m.flag!=="teacher");});
+  b.hasTeacherOnly = b.mats.some(function(m){return m.flag==="teacher";});
+  b.hasAddon = b.mats.some(function(m){return /E-Book|Waffle|모바일 학습지원/.test(m.k);});
+  b.showTutor = b.hasAddon || b.hasTeacherOnly;
+});
+
+var TODOS = [
+ "TODO-26 · UC-FIND-05 '학습자료' 필터명과 목록유형명 '학습자료' 명칭 충돌",
+ "TODO-27 · 마이페이지 메뉴 레이어 목록에 '찜'이 빠져있음(의도 확인 필요)",
+ "TODO-28 · PC 로그인 진입 UI가 모달인지 전용 페이지인지 미확정",
+ "TODO-29 · 교재-NE Tutor 콘텐츠 매핑 데이터 관리 방식 미확정"
+];
+
+/* ================= STATE ================= */
+var state = {
+  auth:"guest", // guest | member | teacher
+  route:"#/home",
+  cart:[],
+  wish:{},
+  recentBooks:[],
+  showUC:false,
+  listType:"buy",
+  filters:{cat:null},
+  sort:"latest",
+  onsaleOnly:false
+};
+
+function isLogged(){return state.auth!=="guest";}
+function fmt(n){return n.toLocaleString("ko-KR")+"원";}
+function toast(msg){
+  var t=document.getElementById("toast"); t.textContent=msg; t.classList.add("show");
+  clearTimeout(toast._t); toast._t=setTimeout(function(){t.classList.remove("show");},2200);
+}
+function go(route){ location.hash = route; }
+
+function requireLogin(afterMsg){
+  if(isLogged()) return true;
+  openModal("로그인이 필요합니다",
+    (afterMsg||"이 기능은 로그인 후 이용할 수 있어요.") ,
+    [{label:"로그인(모달/페이지 미확정)",cls:"btn-primary",onClick:function(){ document.getElementById("authSel").value="member"; state.auth="member"; syncAuthUI(); closeModal(); toast("로그인 되었습니다 → 원래 동작으로 복귀"); }},
+     {label:"취소",cls:"btn",onClick:closeModal}]);
+  return false;
+}
+
+function openModal(title,desc,buttons){
+  var box=document.getElementById("modalBox");
+  box.innerHTML = "<h3>"+title+"</h3><p>"+desc+"</p><div class='row' id='modalBtns'></div>";
+  var wrap=document.getElementById("modalBtns");
+  buttons.forEach(function(b){
+    var el=document.createElement("button");
+    el.className="btn "+(b.cls||""); el.textContent=b.label; el.onclick=b.onClick;
+    wrap.appendChild(el);
+  });
+  document.getElementById("modal-scrim").classList.add("open");
+}
+function closeModal(){ document.getElementById("modal-scrim").classList.remove("open"); }
+document.getElementById("modal-scrim").addEventListener("click",function(e){ if(e.target.id==="modal-scrim") closeModal(); });
+
+function addToCart(book){
+  state.cart.push(book.id);
+  updateCartCount(); toast("장바구니에 담았습니다 · "+book.title);
+}
+function toggleWish(book,btn){
+  if(!requireLogin("찜은 로그인 회원만 이용할 수 있어요.")) return;
+  state.wish[book.id] = !state.wish[book.id];
+  render(); toast(state.wish[book.id] ? "찜 목록에 추가했습니다" : "찜을 해제했습니다");
+}
+function updateCartCount(){
+  document.getElementById("cartCount").textContent = state.cart.length;
+  document.getElementById("cartCountM").textContent = state.cart.length;
+}
+function trackRecent(book){
+  state.recentBooks = [book].concat(state.recentBooks.filter(function(b){return b.id!==book.id;})).slice(0,6);
+  renderFP();
+}
+function renderFP(){
+  var w=document.getElementById("fpWidget");
+  if(!state.recentBooks.length){ w.style.display="none"; return; }
+  w.style.display="block";
+  document.getElementById("fpBody").innerHTML = state.recentBooks.map(function(b){
+    return "<div class='fp-item'><div class='fp-thumb'></div><a href='#/detail/"+b.id+"' style='font-weight:700;'>"+b.title+"</a></div>";
+  }).join("");
+}
+
+function openTutor(book){
+  if(!requireLogin("NE Tutor는 로그인(SSO 연동) 후 이용할 수 있어요.")) return;
+  toast("NE Tutor 상세 페이지로 이동 (SSO 연동) · "+book.title);
+}
+
+/* ================= HEADER: auth icon / mypage flyout ================= */
+var MYPAGE_MENU = ["홈","주문내역","포인트","학습자료실","문의/답변","후기","이벤트/세미나","회원정보수정","로그아웃"];
+function mypageMenuHTML(){
+  return MYPAGE_MENU.map(function(m,i){
+    if(m==="로그아웃") return "<a href='#' class='logout' data-mp='logout'>로그아웃 <span>↩</span></a>";
+    return "<a href='#' data-mp='"+m+"'>"+m+"</a>";
+  }).join("");
+}
+function syncAuthUI(){
+  var slot=document.getElementById("authIconSlot");
+  if(!isLogged()){
+    slot.innerHTML = "<button class='icon-btn' id='loginBtn' data-uc='UC-AUTH-01'><span class='glyph'>👤</span><span class='lbl'>로그인</span></button>";
+    document.getElementById("loginBtn").onclick=function(){ requireLogin("로그인 후 계속 진행합니다."); };
+  } else {
+    slot.innerHTML =
+      "<div class='flyout-wrap' id='mpFlyoutWrap' data-uc='UC-CS-14'>"+
+        "<button class='icon-btn primary'><span class='glyph'>🙋</span><span class='lbl'>마이페이지</span></button>"+
+        "<div class='flyout'><div class='uid'>"+(state.auth==="teacher"?"김선생 님 (교강사)":"홍길동 님 (일반회원)")+"</div>"+mypageMenuHTML()+"</div>"+
+      "</div>";
+    document.querySelectorAll("#mpFlyoutWrap [data-mp]").forEach(function(a){
+      a.addEventListener("click",function(e){
+        e.preventDefault();
+        var v=a.getAttribute("data-mp");
+        if(v==="logout"){ state.auth="guest"; document.getElementById("authSel").value="guest"; syncAuthUI(); go("#/home"); toast("로그아웃 되었습니다"); return; }
+        if(v==="회원정보수정"){ toast("통합회원 정보수정 화면으로 이동(SSO)"); return; }
+        go("#/mypage"); toast(v+" 탭으로 이동");
+      });
+    });
+  }
+  renderDrawerAuth();
+  renderMegaMenu();
+}
+function renderDrawerAuth(){
+  var el=document.getElementById("drawerAuthRow");
+  if(!isLogged()){
+    el.innerHTML = "<span>로그인 · 회원가입</span><span>›</span>";
+    el.onclick=function(){ requireLogin(); };
+  } else {
+    el.innerHTML = "<span>"+(state.auth==="teacher"?"김선생":"홍길동")+" 님 반갑습니다</span><span>마이페이지 ›</span>";
+    el.onclick=function(){ closeDrawer(); go("#/mypage"); };
+  }
+}
+
+document.getElementById("authSel").addEventListener("change",function(e){
+  state.auth = e.target.value; syncAuthUI(); render();
+  toast("로그인 상태 시뮬레이션 → "+({guest:"비회원",member:"일반회원",teacher:"교강사"})[state.auth]);
+});
+
+/* ================= GNB (PC hover cascade) ================= */
+function gnbCascadePanel(entry){
+  var l2 = CATS.map(function(c,i){
+    return "<button data-l2='"+c.key+"'>"+c.label+"<span>›</span></button>";
+  }).join("");
+  var firstCat = CATS[0];
+  var l3 = firstCat.kids.map(function(k){return "<a href='#' data-target='"+entry.target+"' data-cat='"+firstCat.key+"' data-item='"+k+"'>"+k+"</a>";}).join("");
+  return "<div class='gnb-cascade'>"+
+    "<div class='gnb-l2'>"+l2+"</div>"+
+    "<div class='gnb-l3' data-l3-for='"+entry.key+"'>"+l3+"</div>"+
+    "</div>";
+}
+function buildGNB(){
+  var el=document.getElementById("gnb");
+  var row=document.createElement("div"); row.className="gnb-row";
+  GNB.forEach(function(entry){
+    var item=document.createElement("div"); item.className="gnb-item";
+    var btn=document.createElement("button"); btn.textContent=entry.label; item.appendChild(btn);
+    var panel=document.createElement("div"); panel.className="gnb-panel";
+    if(entry.reuse){
+      panel.innerHTML = gnbCascadePanel(entry);
+    } else {
+      panel.innerHTML = "<div class='gnb-simple-list'>"+entry.kids.map(function(k){
+        return "<a href='#' data-target='buy' data-cat='"+entry.key+"' data-item='"+k+"'>"+k+"</a>";
+      }).join("")+"</div><div class='gnb-promo'><a href='#'>교재 레벨차트</a><a href='#'>Come On Series</a><a href='#'>OXFORD UP</a></div>";
+    }
+    item.appendChild(panel);
+    row.appendChild(item);
+  });
+  el.innerHTML=""; el.appendChild(row);
+
+  row.querySelectorAll(".gnb-l2 button").forEach(function(btn){
+    btn.addEventListener("mouseenter",function(){
+      var key=btn.getAttribute("data-l2");
+      var cat=CATS.filter(function(c){return c.key===key;})[0];
+      var wrap=btn.closest(".gnb-cascade").querySelector(".gnb-l3");
+      wrap.innerHTML = cat.kids.map(function(k){
+        return "<a href='#' data-target='"+wrap.getAttribute("data-l3-for").replace("material","material").replace("bookmall","buy")+"' data-cat='"+cat.key+"' data-item='"+k+"'>"+k+"</a>";
+      }).join("");
+      btn.closest(".gnb-l2").querySelectorAll("button").forEach(function(b){b.classList.remove("active");});
+      btn.classList.add("active");
+      wireLeafLinks(wrap);
+    });
+  });
+  wireLeafLinks(row);
+}
+function wireLeafLinks(scope){
+  scope.querySelectorAll("[data-item]").forEach(function(a){
+    a.addEventListener("click",function(e){
+      e.preventDefault();
+      var target = a.getAttribute("data-target")==="material" ? "material":"buy";
+      state.listType = target; state.filters.cat = a.getAttribute("data-cat");
+      go("#/list"); render();
+      toast((target==="material"?"학습자료형":"교재구매형")+" 탭 · "+a.getAttribute("data-item")+" 카테고리로 이동");
+    });
+  });
+}
+
+/* ================= PC 헤더 햄버거 (전체 메뉴) ================= */
+var MEGA_GROUPS = [
+  {key:"elt",label:"ELT",type:"cat"},{key:"jm",label:"초·중등",type:"cat"},{key:"hs",label:"고등",type:"cat"},
+  {key:"tb",label:"교과서·자습서",type:"cat"},{key:"exam",label:"수험·일반",type:"cat"},{key:"mk",label:"수학·국어",type:"cat"},
+  {key:"material",label:"학습자료실",type:"reuse"},{key:"bookmall",label:"도서몰",type:"reuse"},
+  {key:"cs",label:"고객센터",type:"cs"},
+  {key:"mypage",label:"마이페이지",type:"mypage",authOnly:true}
+];
+var megaActive = "elt";
+function renderMegaMenu(){
+  var groupsEl=document.getElementById("megaGroups");
+  var visible = MEGA_GROUPS.filter(function(g){return !g.authOnly || isLogged();});
+  groupsEl.innerHTML = visible.map(function(g){
+    return "<button data-g='"+g.key+"' class='"+(g.key===megaActive?"active":"")+"'>"+g.label+"<span class='grp-tag'>"+(g.type==="reuse"?"2~3depth":"2depth")+"</span></button>";
+  }).join("");
+  groupsEl.querySelectorAll("button").forEach(function(b){
+    b.addEventListener("click",function(){ megaActive=b.getAttribute("data-g"); renderMegaMenu(); });
+  });
+  var itemsEl=document.getElementById("megaItems");
+  var g = MEGA_GROUPS.filter(function(x){return x.key===megaActive;})[0];
+  if(g.type==="cat"){
+    var cat = CATS.filter(function(c){return c.key===g.key;})[0];
+    itemsEl.innerHTML="<h4>"+g.label+" · 2depth (클릭 시 바로 이동)</h4><div class='mega-grid'>"+
+      cat.kids.map(function(k){return "<a href='#' data-cat='"+g.key+"' data-item='"+k+"' data-mega-target='buy'>"+k+"</a>";}).join("")+"</div>";
+  } else if(g.type==="reuse"){
+    itemsEl.innerHTML="<h4>"+g.label+" · 2depth (카테고리명, 3depth 보유 → 클릭 시 첫 3depth로 바로 이동)</h4><div class='mega-grid'>"+
+      CATS.map(function(c){return "<button class='has3' data-reuse-cat='"+c.key+"' data-mega-target='"+(g.key==="material"?"material":"buy")+"'>"+c.label+"</button>";}).join("")+"</div>";
+  } else if(g.type==="cs"){
+    itemsEl.innerHTML="<h4>고객센터 · 2depth</h4><div class='mega-grid'>"+
+      ["공지사항","FAQ","이벤트/신간·개정/세미나","교재 오류정정","1:1 문의","지사안내"].map(function(t){return "<a href='#' data-cs='"+t+"'>"+t+"</a>";}).join("")+"</div>";
+  } else if(g.type==="mypage"){
+    itemsEl.innerHTML="<h4>마이페이지 · 2depth</h4><div class='mega-grid'>"+
+      MYPAGE_MENU.map(function(t){return "<a href='#' data-mp2='"+t+"'>"+t+"</a>";}).join("")+"</div>";
+  }
+  itemsEl.querySelectorAll("[data-item]").forEach(function(a){
+    a.addEventListener("click",function(e){e.preventDefault();
+      state.listType="buy"; state.filters.cat=a.getAttribute("data-cat"); closeMega(); go("#/list"); render();
+      toast("바로 이동 · "+a.getAttribute("data-item"));
+    });
+  });
+  itemsEl.querySelectorAll("[data-reuse-cat]").forEach(function(btn){
+    btn.addEventListener("click",function(){
+      var cat=CATS.filter(function(c){return c.key===btn.getAttribute("data-reuse-cat");})[0];
+      var target=btn.getAttribute("data-mega-target");
+      var first=cat.kids[0];
+      state.listType=target; state.filters.cat=cat.key; closeMega(); go("#/list"); render();
+      toast("2depth 클릭 → 첫 3depth로 바로 이동: "+first);
+    });
+  });
+  itemsEl.querySelectorAll("[data-cs]").forEach(function(a){
+    a.addEventListener("click",function(e){e.preventDefault(); closeMega(); go("#/cs"); toast(a.getAttribute("data-cs")+" 탭으로 이동");});
+  });
+  itemsEl.querySelectorAll("[data-mp2]").forEach(function(a){
+    a.addEventListener("click",function(e){e.preventDefault();
+      var v=a.getAttribute("data-mp2");
+      if(v==="로그아웃"){ state.auth="guest"; document.getElementById("authSel").value="guest"; syncAuthUI(); closeMega(); go("#/home"); toast("로그아웃 되었습니다"); return; }
+      closeMega(); go("#/mypage"); toast(v+"으로 이동");
+    });
+  });
+}
+document.getElementById("pcHamburger").addEventListener("click",function(){
+  document.getElementById("pc-mega").classList.add("open"); renderMegaMenu();
+});
+document.getElementById("megaCloseBtn").addEventListener("click",closeMega);
+document.getElementById("pc-mega").addEventListener("click",function(e){ if(e.target.id==="pc-mega") closeMega(); });
+function closeMega(){ document.getElementById("pc-mega").classList.remove("open"); }
+
+/* ================= Mobile drawer ================= */
+var DRAWER_L1 = CATS.map(function(c){return {key:c.key,label:c.label,type:"cat"};})
+  .concat([{key:"material",label:"학습자료실",type:"reuse"},{key:"bookmall",label:"도서몰",type:"reuse"},
+           {key:"cs",label:"고객센터",type:"cs"},{key:"mypage",label:"마이페이지",type:"mypage",authOnly:true}]);
+var drawerActive="elt";
+function renderDrawer(){
+  var l1=document.getElementById("drawerL1");
+  var visible = DRAWER_L1.filter(function(g){return !g.authOnly || isLogged();});
+  l1.innerHTML = visible.map(function(g){return "<button data-g='"+g.key+"' class='"+(g.key===drawerActive?"active":"")+"'>"+g.label+"</button>";}).join("");
+  l1.querySelectorAll("button").forEach(function(b){ b.addEventListener("click",function(){ drawerActive=b.getAttribute("data-g"); renderDrawer(); }); });
+  var l2=document.getElementById("drawerL2");
+  var g = DRAWER_L1.filter(function(x){return x.key===drawerActive;})[0];
+  if(g.type==="cat"){
+    var cat=CATS.filter(function(c){return c.key===g.key;})[0];
+    l2.innerHTML = cat.kids.map(function(k){return "<a href='#' data-cat='"+g.key+"' data-item='"+k+"'>"+k+"</a>";}).join("");
+    l2.querySelectorAll("a").forEach(function(a){a.addEventListener("click",function(e){e.preventDefault();
+      state.listType="buy"; state.filters.cat=a.getAttribute("data-cat"); closeDrawer(); go("#/list"); render();
+    });});
+  } else if(g.type==="reuse"){
+    l2.innerHTML = CATS.map(function(c){
+      return "<div class='acc'><button class='acc' data-acc='"+c.key+"'>"+c.label+" <span>▾</span></button>"+
+        "<div class='acc-kids'>"+c.kids.map(function(k){return "<a href='#' data-cat='"+c.key+"' data-item='"+k+"' data-target='"+(g.key==="material"?"material":"buy")+"'>"+k+"</a>";}).join("")+"</div></div>";
+    }).join("");
+    l2.querySelectorAll("button.acc").forEach(function(b){
+      b.addEventListener("click",function(){ b.parentElement.classList.toggle("acc-open"); });
+    });
+    l2.querySelectorAll("a").forEach(function(a){a.addEventListener("click",function(e){e.preventDefault();
+      state.listType=a.getAttribute("data-target"); state.filters.cat=a.getAttribute("data-cat"); closeDrawer(); go("#/list"); render();
+    });});
+  } else if(g.type==="cs"){
+    l2.innerHTML = ["공지사항","FAQ","이벤트/신간·개정/세미나","교재 오류정정","1:1 문의","지사안내"].map(function(t){return "<a href='#'>"+t+"</a>";}).join("");
+    l2.querySelectorAll("a").forEach(function(a){a.addEventListener("click",function(e){e.preventDefault(); closeDrawer(); go("#/cs");});});
+  } else if(g.type==="mypage"){
+    l2.innerHTML = MYPAGE_MENU.map(function(t){return "<a href='#' data-mp3='"+t+"'>"+t+"</a>";}).join("");
+    l2.querySelectorAll("a").forEach(function(a){a.addEventListener("click",function(e){e.preventDefault();
+      var v=a.getAttribute("data-mp3");
+      if(v==="로그아웃"){ state.auth="guest"; document.getElementById("authSel").value="guest"; syncAuthUI(); closeDrawer(); go("#/home"); return; }
+      closeDrawer(); go("#/mypage");
+    });});
+  }
+}
+function openDrawer(){ document.getElementById("drawer").classList.add("open"); document.getElementById("drawer-scrim").classList.add("open"); renderDrawer(); }
+function closeDrawer(){ document.getElementById("drawer").classList.remove("open"); document.getElementById("drawer-scrim").classList.remove("open"); }
+document.getElementById("drawerOpenBtn").addEventListener("click",openDrawer);
+document.getElementById("drawerCloseBtn").addEventListener("click",closeDrawer);
+document.getElementById("drawer-scrim").addEventListener("click",closeDrawer);
+
+/* ================= card + list rendering helpers ================= */
+function catLabel(catKey){ var c=CATS.filter(function(x){return x.key===catKey;})[0]; return c?c.label:catKey; }
+function matFlagLabel(f){ return f==="teacher"?"교강사":(f==="member"?"회원":"전체공개"); }
+function canAccess(flag){
+  if(flag==="public") return true;
+  if(flag==="member") return isLogged();
+  if(flag==="teacher") return state.auth==="teacher";
+  return true;
+}
+function bookCardHTML(b){
+  var mainCat = b.cat.split("/")[0];
+  var badge = b.badge==="new" ? "<span class='b-tag b-new'>NEW</span>" : b.badge==="hot" ? "<span class='b-tag b-hot'>HOT</span>" : "";
+  var limitBadge = b.status==="limited" ? "<span class='b-tag b-limit'>구매제한</span>" : "";
+  var wished = !!state.wish[b.id];
+  var off = b.price>b.sale ? Math.round((1-b.sale/b.price)*100) : 0;
+  var actions, matBlock="", tutorBtn="";
+  if(state.listType==="material"){
+    matBlock = "<div class='mat-row' data-uc='UC-INFO-02'>"+ b.mats.map(function(m){
+      var ok = canAccess(m.flag);
+      return "<span class='mat-chip "+(m.flag==="teacher"?"teacher":"")+" "+(ok?"":"locked")+"' title='"+matFlagLabel(m.flag)+"'>"+(ok?"⬇ ":"🔒 ")+m.k+"</span>";
+    }).join("") + (b.mats.length===0 ? "<span class='mat-chip locked'>등록된 학습자료 없음</span>" : "") + "</div>";
+    actions = "<div class='card-actions'><button class='btn btn-sm btn-primary btn-block' data-act='dl' data-id='"+b.id+"'>전체 다운로드</button></div>";
+  } else {
+    actions = "<div class='card-actions'><button class='btn btn-sm' data-act='cart' data-id='"+b.id+"' "+(b.status==="soldout"?"disabled":"")+">담기</button>"+
+      "<button class='btn btn-sm btn-primary' data-act='buy' data-id='"+b.id+"' "+(b.status!=="onsale"?"disabled":"")+">바로구매</button></div>";
+  }
+  if(b.showTutor){
+    tutorBtn = "<button class='btn btn-sm btn-tutor btn-block tutor-btn' data-act='tutor' data-id='"+b.id+"' data-uc='UC-MAT-11'>🎓 NE Tutor에서 선생님 자료 보기</button>";
+  }
+  return "<div class='book-card' data-uc='UC-INFO-01'>"+
+    "<div class='badges'>"+badge+limitBadge+"</div>"+
+    "<button class='wish "+(wished?"on":"")+"' data-act='wish' data-id='"+b.id+"'>"+(wished?"♥":"♡")+"</button>"+
+    "<a href='#/detail/"+b.id+"' class='thumb "+(b.status==="soldout"?"sold":"")+"' data-act='view' data-id='"+b.id+"'>"+b.title.slice(0,2)+"</a>"+
+    "<div class='card-body'>"+
+      "<span class='card-series'>"+catLabel(mainCat)+" · "+b.series+"</span>"+
+      "<a href='#/detail/"+b.id+"' class='card-title' data-act='view' data-id='"+b.id+"'>"+b.title+"</a>"+
+      (state.listType==="buy" ? "<div class='price-row'>"+(off>0?"<span class='price-off'>"+off+"%</span>":"")+"<span class='price-now'>"+fmt(b.sale)+"</span>"+(off>0?"<span class='price-was'>"+fmt(b.price)+"</span>":"")+"</div>" : "")+
+      matBlock+
+      actions+
+      tutorBtn+
+    "</div></div>";
+}
+function wireBookCardEvents(scope){
+  scope.querySelectorAll("[data-act]").forEach(function(el){
+    el.addEventListener("click",function(e){
+      var id=el.getAttribute("data-id"); var b=BOOKS.filter(function(x){return x.id===id;})[0];
+      var act=el.getAttribute("data-act");
+      if(act==="view"){ trackRecent(b); return; }
+      e.preventDefault();
+      if(act==="wish"){ toggleWish(b,el); }
+      if(act==="cart"){ addToCart(b); }
+      if(act==="buy"){ if(!requireLogin("바로구매는 로그인 후 진행됩니다.")) return; addToCart(b); go("#/cart"); }
+      if(act==="dl"){ if(!requireLogin("학습자료 다운로드는 로그인 후 가능합니다.")) return; toast("전체 다운로드 시작 · 권한 있는 자료만 포함"); }
+      if(act==="tutor"){ openTutor(b); }
+    });
+  });
+}
+
+/* ================= SCREENS ================= */
+function screenHome(){
+  var bestsellers = BOOKS.slice(0,4);
+  return ""+
+  "<div class='hero' data-uc='UC-PROMO-01'>"+
+    "<div class='hero-copy'><span class='eyebrow'>2026 신학기 프로모션</span><h1>모든 학습자료를 한 곳에서, NE Books</h1><p>교재구매부터 학습자료 다운로드, NE Tutor 연계까지 반응형 자사몰에서 이어집니다.</p></div>"+
+    "<div class='hero-dots' data-uc='UC-PROMO-02'><span class='on'></span><span></span><span></span></div>"+
+    "<div class='hero-kw'><span>#신간</span><span>#어휘끝판왕</span><span>#수능대비</span></div>"+
+  "</div>"+
+  "<div class='shortcut-row' data-uc='UC-PROMO-03'>"+
+    ["교재구매","레벨차트","학습자료","정답","MP3","Waffle","영어 선생님","수학 선생님"].map(function(s,i){
+      return "<button class='shortcut' data-sc='"+i+"'><span class='glyph'>"+["📘","📊","🗂","✅","🎧","🧇","👩‍🏫","👨‍🏫"][i]+"</span><span>"+s+"</span></button>";
+    }).join("")+
+  "</div>"+
+  "<div class='section-head' data-uc='UC-PROMO-04'><h2>베스트셀러 · 프로모션</h2><div class='tabbar'><button class='active'>베스트셀러</button><button>기획전</button></div></div>"+
+  "<div class='book-grid' id='homeGrid' data-uc='UC-PROMO-05' style='margin-bottom:34px;'></div>"+
+  "<div class='section-head' data-uc='UC-PROMO-07'><h2>NE Tutor 바로가기</h2></div>"+
+  "<div class='tutor-banner' style='margin-bottom:34px;'><div><b>선생님 전용, NE Tutor</b><p>교강사 인증 후 정답지·워크시트·지도서를 NE Tutor에서 바로 받아보세요.</p></div><button class='btn btn-tutor' id='ntEntry'>NE Tutor 가기</button></div>"+
+  "<div class='section-head' data-uc='UC-PROMO-08'><h2>공지사항</h2><a class='more-link' href='#/cs?tab=notice'>더보기</a></div>"+
+  "<ul style='margin-bottom:34px;'>"+
+    "<li class='notice-row'><span>[공지] 반응형 사이트 전환 안내</span><span>2026.07.09</span></li>"+
+    "<li class='notice-row'><span>[공지] 학습자료실 화면 개편 안내</span><span>2026.07.08</span></li>"+
+    "<li class='notice-row'><span>[공지] 신학기 배송 지연 안내</span><span>2026.07.02</span></li>"+
+  "</ul>"+
+  "<div class='section-head' data-uc='UC-PROMO-09'><h2>SNS / 유튜브</h2></div>"+
+  "<div class='rel-grid' style='margin-bottom:10px;'>"+[1,2,3,4,5].map(function(){return "<div class='rel-card'><div class='thumb'>▶</div>영상 콘텐츠</div>";}).join("")+"</div>"+
+  "<div class='doc-note'><b>UC-PROMO-12</b> 메인 하단 고객센터 안내 블록은 Footer 상단 고객센터 문구와 중복 여부 확인 필요(검수 포인트).</div>";
+}
+
+function screenList(){
+  var filtered = BOOKS.filter(function(b){
+    if(state.listType==="material" && !b.hasMaterial) return false;
+    if(state.filters.cat && b.cat.split("/")[0]!==state.filters.cat) return false;
+    if(state.onsaleOnly && b.status!=="onsale") return false;
+    return true;
+  });
+  if(state.sort==="priceAsc") filtered = filtered.slice().sort(function(a,b){return a.sale-b.sale;});
+  if(state.sort==="priceDesc") filtered = filtered.slice().sort(function(a,b){return b.sale-a.sale;});
+
+  var filterHTML =
+    "<h3 data-uc='UC-FIND-05'>필터 <span style='float:right;font-weight:400;color:var(--ink-soft);'>PC=좌측 고정</span></h3>"+
+    "<div class='filter-group'><div class='fg-title'>카테고리</div>"+
+      CATS.map(function(c){return "<label class='filter-opt'><input type='radio' name='fcat' "+(state.filters.cat===c.key?"checked":"")+" data-fc='"+c.key+"'> "+c.label+"</label>";}).join("")+
+      "<label class='filter-opt'><input type='radio' name='fcat' "+(!state.filters.cat?"checked":"")+" data-fc=''> 전체</label>"+
+    "</div>"+
+    "<div class='filter-group' data-uc='UC-FIND-07'><div class='fg-title'>판매상태</div>"+
+      "<label class='filter-opt'><input type='checkbox' id='onsaleOnly' "+(state.onsaleOnly?"checked":"")+"> 판매중인 교재만 보기</label>"+
+    "</div>"+
+    "<button class='btn btn-sm filter-reset' id='filterReset'>필터 초기화</button>";
+
+  setTimeout(function(){
+    var col=document.getElementById("filterCol"); var sheet=document.getElementById("filterSheetBody");
+    [col,sheet].forEach(function(root){ if(!root) return;
+      root.querySelectorAll("[data-fc]").forEach(function(r){ r.addEventListener("change",function(){ state.filters.cat=r.getAttribute("data-fc")||null; render(); }); });
+      var os=root.querySelector("#onsaleOnly"); if(os) os.addEventListener("change",function(){ state.onsaleOnly=os.checked; render(); });
+      var rb=root.querySelector("#filterReset"); if(rb) rb.addEventListener("click",function(){ state.filters.cat=null; state.onsaleOnly=false; render(); });
+    });
+  },0);
+
+  return ""+
+  "<div class='crumb'>홈 › <b>"+(state.listType==="material"?"교재목록 · 학습자료형":"교재목록 · 교재구매형")+"</b></div>"+
+  "<div class='list-layout'>"+
+    "<aside class='filter-col' id='filterCol'>"+filterHTML+"</aside>"+
+    "<div>"+
+      "<div class='list-toolbar'>"+
+        "<div class='listtype-tabs' data-uc='UC-FIND-06'>"+
+          "<button data-lt='buy' class='"+(state.listType==="buy"?"active":"")+"'>교재구매</button>"+
+          "<button data-lt='material' class='"+(state.listType==="material"?"active":"")+"'>학습자료</button>"+
+        "</div>"+
+        "<div class='toolbar-right'>"+
+          "<button class='btn btn-sm filter-fab' id='openFilterSheet'>필터 ▾</button>"+
+          (state.listType==="buy" ? "<select id='sortSel' data-uc='UC-FIND-08'><option value='latest'>최신순</option><option value='priceAsc'>낮은가격순</option><option value='priceDesc'>높은가격순</option></select>" : "")+
+          "<span>총 "+filtered.length+"건</span>"+
+        "</div>"+
+      "</div>"+
+      "<div class='book-grid' id='listGrid' data-uc='UC-INFO-01'>"+
+        (filtered.length ? filtered.map(bookCardHTML).join("") : "<div class='empty-state' data-uc='UC-FIND-10' style='grid-column:1/-1;'>조건에 맞는 교재가 없습니다.</div>")+
+      "</div>"+
+      "<div class='pager' data-uc='UC-FIND-09'><button class='active'>1</button><button disabled>2</button><button disabled>›</button></div>"+
+    "</div>"+
+  "</div>";
+}
+
+function screenDetail(id){
+  var b = BOOKS.filter(function(x){return x.id===id;})[0] || BOOKS[0];
+  trackRecent(b);
+  var off = b.price>b.sale ? Math.round((1-b.sale/b.price)*100) : 0;
+  var statusNote = b.status==="soldout" ? "<div class='status-note'>일시품절 · 재입고 알림 신청 가능</div>" :
+                   b.status==="limited" ? "<div class='status-note limit'>구매제한 상품입니다(개인 구매 불가)</div>" : "";
+  var tutorBtnTop = b.showTutor ? "<button class='btn btn-tutor btn-sm' style='margin-top:10px;' data-act='tutor' data-id='"+b.id+"' data-uc='UC-MAT-11'>🎓 NE Tutor에서 선생님 자료 보기</button>" : "";
+
+  var matRows = b.mats.map(function(m){
+    var ok = canAccess(m.flag);
+    return "<tr><td>"+m.k+"</td><td><span class='flag "+m.flag+"'>"+matFlagLabel(m.flag)+"</span></td>"+
+      "<td>"+(ok ? "<button class='btn btn-sm btn-primary' data-act='matdl' data-name='"+m.k+"'>다운로드</button>" : "<button class='btn btn-sm' disabled>🔒 권한없음</button>")+"</td></tr>";
+  }).join("");
+
+  var tutorBanner = b.showTutor ? "<div class='tutor-banner' data-uc='UC-MAT-11'><div><b>이 교재의 NE Tutor 자료 더 보기</b><p>본책/워크북 E-Book, Waffle, 교사용 자료를 NE Tutor에서 통합 이용할 수 있어요.</p></div><button class='btn btn-tutor' data-act='tutor' data-id='"+b.id+"'>NE Tutor 상세로 이동</button></div>" : "";
+
+  setTimeout(function(){
+    document.querySelectorAll(".tabnav button").forEach(function(btn){
+      btn.addEventListener("click",function(){
+        document.querySelectorAll(".tabnav button").forEach(function(x){x.classList.remove("active");});
+        document.querySelectorAll(".tabpane").forEach(function(x){x.classList.remove("active");});
+        btn.classList.add("active");
+        document.getElementById(btn.getAttribute("data-tab")).classList.add("active");
+      });
+    });
+    var qty=document.getElementById("qtyInput");
+    document.getElementById("qtyMinus").addEventListener("click",function(){ qty.value=Math.max(1,+qty.value-1); });
+    document.getElementById("qtyPlus").addEventListener("click",function(){ qty.value=+qty.value+1; });
+    wireBookCardEvents(document);
+    document.querySelectorAll("[data-act='tutor']").forEach(function(el){ el.addEventListener("click",function(){ openTutor(b); }); });
+    document.querySelectorAll("[data-act='matdl']").forEach(function(el){ el.addEventListener("click",function(){ toast("다운로드 시작 · "+el.getAttribute("data-name")); }); });
+    var addBtn=document.getElementById("detailAdd"), buyBtn=document.getElementById("detailBuy"), wishBtn=document.getElementById("detailWish");
+    if(addBtn) addBtn.addEventListener("click",function(){ addToCart(b); });
+    if(buyBtn) buyBtn.addEventListener("click",function(){ if(!requireLogin("바로구매는 로그인 후 진행됩니다.")) return; addToCart(b); go("#/cart"); });
+    if(wishBtn) wishBtn.addEventListener("click",function(){ toggleWish(b,wishBtn); wishBtn.textContent = state.wish[b.id] ? "♥ 찜 해제":"♡ 찜하기"; });
+  },0);
+
+  return ""+
+  "<div class='crumb'>홈 › "+catLabel(b.cat.split('/')[0])+" › <b>"+b.title+"</b></div>"+
+  "<div class='detail-top'>"+
+    "<div><div class='detail-thumb' data-uc='UC-INFO-05'>"+b.title.slice(0,2)+"</div></div>"+
+    "<div class='sale-panel' data-uc='UC-INFO-05'>"+
+      "<div class='series'>"+catLabel(b.cat.split('/')[0])+" · "+b.series+(b.badge?" · "+(b.badge==='new'?'NEW':'HOT'):"")+"</div>"+
+      "<h1>"+b.title+"</h1>"+
+      "<div class='price-block'>"+(off>0?"<span class='price-off'>"+off+"%</span>":"")+"<span class='now'>"+fmt(b.sale)+"</span>"+(off>0?"<span class='price-was'>"+fmt(b.price)+"</span>":"")+"</div>"+
+      "<div class='qty-row'>수량 <div class='qty-box'><button id='qtyMinus'>−</button><input id='qtyInput' value='1'><button id='qtyPlus'>+</button></div></div>"+
+      "<div class='cta-row'>"+
+        "<button class='btn' id='detailAdd' "+(b.status==="soldout"?"disabled":"")+">장바구니 담기</button>"+
+        "<button class='btn btn-primary' id='detailBuy' "+(b.status!=="onsale"?"disabled":"")+">바로구매</button>"+
+        "<button class='btn' id='detailWish'>"+(state.wish[b.id]?"♥ 찜 해제":"♡ 찜하기")+"</button>"+
+      "</div>"+
+      statusNote+tutorBtnTop+
+    "</div>"+
+  "</div>"+
+  "<div class='tabnav'>"+
+    "<button class='active' data-tab='t1'>상세정보</button><button data-tab='t2'>정보고시</button><button data-tab='t3'>구매유의사항</button>"+
+    "<button data-tab='t4'>학습법</button><button data-tab='t5' data-uc='UC-MAT-01'>학습자료</button><button data-tab='t6'>후기</button>"+
+  "</div>"+
+  "<div class='tabpane active' id='t1' data-uc='UC-INFO-06'><p>"+b.title+"은(는) "+catLabel(b.cat.split('/')[0])+" 영역의 대표 교재로, 최신 개정 교육과정을 반영해 구성되었습니다.</p></div>"+
+  "<div class='tabpane' id='t2' data-uc='UC-INFO-07'><table class='info-table'><tr><th>도서명</th><td>"+b.title+"</td></tr><tr><th>발행사</th><td>NE능률</td></tr><tr><th>쪽수</th><td>224쪽</td></tr><tr><th>제품 구성</th><td>본책 + 워크북</td></tr></table></div>"+
+  "<div class='tabpane' id='t3' data-uc='UC-INFO-08'><p>교재 특성상 수령 후 7일 이내, 사용 흔적이 없는 경우에만 교환/반품이 가능합니다.</p></div>"+
+  "<div class='tabpane' id='t4' data-uc='UC-INFO-09'><p>주 4회 학습 기준 8주 완성 커리큘럼을 권장합니다.</p></div>"+
+  "<div class='tabpane' id='t5'>"+
+    (b.mats.length ? "<table class='mat-table'><tr><th>자료명</th><th>대상</th><th>다운로드</th></tr>"+matRows+"</table>" : "<p style='color:var(--ink-soft);font-size:.84rem;margin-bottom:16px;'>등록된 학습자료가 없습니다.</p>")+
+    tutorBanner+
+  "</div>"+
+  "<div class='tabpane' id='t6' data-uc='UC-INFO-10'>"+
+    "<div class='review-row'><span class='stars'>★★★★★</span> 설명이 정말 자세해서 좋아요. — 학부모A</div>"+
+    "<div class='review-row'><span class='stars'>★★★★☆</span> 워크북 구성이 알찹니다. — 교강사B</div>"+
+  "</div>"+
+  "<div class='section-head' style='margin-top:30px;' data-uc='UC-INFO-11'><h2>시리즈 교재</h2></div>"+
+  "<div class='rel-grid' style='margin-bottom:26px;'>"+BOOKS.slice(0,5).map(function(x){return "<a href='#/detail/"+x.id+"' class='rel-card'><div class='thumb'>"+x.title.slice(0,2)+"</div>"+x.title+"</a>";}).join("")+"</div>"+
+  "<div class='section-head' data-uc='UC-INFO-12'><h2>이 교재를 함께 산 회원님들</h2></div>"+
+  "<div class='rel-grid'>"+BOOKS.slice(5,10).map(function(x){return "<a href='#/detail/"+x.id+"' class='rel-card'><div class='thumb'>"+x.title.slice(0,2)+"</div>"+x.title+"</a>";}).join("")+"</div>";
+}
+
+function screenCart(){
+  var items = BOOKS.filter(function(b){return state.cart.indexOf(b.id)>-1;});
+  var total = items.reduce(function(s,b){return s+b.sale;},0);
+  setTimeout(function(){
+    document.querySelectorAll("[data-rm]").forEach(function(btn){
+      btn.addEventListener("click",function(){ var id=btn.getAttribute("data-rm"); state.cart.splice(state.cart.indexOf(id),1); updateCartCount(); render(); });
+    });
+    var order=document.getElementById("orderBtn");
+    if(order) order.addEventListener("click",function(){ if(!requireLogin("주문은 로그인 후 진행됩니다.")) return; toast("주문/결제 화면으로 이동(프로토타입 범위 외)"); });
+  },0);
+  return ""+
+  "<h2 style='margin-bottom:18px;' data-uc='UC-BUY-06'>장바구니</h2>"+
+  "<div class='cart-layout'>"+
+    "<div>"+ (items.length ? items.map(function(b){
+      return "<div class='cart-item'><input type='checkbox' checked><div class='thumb'>"+b.title.slice(0,2)+"</div>"+
+        "<div><div style='font-weight:700;font-size:.88rem;'>"+b.title+"</div><div style='font-size:.76rem;color:var(--ink-soft);'>"+catLabel(b.cat.split('/')[0])+"</div></div>"+
+        "<div style='font-weight:800;'>"+fmt(b.sale)+"</div><button class='btn btn-sm' data-rm='"+b.id+"'>삭제</button></div>";
+    }).join("") : "<div class='empty-state' data-uc='UC-BUY-12'>장바구니가 비어 있습니다.</div>") +"</div>"+
+    "<div class='summary-box' data-uc='UC-BUY-08'>"+
+      "<div class='summary-row'><span>상품금액</span><span>"+fmt(total)+"</span></div>"+
+      "<div class='summary-row'><span>배송비</span><span>"+(total>0 && total<30000 ? "3,000원":"무료")+"</span></div>"+
+      "<div class='coupon-note'>쿠폰 기능은 이번 개편 범위에서 완전히 제거되었습니다(확정 2026-06-29).</div>"+
+      "<div class='summary-row total'><span>결제예정금액</span><span>"+fmt(total + (total>0 && total<30000?3000:0))+"</span></div>"+
+      "<button class='btn btn-primary btn-block' id='orderBtn' style='margin-top:10px;' data-uc='UC-BUY-11'>주문하기</button>"+
+    "</div>"+
+  "</div>";
+}
+
+function screenMypage(){
+  if(!requireLogin("마이페이지는 로그인 후 이용할 수 있어요.")){
+    return "<div class='empty-state'>로그인이 필요한 화면입니다.</div>";
+  }
+  var tabs=["홈","주문내역","포인트","학습자료실","찜","문의/답변","후기","이벤트/세미나"];
+  return ""+
+  "<div class='profile-card' data-uc='UC-CS-14'>"+
+    "<div><b style='font-size:1.05rem;'>"+(state.auth==="teacher"?"김선생":"홍길동")+" 님</b><span class='role "+(state.auth==="teacher"?"teacher":"")+"'>"+(state.auth==="teacher"?"교강사":"일반회원")+"</span></div>"+
+    "<button class='btn btn-sm' id='editProfile' data-uc='UC-AUTH-05'>회원정보수정</button>"+
+  "</div>"+
+  "<div class='mypage-layout'>"+
+    "<nav class='mp-nav'>"+tabs.map(function(t,i){return "<a href='#' class='"+(i===0?"active":"")+"'>"+t+"</a>";}).join("")+"</nav>"+
+    "<div>"+
+      "<div class='widget-grid'>"+
+        "<div class='widget' data-uc='UC-ORD-15'><h4>주문 현황</h4><div class='big'>3건</div><div class='stat-row'><span>입금대기 0</span><span>배송중 1</span></div></div>"+
+        "<div class='widget' data-uc='UC-PNT-04'><h4>포인트 <span style='font-weight:400;'>(쿠폰: 범위 제외)</span></h4><div class='big'>4,500P</div><div class='stat-row'><span>소멸예정 300P</span></div></div>"+
+        "<div class='widget' data-uc='UC-CS-14'><h4>활동 요약</h4><div class='stat-row'><span>문의 2</span><span>후기 1</span><span>세미나 0</span></div></div>"+
+      "</div>"+
+      "<div class='section-head' data-uc='UC-CS-15'><h2>학습자료실 (다운로드 이력)</h2></div>"+
+      "<table class='simple-table' style='margin-bottom:24px;'><tr><th>교재</th><th>최근 다운로드</th><th></th></tr>"+
+        BOOKS.filter(function(b){return b.hasMaterial;}).slice(0,3).map(function(b){return "<tr><td>"+b.title+"</td><td>2026.07.0"+b.id+"</td><td><a href='#/detail/"+b.id+"'>다시 받기</a></td></tr>";}).join("")+
+      "</table>"+
+      "<div class='section-head' data-uc='UC-BUY-14'><h2>찜한 교재</h2></div>"+
+      "<div class='rel-grid'>"+Object.keys(state.wish).filter(function(k){return state.wish[k];}).map(function(id){var b=BOOKS.filter(function(x){return x.id===id;})[0]; return "<a href='#/detail/"+b.id+"' class='rel-card'><div class='thumb'>"+b.title.slice(0,2)+"</div>"+b.title+"</a>";}).join("") + "" +
+      (Object.values(state.wish).filter(Boolean).length===0 ? "<span style='color:var(--ink-soft);font-size:.82rem;'>찜한 교재가 없습니다.</span>" : "") +"</div>"+
+    "</div>"+
+  "</div>";
+}
+
+function screenCS(){
+  var params = new URLSearchParams((location.hash.split("?")[1]||""));
+  var active = params.get("tab") || "notice";
+  var tabs=[["notice","공지사항"],["faq","FAQ"],["event","이벤트/신간·개정/세미나"],["fix","교재 오류정정"],["qna","1:1 문의"],["branch","지사안내"]];
+  var body="";
+  if(active==="notice"){
+    body = "<div data-uc='UC-CS-01'>"+["반응형 사이트 전환 안내","학습자료실 화면 개편 안내","신학기 배송 지연 안내","여름방학 특강 교재 사전예약"].map(function(t,i){
+      return "<div class='notice-row'><span>[공지] "+t+"</span><span>2026.07.0"+(9-i)+"</span></div>";
+    }).join("")+"</div>";
+  } else if(active==="faq"){
+    var qs=["주문 취소는 어떻게 하나요?","학습자료 다운로드가 안돼요","교강사 인증은 어떻게 하나요?","배송은 얼마나 걸리나요?"];
+    body = "<div data-uc='UC-CS-03'>"+qs.map(function(q,i){return "<div class='faq-item'><button class='faq-q' data-i='"+i+"'>"+q+" <span>+</span></button><div class='faq-a'>답변 예시 내용이 들어갑니다.</div></div>";}).join("")+"</div>";
+    setTimeout(function(){ document.querySelectorAll(".faq-q").forEach(function(b){ b.addEventListener("click",function(){ b.parentElement.classList.toggle("open"); }); }); },0);
+  } else if(active==="event"){
+    body = "<div class='rel-grid' data-uc='UC-CS-04'>"+[1,2,3,4].map(function(){return "<div class='rel-card'><div class='thumb'>🎉</div>신학기 이벤트</div>";}).join("")+"</div>";
+  } else if(active==="fix"){
+    body = "<p data-uc='UC-CS-05' style='font-size:.84rem;color:var(--ink-soft);'>교재 오탈자·오류 제보 게시판입니다. 접수된 오류정정 사항은 검토 후 공지됩니다.</p>";
+  } else if(active==="qna"){
+    body = "<div data-uc='UC-CS-07'><table class='simple-table'><tr><th>분류</th><th>제목</th><th>상태</th></tr>"+
+      "<tr><td>주문/결제</td><td>결제가 안돼요</td><td>답변완료</td></tr><tr><td>교재</td><td>워크북 정답 문의</td><td>답변대기</td></tr></table>"+
+      "<button class='btn btn-primary btn-sm' style='margin-top:12px;' data-uc='UC-CS-08'>1:1 문의 등록</button></div>";
+  } else if(active==="branch"){
+    body = "<div class='branch-grid' data-uc='UC-CS-17'>"+
+      ["서울지사","경기지사","부산지사"].map(function(t){return "<div class='branch-card'><b>"+t+"</b>02-000-0000<br>서울/경기/부산 일대</div>";}).join("")+
+    "</div><p style='font-size:.72rem;color:var(--ink-soft);margin-top:10px;'>※ 상단 독립 버튼이 아닌 탭으로 노출(2026-07-08 변경).</p>";
+  }
+  return "<div class='cs-tabs'>"+tabs.map(function(t){return "<button data-cst='"+t[0]+"' class='"+(t[0]===active?"active":"")+"'>"+t[1]+"</button>";}).join("")+"</div>"+
+    "<div id='csBody'>"+body+"</div>";
+}
+
+/* ================= ROUTER ================= */
+function render(){
+  var hash = location.hash || "#/home";
+  var path = hash.split("?")[0];
+  var app = document.getElementById("app");
+  var m;
+  if(path==="#/home" || path==="#" || path===""){ app.innerHTML = screenHome(); document.getElementById("homeGrid").innerHTML = BOOKS.slice(0,4).map(bookCardHTML).join(""); wireBookCardEvents(app);
+    document.querySelectorAll(".shortcut").forEach(function(b){ b.addEventListener("click",function(){
+      var i=+b.getAttribute("data-sc");
+      if(i===2){ state.listType="material"; go("#/list"); }
+      else { state.listType="buy"; go("#/list"); }
+    });});
+    var nt=document.getElementById("ntEntry"); if(nt) nt.addEventListener("click",function(){ if(!requireLogin("NE Tutor는 로그인 후 이용할 수 있어요.")) return; toast("NE Tutor로 이동합니다"); });
+  }
+  else if(path==="#/list"){ app.innerHTML = screenList(); wireBookCardEvents(app);
+    var lt=app.querySelectorAll("[data-lt]"); lt.forEach(function(b){ b.addEventListener("click",function(){ state.listType=b.getAttribute("data-lt"); render(); }); });
+    var ss=document.getElementById("sortSel"); if(ss){ ss.value=state.sort; ss.addEventListener("change",function(){ state.sort=ss.value; render(); }); }
+    var fs=document.getElementById("openFilterSheet"); if(fs) fs.addEventListener("click",function(){ document.getElementById("filterSheetBody").innerHTML = document.getElementById("filterCol").innerHTML; document.getElementById("filter-sheet").classList.add("open");
+      document.getElementById("filterSheetBody").querySelectorAll("[data-fc]").forEach(function(r){ r.addEventListener("change",function(){ state.filters.cat=r.getAttribute("data-fc")||null; document.getElementById("filter-sheet").classList.remove("open"); render(); }); });
+    });
+  }
+  else if((m=path.match(/^#\/detail\/(.+)/))){ app.innerHTML = screenDetail(m[1]); }
+  else if(path==="#/cart"){ app.innerHTML = screenCart(); }
+  else if(path==="#/mypage"){ app.innerHTML = screenMypage(); }
+  else if(path==="#/cs"){ app.innerHTML = screenCS();
+    app.querySelectorAll("[data-cst]").forEach(function(b){ b.addEventListener("click",function(){ location.hash="#/cs?tab="+b.getAttribute("data-cst"); render(); }); });
+  }
+  else { app.innerHTML = "<div class='empty-state'>화면을 찾을 수 없습니다.</div>"; }
+
+  document.querySelectorAll("[data-route]").forEach(function(el){ el.addEventListener("click",function(){ go(el.getAttribute("data-route")); }); });
+  window.scrollTo(0,0);
+  updateBpTag();
+}
+
+/* ================= misc UI wiring ================= */
+document.getElementById("filterSheetScrim").addEventListener("click",function(){ document.getElementById("filter-sheet").classList.remove("open"); });
+document.getElementById("fpToggle").addEventListener("click",function(){ document.getElementById("fpBody").classList.toggle("collapsed"); });
+document.getElementById("ucToggle").addEventListener("click",function(){
+  state.showUC=!state.showUC; document.body.classList.toggle("show-uc",state.showUC);
+  this.classList.toggle("on",state.showUC); this.textContent = state.showUC ? "UC 라벨 숨기기" : "UC 라벨 표시";
+});
+document.getElementById("todoLink").addEventListener("click",function(){
+  openModal("문서 기준 열린 TODO","이 프로토타입에서 아직 확정되지 않은 항목입니다(README 기준).",
+    [{label:"닫기",cls:"btn-primary",onClick:closeModal}]);
+  document.getElementById("modalBox").querySelector("p").outerHTML = "<ul style='text-align:left;font-size:.78rem;color:var(--ink-soft);margin-bottom:18px;padding-left:18px;'>"+TODOS.map(function(t){return "<li style='margin-bottom:6px;'>"+t+"</li>";}).join("")+"</ul>";
+});
+function updateBpTag(){
+  document.getElementById("bpTag").textContent = window.innerWidth<=960 ? "Mobile 레이아웃" : "PC 레이아웃";
+}
+window.addEventListener("resize",updateBpTag);
+window.addEventListener("hashchange",render);
+
+/* ================= init ================= */
+buildGNB();
+syncAuthUI();
+render();
+})();
+</script>
+</body>
+</html>
+

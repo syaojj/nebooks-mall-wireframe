@@ -1,0 +1,306 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=1280">
+<title>NE_Books 주문/결제</title>
+<style>
+  :root{--ink:#222732;--line:#d7dbe2;--line2:#e6e9ee;--fill:#eef0f3;--fill2:#f7f8fa;--muted:#8b909c;--bar2:#dde1e7;
+    --new:#1f9d72;--newbg:#e6f6ef;--red:#e23b3b;--orange:#e8852b;--blue:#3a78f2;--bluebg:#eaf1ff;}
+  *{box-sizing:border-box}
+  body{margin:0;background:#fff;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Apple SD Gothic Neo","Malgun Gothic",sans-serif}
+  a{color:inherit;text-decoration:none}
+  .container{max-width:1280px;margin:0 auto;padding:0 24px}
+  .spacer{flex:1}
+
+  .utilbar{background:#f4f5f7;border-bottom:1px solid var(--line2);font-size:12px;color:#5a606c}
+  .utilbar .container{display:flex;align-items:center;gap:14px;height:38px;font-weight:600;flex-wrap:wrap}
+  .utilbar .sep{color:#cfd3da}
+  .header .container{display:flex;align-items:center;gap:24px;padding-top:22px;padding-bottom:22px}
+  .logo{font-size:26px;font-weight:800}.logo .r{color:var(--red)}
+  .srch{flex:1;max-width:900px;display:flex;align-items:center;gap:12px}
+  .srchwrap{position:relative;flex:1}
+  .recobtn{flex-shrink:0;background:var(--ink);color:#fff;border-radius:9px;padding:13px 18px;font-size:13.5px;font-weight:800;white-space:nowrap;cursor:pointer}
+  .srchbox{height:48px;border:2px solid var(--ink);border-radius:8px;display:flex;align-items:center;padding:0 18px;color:var(--muted);font-size:14px;cursor:text}
+  .uicons{display:flex;align-items:center;gap:22px;margin-left:auto}
+  .uic{display:flex;flex-direction:column;align-items:center;gap:5px;font-size:11px;color:#5a606c;font-weight:700}
+  .uic .ci{width:34px;height:34px;border-radius:50%;background:var(--fill);border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;font-size:17px}
+  .gnb{border-top:1px solid var(--line2);border-bottom:2px solid var(--ink)}
+  .gnb .container{display:flex;align-items:center;justify-content:space-between;height:54px;font-size:15px;font-weight:700}
+  .gnb a{color:#444b57}
+
+  .crumb{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);padding:18px 0 0}
+  .crumb .hm{color:#5a606c}.crumb .sep{color:#cfd3da}
+  .ptitle{font-size:28px;font-weight:800;margin:14px 0 18px;letter-spacing:-.02em}
+
+  /* 스텝 인디케이터 */
+  .steps{display:flex;align-items:center;gap:10px;margin-bottom:26px;font-size:14px;font-weight:800}
+  .steps .st{color:#c2c6cf}.steps .st.on{color:var(--ink)}
+  .steps .st .n{display:inline-flex;width:24px;height:24px;border-radius:50%;background:var(--fill);color:#9aa0ac;align-items:center;justify-content:center;font-size:12px;margin-right:7px}
+  .steps .st.on .n{background:var(--ink);color:#fff}
+  .steps .ar{color:#cfd3da}
+
+  /* 레이아웃 */
+  .orderwrap{display:grid;grid-template-columns:1fr 360px;gap:30px;padding-bottom:50px;align-items:start}
+
+  .block{border:1px solid var(--line2);border-radius:16px;padding:24px 26px;margin-bottom:18px}
+  .block h2{font-size:18px;font-weight:800;margin:0 0 18px;display:flex;align-items:center;gap:9px}
+  .block h2 .req{font-size:11px;font-weight:800;color:var(--red)}
+  .editbtn{margin-left:auto;font-size:12px;font-weight:700;color:#5a606c;border:1px solid var(--line);border-radius:8px;padding:8px 14px;cursor:pointer}
+
+  /* 주문상품 */
+  .oitem{display:grid;grid-template-columns:72px 1fr auto;gap:16px;align-items:center;padding:16px 0;border-bottom:1px solid var(--line2)}
+  .oitem:last-child{border-bottom:0}
+  .ocover{width:72px;aspect-ratio:3/4;background:var(--fill);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:10px;position:relative}
+  .ometa{font-size:12px;color:#7a828f;font-weight:700;margin-bottom:5px}.ometa b{color:#3d4756}
+  .oname{font-size:15px;font-weight:800;margin:0 0 6px}
+  .oqty{font-size:12.5px;color:#6b7280}
+  .oprice{text-align:right}
+  .oprice .ori{font-size:12px;color:#b6bcc6;text-decoration:line-through;display:block}
+  .oprice .now{font-size:17px;font-weight:800}
+  .warn{display:inline-block;font-size:11px;font-weight:800;color:var(--orange);background:#fdf0e2;border-radius:5px;padding:2px 8px;margin-top:5px}
+
+  /* 폼 */
+  .frow{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+  .frow:last-child{margin-bottom:0}
+  .frow .lab{flex:0 0 90px;font-size:13px;font-weight:700;color:#5a606c}
+  .inp{flex:1;height:44px;border:1px solid var(--line);border-radius:9px;padding:0 14px;font-size:13.5px;color:#3d4756;background:#fff;display:flex;align-items:center}
+  .inp.ph{color:var(--muted)}
+  .selbox{height:44px;border:1px solid var(--line);border-radius:9px;padding:0 14px;font-size:13px;display:flex;align-items:center;gap:8px;color:#3d4756;cursor:pointer}
+  .sbtn{height:44px;border:1px solid var(--ink);border-radius:9px;padding:0 18px;font-size:13px;font-weight:800;color:var(--ink);background:#fff;cursor:pointer;white-space:nowrap;display:flex;align-items:center}
+  .addrtabs{display:flex;gap:8px;margin-bottom:14px}
+  .atab{border:1px solid var(--line);border-radius:20px;padding:8px 16px;font-size:12.5px;font-weight:700;color:#5a606c;cursor:pointer}
+  .atab.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+  /* 포인트/쿠폰 */
+  .ptrow{display:flex;align-items:center;gap:12px}
+  .ptrow .lab{flex:0 0 90px;font-size:13px;font-weight:700;color:#5a606c}
+  .have{font-size:12.5px;color:var(--muted);margin-left:4px}.have b{color:var(--blue)}
+  .minibtn{height:44px;border:1px solid var(--line);border-radius:9px;padding:0 16px;font-size:12.5px;font-weight:800;color:#3d4756;background:var(--fill2);cursor:pointer}
+  .note{font-size:12px;color:var(--muted);margin:10px 0 0;line-height:1.6}
+  .blind{display:flex;align-items:center;gap:8px;background:var(--fill2);border:1px dashed var(--line);border-radius:10px;padding:14px 16px;font-size:13px;color:var(--muted);font-weight:600}
+
+  /* 결제수단 */
+  .pays{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  .pay{border:1px solid var(--line);border-radius:11px;padding:16px 10px;text-align:center;font-size:13px;font-weight:800;color:#3d4756;cursor:pointer}
+  .pay .pi{font-size:22px;display:block;margin-bottom:7px}
+  .pay.on{border-color:var(--ink);background:var(--fill2);box-shadow:inset 0 0 0 1px var(--ink)}
+
+  /* 동의 */
+  .agall{display:flex;align-items:center;gap:10px;padding:14px 0;border-bottom:1px solid var(--line2);font-size:14px;font-weight:800}
+  .agrow{display:flex;align-items:center;gap:10px;padding:12px 0;font-size:13px;color:#3d4756}
+  .agrow .reqd{color:var(--red);font-weight:800;font-size:12px}
+  .agrow .opt{color:var(--muted);font-weight:700;font-size:12px}
+  .agrow .view{margin-left:auto;font-size:12px;color:var(--muted);text-decoration:underline;cursor:pointer}
+  .cb{width:20px;height:20px;border-radius:6px;border:1.5px solid var(--line);background:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:13px;color:#fff;font-weight:800;cursor:pointer;flex-shrink:0}
+  .cb.on{background:var(--blue);border-color:var(--blue)}
+
+  /* 우측 요약(sticky) */
+  .summary{position:sticky;top:14px;border:1px solid var(--line2);border-radius:16px;padding:24px 24px}
+  .summary h3{font-size:17px;font-weight:800;margin:0 0 18px}
+  .srow{display:flex;justify-content:space-between;font-size:13.5px;color:#5a606c;padding:9px 0}
+  .srow b{color:#3d4756;font-weight:700}
+  .srow.disc b{color:var(--red)}
+  .sdiv{height:1px;background:var(--line2);margin:8px 0}
+  .total{display:flex;justify-content:space-between;align-items:baseline;padding:12px 0 4px}
+  .total .tl{font-size:15px;font-weight:800}
+  .total .tv{font-size:26px;font-weight:800;color:var(--blue)}.total .tv .won{font-size:15px;color:#3d4756}
+  .pointback{font-size:12px;color:var(--blue);font-weight:700;text-align:right;margin-bottom:14px}
+  .paybtn{display:block;text-align:center;background:var(--blue);color:#fff;border-radius:11px;padding:17px;font-size:16px;font-weight:800;cursor:pointer}
+  .paynote{font-size:11.5px;color:var(--muted);text-align:center;margin-top:12px;line-height:1.6}
+
+  .ftr{background:#2a2f3a;color:#aeb4c0;font-size:13px;line-height:2;margin-top:20px}
+  .ftr .container{padding-top:26px;padding-bottom:30px}
+  .ftr .fnav{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+  .ftr .fnav a{color:#cdd2db;font-weight:600}.ftr .fnav .b{color:#fff;font-weight:800}.ftr .fnav .sep{color:#555c69}
+  .ftr .family{float:right;border:1px solid #555c69;border-radius:22px;padding:9px 20px;color:#cdd2db}
+  .ftr .fco{color:#8b909c}.ftr .flogo{float:right;font-weight:800;color:#7d8390;font-size:17px;margin-top:8px}
+
+  .toast{position:fixed;left:50%;bottom:40px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;font-size:13.5px;font-weight:700;padding:14px 22px;border-radius:10px;opacity:0;pointer-events:none;transition:.25s;z-index:999;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+  .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+</style></head>
+<body>
+
+  <div class="utilbar"><div class="container">
+    <span>NE능률</span><span class="sep">|</span><span>교과서</span><span class="sep">|</span><span>영어·수학교재</span><span class="sep">|</span><span>ELT교재</span><span class="sep">|</span><span>영자신문</span><span class="sep">|</span><span>아이챌린지</span><span class="sep">|</span><span>유아교육</span><span class="sep">|</span><span>영어레벨테스트</span><span class="sep">|</span><span>초중등영어학원</span>
+    <span class="spacer"></span><span>👤 김능률님</span>
+  </div></div>
+
+  <header class="header"><div class="container">
+    <div class="logo"><span class="r">NE_</span>Books</div>
+    <div class="srch"><div class="srchwrap">
+      <div class="srchbox">🔎 교재명 또는 검색어를 입력해 주세요.<span class="spacer"></span>🔍</div>
+    </div><a class="recobtn">🎯 맞춤형 교재추천</a></div>
+    <div class="uicons">
+      <a class="uic"><span class="ci">👤</span>로그아웃</a>
+      <a class="uic"><span class="ci">🛒</span>장바구니</a>
+      <a class="uic"><span class="ci">📋</span>MY페이지</a>
+      <a class="uic"><span class="ci">🎧</span>고객센터</a>
+    </div>
+  </div></header>
+
+  <nav class="gnb"><div class="container">
+    <a>ELT</a><a>초·중등</a><a>고등</a><a>교과서·자습서</a><a>수험·일반</a><a>수학·국어</a><a>학습자료실</a><a>도서몰</a>
+  </div></nav>
+
+  <main class="container">
+    <div class="crumb"><span class="hm">🏠 홈</span><span class="sep">›</span><span>장바구니</span><span class="sep">›</span><span>주문/결제</span></div>
+    <h1 class="ptitle">주문/결제</h1>
+    <div class="steps">
+      <span class="st">장바구니</span><span class="ar">›</span>
+      <span class="st on"><span class="n">1</span>주문서 작성/결제</span><span class="ar">›</span>
+      <span class="st"><span class="n">2</span>주문완료</span>
+    </div>
+
+    <div class="orderwrap">
+      <!-- 좌측 -->
+      <div class="left">
+        <!-- 주문상품 -->
+        <div class="block">
+          <h2>주문 상품 <span style="font-size:13px;color:var(--muted);font-weight:700">총 3건</span></h2>
+          <div class="oitem">
+            <div class="ocover">표지</div>
+            <div><div class="ometa"><b>NE능률</b> · 독해 · 중등</div><p class="oname">주니어 리딩튜터 Level 3</p><div class="oqty">수량 1개</div></div>
+            <div class="oprice"><span class="ori">15,000원</span><span class="now">13,500원</span></div>
+          </div>
+          <div class="oitem">
+            <div class="ocover">표지</div>
+            <div><div class="ometa"><b>NE능률</b> · 어휘 · 중등</div><p class="oname">능률 VOCA 어원편 (개정판)</p><div class="oqty">수량 2개</div></div>
+            <div class="oprice"><span class="ori">28,000원</span><span class="now">23,800원</span></div>
+          </div>
+          <div class="oitem">
+            <div class="ocover">표지</div>
+            <div><div class="ometa"><b>NE능률</b> · 듣기 · 중등</div><p class="oname">1316 Listening Level 2</p><div class="oqty">수량 1개</div><span class="warn">⚠ 판매상태 변경 — 일시품절</span></div>
+            <div class="oprice"><span class="now">11,700원</span></div>
+          </div>
+        </div>
+
+        <!-- 주문자 정보 -->
+        <div class="block">
+          <h2>주문자 정보</h2>
+          <div class="frow"><span class="lab">이름</span><div class="inp">김능률</div></div>
+          <div class="frow"><span class="lab">연락처</span><div class="inp">010-1234-5678</div></div>
+          <div class="frow"><span class="lab">이메일</span><div class="inp">knr@neungyule.com</div></div>
+        </div>
+
+        <!-- 배송지 정보 -->
+        <div class="block">
+          <h2>배송지 정보 <span class="req">* 필수</span><span class="editbtn">배송지 목록</span></h2>
+          <div class="addrtabs">
+            <span class="atab on">기본 배송지</span>
+            <span class="atab">신규 입력</span>
+            <span class="atab">배송지 목록에서 선택</span>
+          </div>
+          <div class="frow"><span class="lab">수령인</span><div class="inp">김능률</div></div>
+          <div class="frow"><span class="lab">연락처</span><div class="inp">010-1234-5678</div></div>
+          <div class="frow"><span class="lab">주소</span><div class="inp">(03925) 서울 마포구 월드컵북로 396</div><span class="sbtn">우편번호 검색</span></div>
+          <div class="frow"><span class="lab"></span><div class="inp ph">상세주소를 입력해 주세요.</div></div>
+          <div class="frow"><span class="lab">배송요청</span><div class="selbox spacer">부재 시 경비실에 맡겨주세요 ▾</div></div>
+        </div>
+
+        <!-- NE Point / 쿠폰 -->
+        <div class="block">
+          <h2>할인 / NE Point</h2>
+          <div class="ptrow">
+            <span class="lab">NE Point</span>
+            <div class="inp ph spacer">0</div>
+            <span class="minibtn" id="useAll">전액사용</span>
+            <span class="minibtn" id="applyPt">적용</span>
+          </div>
+          <p class="note">보유 <b style="color:var(--blue)">2,400P</b> · 100P 단위로 사용 가능합니다. (보유 포인트 내 사용)</p>
+          <div style="height:14px"></div>
+          <div class="ptrow">
+            <span class="lab">쿠폰</span>
+            <div class="blind spacer">🎟️ 쿠폰 기능은 추후 오픈 예정입니다.</div>
+          </div>
+        </div>
+
+        <!-- 결제수단 -->
+        <div class="block">
+          <h2>결제수단 <span class="req">* 필수</span></h2>
+          <div class="pays">
+            <div class="pay on"><span class="pi">💳</span>신용/체크카드</div>
+            <div class="pay"><span class="pi">🏦</span>계좌이체</div>
+            <div class="pay"><span class="pi">🧾</span>가상계좌</div>
+            <div class="pay"><span class="pi">📱</span>간편결제</div>
+          </div>
+          <p class="note">* PG사 및 결제수단 범위는 확정 후 반영됩니다.</p>
+        </div>
+
+        <!-- 주문 동의 -->
+        <div class="block">
+          <h2>주문 동의 <span class="req">* 필수</span></h2>
+          <div class="agall"><span class="cb" id="agAll"></span>전체 동의</div>
+          <div class="agrow"><span class="cb agc"></span><span class="reqd">[필수]</span> 구매조건 확인 및 결제 진행 동의<span class="view">보기</span></div>
+          <div class="agrow"><span class="cb agc"></span><span class="reqd">[필수]</span> 개인정보 제3자 제공 동의<span class="view">보기</span></div>
+          <div class="agrow"><span class="cb agc"></span><span class="opt">[선택]</span> 마케팅 정보 수신 동의<span class="view">보기</span></div>
+        </div>
+      </div>
+
+      <!-- 우측 요약 -->
+      <aside>
+        <div class="summary">
+          <h3>결제 금액</h3>
+          <div class="srow"><span>상품금액</span><b>52,700원</b></div>
+          <div class="srow disc"><span>상품 할인</span><b>−6,500원</b></div>
+          <div class="srow disc"><span>포인트 사용</span><b id="ptUse">−0원</b></div>
+          <div class="srow"><span>배송비</span><b>+2,500원</b></div>
+          <div class="sdiv"></div>
+          <div class="total"><span class="tl">최종 결제금액</span><span class="tv" id="finalAmt">48,700<span class="won">원</span></span></div>
+          <p class="pointback">결제 시 2,435P 적립 예정</p>
+          <span class="paybtn" id="payBtn">48,700원 결제하기</span>
+          <p class="paynote">위 주문 내용을 확인하였으며,<br>결제에 동의합니다. (회원 전용 / 비회원 진입 불가)</p>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="ftr"><div class="container">
+    <span class="family">FAMILY SITE ▾</span>
+    <div class="fnav">
+      <a>개인정보처리방침</a><span class="sep">|</span><a>이용약관</a><span class="sep">|</span><a>이메일무단수집거부</a><span class="sep">|</span><a>지사안내</a><span class="sep">|</span><a>찾아오시는 길</a><span class="sep">|</span><a class="b">학원/도서관 대량구매</a>
+    </div>
+    <div class="flogo">NE능률</div>
+    <div class="fco">
+      ㈜NE능률 (03925) 서울 특별시 마포구 월드컵북로 396(상암동) 누리꿈스퀘어 비즈니스타워 10층 &nbsp;|&nbsp; 대표이사 : 이정진<br>
+      고객센터 : 1833-8368 / 02-2014-7260 [사업별 고객센터 안내]<br>
+      Copyright © NE Neungyule, Inc. All Rights Reserved
+    </div>
+  </div></footer>
+
+  <div class="toast" id="toast"></div>
+
+<script>
+  function toast(m){var t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(function(){t.classList.remove('on');},2000);}
+  function won(n){return n.toLocaleString()+'원';}
+
+  /* 배송지 탭 */
+  document.querySelectorAll('.atab').forEach(function(t){t.addEventListener('click',function(){
+    document.querySelectorAll('.atab').forEach(function(x){x.classList.remove('on');});t.classList.add('on');});});
+
+  /* 결제수단 */
+  document.querySelectorAll('.pay').forEach(function(p){p.addEventListener('click',function(){
+    document.querySelectorAll('.pay').forEach(function(x){x.classList.remove('on');});p.classList.add('on');});});
+
+  /* 동의 */
+  function setCb(c,on){c.classList.toggle('on',on);c.textContent=on?'✓':'';}
+  var agAll=document.getElementById('agAll'),agcs=document.querySelectorAll('.agc');
+  agAll.addEventListener('click',function(){var on=!agAll.classList.contains('on');setCb(agAll,on);agcs.forEach(function(c){setCb(c,on);});});
+  agcs.forEach(function(c){c.addEventListener('click',function(){setCb(c,!c.classList.contains('on'));
+    var all=[].every.call(agcs,function(x){return x.classList.contains('on');});setCb(agAll,all);});});
+
+  /* 포인트 적용 */
+  var base=48700, ptUse=document.getElementById('ptUse'), finalAmt=document.getElementById('finalAmt'), payBtn=document.getElementById('payBtn');
+  function applyPoint(p){
+    p=Math.min(p,2400); p=Math.floor(p/100)*100;
+    ptUse.textContent='−'+won(p);
+    var f=base-p; finalAmt.innerHTML=f.toLocaleString()+'<span class="won">원</span>';
+    payBtn.textContent=won(f)+' 결제하기';
+  }
+  document.getElementById('useAll').addEventListener('click',function(){applyPoint(2400);toast('보유 포인트 2,400P를 사용합니다.');});
+  document.getElementById('applyPt').addEventListener('click',function(){applyPoint(1000);toast('1,000P 적용 (예시)');});
+
+  /* 결제 */
+  payBtn.addEventListener('click',function(){
+    var reqOk=document.querySelectorAll('.agc')[0].classList.contains('on')&&document.querySelectorAll('.agc')[1].classList.contains('on');
+    if(!reqOk){toast('필수 동의 항목에 동의해 주세요.');return;}
+    toast('PG 결제창을 호출합니다. → 결제 성공 시 주문완료로 이동');
+  });
+</script>
+</body></html>

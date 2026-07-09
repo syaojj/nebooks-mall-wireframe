@@ -1,0 +1,27 @@
+/*
+ * NE design.md v0.11.5-alpha — official font loading reference
+ * This file is a reference for docs-only consumers.
+ * Fonts are loaded from NE-hosted official font sources (front.neungyule.com).
+ *
+ * Font provenance:
+ *   - Pretendard: orioncactus/pretendard (Kil Hyung-jin),
+ *     licensed under SIL Open Font License 1.1.
+ *     https://github.com/orioncactus/pretendard
+ *   - Paperlogy: Korean open-source font, served via NE-hosted official source.
+ *
+ * Source of truth:
+ *   - DESIGN.md typography.embedding
+ *   - full baseline index.html link tags
+ */
+
+@import url("https://front.neungyule.com/css/pretendardvariable.css");
+@import url("https://front.neungyule.com/font/Paperlogy/subset/Paperlogy-subset.css");
+
+:root {
+  --font-primary: "Pretendard Variable", "Pretendard", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-display: "Paperlogy", "Pretendard Variable", "Pretendard", system-ui, sans-serif;
+}
+
+body {
+  font-family: var(--font-primary);
+}
