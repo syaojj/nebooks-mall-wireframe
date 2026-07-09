@@ -263,6 +263,15 @@
   .more-link{font-size:.78rem;font-weight:700;color:var(--brand);}
 
   .book-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;}
+  /* UC-FIND-06: 교재목록은 앨범형(그리드) 대신 리스트형(1열, 가로 행) 레이아웃으로 고정 */
+  .book-list{display:flex;flex-direction:column;gap:12px;}
+  .book-list .book-card{flex-direction:row;}
+  .book-list .thumb{width:110px;aspect-ratio:3/4;flex:0 0 auto;}
+  .book-list .card-body{flex-direction:row;flex-wrap:wrap;align-items:center;gap:12px;padding:12px 16px;}
+  .book-list .card-series{width:100%;}
+  .book-list .card-title{min-height:0;flex:1 1 260px;}
+  .book-list .card-actions{margin-top:0;flex:0 0 auto;width:auto;}
+  .book-list .mat-row{flex:1 1 100%;}
   .book-card{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;position:relative;}
   .book-card:hover{box-shadow:var(--shadow);}
   .thumb{aspect-ratio:3/4;background:linear-gradient(150deg,#DCE6FF,#EFF3FF);display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--brand-deep);font-size:1.5rem;position:relative;}
@@ -1117,8 +1126,8 @@ function screenList(){
           "<span>총 "+filtered.length+"건</span>"+
         "</div>"+
       "</div>"+
-      "<div class='book-grid' id='listGrid' data-uc='UC-INFO-01'>"+
-        (filtered.length ? filtered.map(bookCardHTML).join("") : "<div class='empty-state' data-uc='UC-FIND-10' style='grid-column:1/-1;'>조건에 맞는 교재가 없습니다.</div>")+
+      "<div class='book-list' id='listGrid' data-uc='UC-INFO-01'>"+
+        (filtered.length ? filtered.map(bookCardHTML).join("") : "<div class='empty-state' data-uc='UC-FIND-10'>조건에 맞는 교재가 없습니다.</div>")+
       "</div>"+
       "<div class='pager' data-uc='UC-FIND-09'><button class='active'>1</button><button disabled>2</button><button disabled>›</button></div>"+
     "</div>"+
