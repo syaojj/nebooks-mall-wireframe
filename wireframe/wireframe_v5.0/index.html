@@ -378,6 +378,39 @@
   .summary-row.total{border-top:1px solid var(--line);margin-top:6px;padding-top:12px;font-weight:800;font-size:1rem;}
   .coupon-note{font-size:.72rem;color:var(--ink-soft);background:var(--paper);border-radius:8px;padding:8px 10px;margin:10px 0;}
 
+  /* order / order-complete */
+  .order-layout{display:grid;grid-template-columns:1fr 300px;gap:26px;align-items:start;}
+  .order-section{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:16px;}
+  .order-section h3{font-size:.92rem;margin-bottom:12px;}
+  .order-item-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--line);font-size:.85rem;}
+  .order-item-row:last-child{border-bottom:0;}
+  .addr-toggle{display:flex;gap:16px;margin-bottom:10px;font-size:.84rem;flex-wrap:wrap;}
+  .addr-toggle label{display:flex;align-items:center;gap:6px;}
+  .addr-form{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .addr-form input, .addr-form textarea{border:1px solid var(--line-strong);border-radius:8px;padding:9px 11px;font-size:.84rem;font-family:inherit;}
+  .addr-form textarea{grid-column:span 2;resize:vertical;}
+  .addr-form input:disabled, .addr-form textarea:disabled{background:var(--paper);color:var(--ink-soft);}
+  .point-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:.84rem;}
+  .point-row input[type=number]{width:110px;border:1px solid var(--line-strong);border-radius:8px;padding:8px 10px;}
+  .pay-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+  .pay-opt{display:flex;align-items:center;justify-content:center;border:1.5px solid var(--line-strong);border-radius:9px;padding:12px 8px;text-align:center;font-size:.8rem;font-weight:700;cursor:pointer;}
+  .pay-opt.active{border-color:var(--brand);background:var(--brand-wash);color:var(--brand-deep);}
+  .agree-row{display:flex;align-items:flex-start;gap:8px;font-size:.76rem;color:var(--ink-soft);padding-top:10px;border-top:1px solid var(--line);margin-top:12px;}
+  .vbank-box{background:var(--warm-wash);border:1px solid var(--warm);border-radius:10px;padding:14px 16px;margin-bottom:16px;font-size:.85rem;line-height:1.7;}
+  .vbank-box b{color:var(--warm);}
+  .complete-hero{text-align:center;padding:26px 0 18px;}
+  .complete-hero .ok-mark{font-size:2.3rem;color:var(--ok);}
+  .complete-hero h2{margin-top:10px;font-size:1.3rem;}
+  .complete-hero .ordno{font-size:.86rem;color:var(--ink-soft);margin-top:6px;}
+  .complete-actions{display:flex;gap:8px;justify-content:center;margin-top:18px;flex-wrap:wrap;}
+  .complete-actions .btn{flex:0 0 auto;min-width:130px;}
+  @media (max-width:960px){
+    .order-layout{grid-template-columns:1fr;}
+    .addr-form{grid-template-columns:1fr;}
+    .addr-form textarea{grid-column:span 1;}
+    .pay-grid{grid-template-columns:repeat(2,1fr);}
+  }
+
   /* mypage */
   .mypage-layout{display:grid;grid-template-columns:190px 1fr;gap:26px;}
   .mp-nav a{display:block;padding:11px 14px;border-radius:8px;font-weight:700;font-size:.85rem;color:var(--ink-soft);margin-bottom:2px;}
@@ -658,11 +691,19 @@ var state = {
   listType:"buy",
   filters:{cat:null},
   sort:"latest",
-  onsaleOnly:false
+  onsaleOnly:false,
+  pointBalance:4500,
+  order:{
+    addrMode:"default", pointUse:0, pay:"card", agree:false,
+    addr:{name:"홍길동",phone:"010-1234-5678",addr:"서울특별시 마포구 성지길 000",req:"부재시 경비실에 맡겨주세요"}
+  },
+  lastOrder:null
 };
 
 function isLogged(){return state.auth!=="guest";}
 function fmt(n){return n.toLocaleString("ko-KR")+"원";}
+function deliveryFee(amount){ return amount>0 && amount<30000 ? 3000 : 0; }
+function genOrderNo(){ return "ORD20260709-"+Math.floor(10000+Math.random()*89999); }
 function toast(msg){
   var t=document.getElementById("toast"); t.textContent=msg; t.classList.add("show");
   clearTimeout(toast._t); toast._t=setTimeout(function(){t.classList.remove("show");},2200);
@@ -1168,7 +1209,7 @@ function screenCart(){
       btn.addEventListener("click",function(){ var id=btn.getAttribute("data-rm"); state.cart.splice(state.cart.indexOf(id),1); updateCartCount(); render(); });
     });
     var order=document.getElementById("orderBtn");
-    if(order) order.addEventListener("click",function(){ if(!requireLogin("주문은 로그인 후 진행됩니다.")) return; toast("주문/결제 화면으로 이동(프로토타입 범위 외)"); });
+    if(order) order.addEventListener("click",function(){ if(!requireLogin("주문은 로그인 후 진행됩니다.")) return; go("#/order"); });
   },0);
   return ""+
   "<h2 style='margin-bottom:18px;' data-uc='UC-BUY-06'>장바구니</h2>"+
@@ -1180,11 +1221,181 @@ function screenCart(){
     }).join("") : "<div class='empty-state' data-uc='UC-BUY-12'>장바구니가 비어 있습니다.</div>") +"</div>"+
     "<div class='summary-box' data-uc='UC-BUY-08'>"+
       "<div class='summary-row'><span>상품금액</span><span>"+fmt(total)+"</span></div>"+
-      "<div class='summary-row'><span>배송비</span><span>"+(total>0 && total<30000 ? "3,000원":"무료")+"</span></div>"+
+      "<div class='summary-row'><span>배송비</span><span>"+(deliveryFee(total)>0 ? fmt(deliveryFee(total)):"무료")+"</span></div>"+
       "<div class='coupon-note'>쿠폰 기능은 이번 개편 범위에서 완전히 제거되었습니다(확정 2026-06-29).</div>"+
-      "<div class='summary-row total'><span>결제예정금액</span><span>"+fmt(total + (total>0 && total<30000?3000:0))+"</span></div>"+
+      "<div class='summary-row total'><span>결제예정금액</span><span>"+fmt(total + deliveryFee(total))+"</span></div>"+
       "<button class='btn btn-primary btn-block' id='orderBtn' style='margin-top:10px;' data-uc='UC-BUY-11'>주문하기</button>"+
     "</div>"+
+  "</div>";
+}
+
+function screenOrder(){
+  if(!requireLogin("주문/결제는 로그인 후 진행됩니다.")){
+    return "<div class='empty-state' data-uc='UC-ORD-01'>로그인이 필요한 화면입니다.</div>";
+  }
+  var items = BOOKS.filter(function(b){return state.cart.indexOf(b.id)>-1;});
+  if(!items.length){
+    return "<div class='empty-state' data-uc='UC-ORD-01'>주문할 상품이 없습니다. <a href='#/list' style='color:var(--brand);font-weight:700;'>교재 보러가기</a></div>";
+  }
+  var o = state.order;
+  var productTotal = items.reduce(function(s,b){return s+b.sale;},0);
+  var priceTotal = items.reduce(function(s,b){return s+b.price;},0);
+  var discount = priceTotal - productTotal;
+  var maxPoint = Math.min(state.pointBalance, productTotal);
+  var pointUse = Math.min(o.pointUse, maxPoint);
+  var delivery = deliveryFee(productTotal - pointUse);
+  var finalAmount = Math.max(0, productTotal - pointUse) + delivery;
+  var payLabels = {card:"신용카드",transfer:"계좌이체",vbank:"무통장입금(가상계좌)",easypay:"간편결제"};
+
+  setTimeout(function(){
+    document.querySelectorAll("[data-addr-mode]").forEach(function(r){
+      r.addEventListener("change",function(){ o.addrMode=r.value; render(); });
+    });
+    ["name","phone","addr","req"].forEach(function(f){
+      var el=document.getElementById("addr-"+f);
+      if(el) el.addEventListener("input",function(){ o.addr[f]=el.value; });
+    });
+    var pInput=document.getElementById("pointInput");
+    if(pInput) pInput.addEventListener("change",function(){
+      var v=Math.floor((+pInput.value||0)/100)*100;
+      o.pointUse=Math.max(0,Math.min(v,maxPoint)); render();
+    });
+    var pMax=document.getElementById("pointMaxBtn");
+    if(pMax) pMax.addEventListener("click",function(){ o.pointUse=maxPoint; render(); });
+    document.querySelectorAll("[data-pay]").forEach(function(r){
+      r.addEventListener("change",function(){ o.pay=r.value; render(); });
+    });
+    var agreeEl=document.getElementById("agreeChk");
+    if(agreeEl) agreeEl.addEventListener("change",function(){
+      o.agree=agreeEl.checked; document.getElementById("payBtn").disabled=!o.agree;
+    });
+    var payBtn=document.getElementById("payBtn");
+    if(payBtn) payBtn.addEventListener("click",function(){
+      if(!o.agree){ toast("주문동의를 체크해주세요."); return; }
+      var orderNo=genOrderNo();
+      var status = o.pay==="vbank" ? "입금대기" : "결제완료";
+      state.lastOrder = {
+        no:orderNo, items:items, pay:o.pay, amount:finalAmount, pointUse:pointUse, status:status,
+        addr:JSON.parse(JSON.stringify(o.addr)),
+        pointsEarned: Math.round(priceTotal*0.02),
+        vbank: o.pay==="vbank" ? {bank:"토스뱅크", no:"1000-"+Math.floor(1000+Math.random()*8999)+"-"+Math.floor(100000+Math.random()*899999), due:"2026.07.12 23:59", amount:finalAmount} : null,
+        date:"2026.07.09 10:32"
+      };
+      state.cart=[]; updateCartCount();
+      go("#/order-complete");
+      toast("결제 요청 완료(토스페이먼츠 PG · 프로토타입)");
+    });
+  },0);
+
+  return ""+
+  "<h2 style='margin-bottom:18px;' data-uc='UC-ORD-01'>주문/결제</h2>"+
+  "<div class='order-layout'>"+
+    "<div>"+
+      "<div class='order-section' data-uc='UC-ORD-01'><h3>주문상품 ("+items.length+")</h3>"+
+        items.map(function(b){return "<div class='order-item-row'><span>"+b.title+" · 1권</span><span>"+fmt(b.sale)+"</span></div>";}).join("")+
+      "</div>"+
+      "<div class='order-section' data-uc='UC-ORD-02'><h3>주문자 정보</h3>"+
+        "<div class='order-item-row'><span>이름</span><span>"+(state.auth==="teacher"?"김선생":"홍길동")+"</span></div>"+
+        "<div class='order-item-row'><span>연락처</span><span>010-1234-5678</span></div>"+
+        "<div class='order-item-row'><span>이메일</span><span>user@example.com</span></div>"+
+      "</div>"+
+      "<div class='order-section' data-uc='UC-ORD-03'><h3>배송지 정보 <span style='font-weight:400;color:var(--ink-soft);font-size:.76rem;'>(3종: 기본배송지/신규입력/배송지목록)</span></h3>"+
+        "<div class='addr-toggle'>"+
+          "<label><input type='radio' name='addrMode' data-addr-mode value='default' "+(o.addrMode==="default"?"checked":"")+"> 기본배송지 사용</label>"+
+          "<label><input type='radio' name='addrMode' data-addr-mode value='new' "+(o.addrMode==="new"?"checked":"")+"> 새 배송지 입력</label>"+
+          "<label><input type='radio' name='addrMode' data-addr-mode value='list' "+(o.addrMode==="list"?"checked":"")+"> 배송지 목록에서 선택</label>"+
+        "</div>"+
+        (o.addrMode==="list" ? "<div class='doc-note'>배송지 목록(마이페이지 저장 배송지) 중 기본배송지가 자동 선택되어 있습니다.</div>" : "")+
+        "<div class='addr-form'>"+
+          "<input id='addr-name' placeholder='수령인' value='"+o.addr.name+"' "+(o.addrMode!=="new"?"disabled":"")+">"+
+          "<input id='addr-phone' placeholder='연락처' value='"+o.addr.phone+"' "+(o.addrMode!=="new"?"disabled":"")+">"+
+          "<textarea id='addr-addr' placeholder='주소' "+(o.addrMode!=="new"?"disabled":"")+">"+o.addr.addr+"</textarea>"+
+          "<textarea id='addr-req' placeholder='배송 요청사항' "+(o.addrMode!=="new"?"disabled":"")+">"+o.addr.req+"</textarea>"+
+        "</div>"+
+      "</div>"+
+      "<div class='order-section' data-uc='UC-PNT-01'><h3>NE Point 사용 <span style='font-weight:400;color:var(--ink-soft);font-size:.78rem;'>(보유 "+state.pointBalance.toLocaleString()+"P · 100P 단위)</span></h3>"+
+        "<div class='point-row'>"+
+          "<input type='number' id='pointInput' step='100' min='0' max='"+maxPoint+"' value='"+pointUse+"'>"+
+          "<span>P 사용</span>"+
+          "<button class='btn btn-sm' id='pointMaxBtn' type='button'>전액사용("+maxPoint.toLocaleString()+"P)</button>"+
+        "</div>"+
+      "</div>"+
+      "<div class='order-section' data-uc='UC-ORD-05'><h3>결제수단 <span style='font-weight:400;color:var(--ink-soft);font-size:.76rem;'>(4종 · 토스페이먼츠 PG)</span></h3>"+
+        "<div class='pay-grid'>"+
+          Object.keys(payLabels).map(function(k){
+            return "<label class='pay-opt "+(o.pay===k?"active":"")+"'><input type='radio' name='payMethod' data-pay value='"+k+"' "+(o.pay===k?"checked":"")+" style='display:none;'>"+payLabels[k]+"</label>";
+          }).join("")+
+        "</div>"+
+        (o.pay==="vbank" ? "<div class='doc-note' style='margin-top:10px;'>무통장입금은 결제완료가 아닌 <b>입금대기</b> 상태로 주문이 생성됩니다. 입금기한(7일) 내 미입금 시 자동취소됩니다.</div>" : "")+
+      "</div>"+
+    "</div>"+
+    "<div class='summary-box' data-uc='UC-ORD-04'>"+
+      "<div class='summary-row'><span>상품금액(정가)</span><span>"+fmt(priceTotal)+"</span></div>"+
+      "<div class='summary-row'><span>할인금액</span><span>"+(discount>0?"-"+fmt(discount):fmt(0))+"</span></div>"+
+      "<div class='summary-row'><span>포인트 사용</span><span>"+(pointUse>0?"-"+fmt(pointUse):fmt(0))+"</span></div>"+
+      "<div class='summary-row'><span>배송비</span><span>"+(delivery>0?fmt(delivery):"무료")+"</span></div>"+
+      "<div class='coupon-note'>쿠폰 기능은 이번 개편 범위에서 완전히 제거되었습니다(POL-SSOT 확정 2026-06-29).</div>"+
+      "<div class='summary-row total' data-uc='UC-ORD-10'><span>최종 결제금액</span><span>"+fmt(finalAmount)+"</span></div>"+
+      "<label class='agree-row' data-uc='UC-ORD-06'><input type='checkbox' id='agreeChk' "+(o.agree?"checked":"")+">"+
+        "<span>구매조건 확인 및 결제진행에 동의합니다. 개인정보 제3자 제공(PG사)에 동의합니다. <b>(필수, 전자상거래법 제8조 제2항)</b></span></label>"+
+      "<button class='btn btn-primary btn-block' id='payBtn' style='margin-top:12px;' data-uc='UC-ORD-07' "+(o.agree?"":"disabled")+">"+fmt(finalAmount)+" 결제하기</button>"+
+    "</div>"+
+  "</div>";
+}
+
+function screenOrderComplete(){
+  var o = state.lastOrder;
+  if(!o){
+    return "<div class='empty-state' data-uc='UC-ORD-14'>비정상 접근입니다 — 결제를 완료한 주문 정보가 없습니다.<br><br><a href='#/home' class='btn btn-primary' style='display:inline-flex;margin-top:10px;'>홈으로</a></div>";
+  }
+  var payLabels = {card:"신용카드",transfer:"계좌이체",vbank:"무통장입금(가상계좌)",easypay:"간편결제"};
+  setTimeout(function(){
+    document.querySelectorAll("[data-complete-act]").forEach(function(btn){
+      btn.addEventListener("click",function(){
+        var act=btn.getAttribute("data-complete-act");
+        if(act==="home") go("#/home");
+        else if(act==="continue") go("#/list");
+        else if(act==="status"){ go("#/mypage"); toast("주문내역 탭으로 이동"); }
+        else if(act==="detail"){ go("#/mypage"); toast("주문상세 화면으로 이동(주문번호 "+o.no+")"); }
+      });
+    });
+  },0);
+  return ""+
+  "<div class='complete-hero' data-uc='UC-ORD-11'>"+
+    "<div class='ok-mark'>✅</div>"+
+    "<h2>"+(o.status==="입금대기"?"주문이 접수되었습니다":"결제가 완료되었습니다")+"</h2>"+
+    "<div class='ordno'>주문번호 <b>"+o.no+"</b></div>"+
+  "</div>"+
+  (o.vbank ? "<div class='vbank-box' data-uc='UC-ORD-11'><b>무통장입금 안내</b><br>"+
+      "입금은행/계좌 : "+o.vbank.bank+" "+o.vbank.no+"<br>입금기한 : "+o.vbank.due+"<br>입금금액 : "+fmt(o.vbank.amount)+
+      "<br><span style='font-size:.76rem;color:var(--ink-soft);'>기한 내 미입금 시 주문이 자동취소됩니다.</span></div>" : "")+
+  "<div class='order-layout'>"+
+    "<div>"+
+      "<div class='order-section' data-uc='UC-ORD-11'><h3>결제 정보</h3>"+
+        "<div class='order-item-row'><span>결제수단</span><span>"+payLabels[o.pay]+"</span></div>"+
+        "<div class='order-item-row'><span>결제금액</span><span>"+fmt(o.amount)+"</span></div>"+
+        "<div class='order-item-row'><span>결제일시</span><span>"+o.date+"</span></div>"+
+        "<div class='order-item-row'><span>주문상태</span><span>"+o.status+"</span></div>"+
+      "</div>"+
+      "<div class='order-section'><h3>배송 정보</h3>"+
+        "<div class='order-item-row'><span>수령인</span><span>"+o.addr.name+" · "+o.addr.phone+"</span></div>"+
+        "<div class='order-item-row'><span>배송지</span><span>"+o.addr.addr+"</span></div>"+
+        "<div class='order-item-row'><span>배송 예정일</span><span>2026.07.11 ~ 2026.07.12</span></div>"+
+      "</div>"+
+      "<div class='order-section'><h3>주문 상품 ("+o.items.length+")</h3>"+
+        o.items.map(function(b){return "<div class='order-item-row'><span>"+b.title+" · 1권</span><span>"+fmt(b.sale)+"</span></div>";}).join("")+
+      "</div>"+
+    "</div>"+
+    "<div class='summary-box'>"+
+      "<div class='summary-row'><span>적립예정 NE Point</span><span>"+o.pointsEarned.toLocaleString()+"P</span></div>"+
+      "<div class='coupon-note'>구매확정(배송완료 +7일) 시 자동 지급됩니다.</div>"+
+    "</div>"+
+  "</div>"+
+  "<div class='complete-actions' data-uc='UC-ORD-13'>"+
+    "<button class='btn' data-complete-act='home'>홈으로</button>"+
+    "<button class='btn' data-complete-act='continue'>계속 쇼핑하기</button>"+
+    "<button class='btn' data-complete-act='status'>주문배송현황</button>"+
+    "<button class='btn btn-primary' data-complete-act='detail'>주문상세 보기</button>"+
   "</div>";
 }
 
@@ -1270,6 +1481,8 @@ function render(){
   }
   else if((m=path.match(/^#\/detail\/(.+)/))){ app.innerHTML = screenDetail(m[1]); }
   else if(path==="#/cart"){ app.innerHTML = screenCart(); }
+  else if(path==="#/order"){ app.innerHTML = screenOrder(); }
+  else if(path==="#/order-complete"){ app.innerHTML = screenOrderComplete(); }
   else if(path==="#/mypage"){ app.innerHTML = screenMypage(); }
   else if(path==="#/cs"){ app.innerHTML = screenCS();
     app.querySelectorAll("[data-cst]").forEach(function(b){ b.addEventListener("click",function(){ location.hash="#/cs?tab="+b.getAttribute("data-cst"); render(); }); });
