@@ -275,10 +275,9 @@
   .book-card{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;position:relative;}
   .book-card:hover{box-shadow:var(--shadow);}
   .thumb{aspect-ratio:3/4;background:linear-gradient(150deg,#DCE6FF,#EFF3FF);display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--brand-deep);font-size:1.5rem;position:relative;}
-  .thumb.sold::after{content:"품절";position:absolute;inset:0;background:rgba(21,34,51,.55);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1rem;}
   .badges{position:absolute;top:8px;left:8px;display:flex;gap:4px;z-index:2;}
   .b-tag{font-size:.62rem;font-weight:800;padding:3px 7px;border-radius:5px;color:#fff;}
-  .b-new{background:var(--brand);} .b-hot{background:var(--warm);} .b-limit{background:var(--sale);}
+  .b-new{background:var(--brand);} .b-hot{background:var(--warm);} .b-limit{background:var(--sale);} .b-soldout{background:var(--ink-soft);}
   .wish{position:absolute;top:8px;right:8px;z-index:2;width:30px;height:30px;border-radius:50%;background:#fff;border:1px solid var(--line);font-size:.95rem;display:flex;align-items:center;justify-content:center;}
   .wish.on{color:var(--sale);border-color:var(--sale);}
   .card-body{padding:12px 12px 14px;display:flex;flex-direction:column;gap:6px;flex:1;}
@@ -320,6 +319,12 @@
   .toolbar-right{display:flex;align-items:center;gap:12px;font-size:.8rem;}
   .toolbar-right select{border:1px solid var(--line-strong);border-radius:7px;padding:6px 8px;}
   .filter-fab{display:none;}
+  .series-bar{display:flex;align-items:center;gap:8px;overflow-x:auto;padding:2px 2px 14px;margin-bottom:14px;border-bottom:1px solid var(--line);}
+  .series-bar .fg-title{flex:0 0 auto;}
+  .series-chip{flex:0 0 auto;padding:7px 14px;border-radius:20px;border:1.5px solid var(--line-strong);background:#fff;font-size:.8rem;font-weight:700;white-space:nowrap;color:var(--ink-soft);}
+  .series-chip.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+  .filter-col .series-in-aside{display:none;}
+  @media (max-width:960px){ .series-bar{display:none;} }
   .pager{display:flex;justify-content:center;gap:6px;margin-top:26px;}
   .pager button{width:32px;height:32px;border-radius:7px;border:1px solid var(--line);background:#fff;font-weight:700;font-size:.8rem;}
   .pager button.active{background:var(--ink);color:#fff;border-color:var(--ink);}
@@ -697,7 +702,7 @@ var state = {
   recentBooks:[],
   showUC:false,
   listType:"buy",
-  filters:{cat:null},
+  filters:{cat:null,series:null},
   sort:"latest",
   onsaleOnly:false,
   pointBalance:4500,
@@ -871,7 +876,7 @@ function wireLeafLinks(scope){
     a.addEventListener("click",function(e){
       e.preventDefault();
       var target = a.getAttribute("data-target")==="material" ? "material":"buy";
-      state.listType = target; state.filters.cat = a.getAttribute("data-cat");
+      state.listType = target; state.filters.cat = a.getAttribute("data-cat"); state.filters.series = null;
       go("#/list"); render();
       toast((target==="material"?"학습자료형":"교재구매형")+" 탭 · "+a.getAttribute("data-item")+" 카테고리로 이동");
     });
@@ -914,7 +919,7 @@ function renderMegaMenu(){
   }
   itemsEl.querySelectorAll("[data-item]").forEach(function(a){
     a.addEventListener("click",function(e){e.preventDefault();
-      state.listType="buy"; state.filters.cat=a.getAttribute("data-cat"); closeMega(); go("#/list"); render();
+      state.listType="buy"; state.filters.cat=a.getAttribute("data-cat"); state.filters.series=null; closeMega(); go("#/list"); render();
       toast("바로 이동 · "+a.getAttribute("data-item"));
     });
   });
@@ -923,7 +928,7 @@ function renderMegaMenu(){
       var cat=CATS.filter(function(c){return c.key===btn.getAttribute("data-reuse-cat");})[0];
       var target=btn.getAttribute("data-mega-target");
       var first=cat.kids[0];
-      state.listType=target; state.filters.cat=cat.key; closeMega(); go("#/list"); render();
+      state.listType=target; state.filters.cat=cat.key; state.filters.series=null; closeMega(); go("#/list"); render();
       toast("2depth 클릭 → 첫 3depth로 바로 이동: "+first);
     });
   });
@@ -961,7 +966,7 @@ function renderDrawer(){
     var cat=CATS.filter(function(c){return c.key===g.key;})[0];
     l2.innerHTML = cat.kids.map(function(k){return "<a href='#' data-cat='"+g.key+"' data-item='"+k+"'>"+k+"</a>";}).join("");
     l2.querySelectorAll("a").forEach(function(a){a.addEventListener("click",function(e){e.preventDefault();
-      state.listType="buy"; state.filters.cat=a.getAttribute("data-cat"); closeDrawer(); go("#/list"); render();
+      state.listType="buy"; state.filters.cat=a.getAttribute("data-cat"); state.filters.series=null; closeDrawer(); go("#/list"); render();
     });});
   } else if(g.type==="reuse"){
     l2.innerHTML = CATS.map(function(c){
@@ -972,7 +977,7 @@ function renderDrawer(){
       b.addEventListener("click",function(){ b.parentElement.classList.toggle("acc-open"); });
     });
     l2.querySelectorAll("a").forEach(function(a){a.addEventListener("click",function(e){e.preventDefault();
-      state.listType=a.getAttribute("data-target"); state.filters.cat=a.getAttribute("data-cat"); closeDrawer(); go("#/list"); render();
+      state.listType=a.getAttribute("data-target"); state.filters.cat=a.getAttribute("data-cat"); state.filters.series=null; closeDrawer(); go("#/list"); render();
     });});
   } else if(g.type==="cs"){
     l2.innerHTML = ["공지사항","FAQ","이벤트/신간·개정/세미나","교재 오류정정","1:1 문의","지사안내"].map(function(t){return "<a href='#'>"+t+"</a>";}).join("");
@@ -1005,6 +1010,7 @@ function bookCardHTML(b){
   var mainCat = b.cat.split("/")[0];
   var badge = b.badge==="new" ? "<span class='b-tag b-new'>NEW</span>" : b.badge==="hot" ? "<span class='b-tag b-hot'>HOT</span>" : "";
   var limitBadge = b.status==="limited" ? "<span class='b-tag b-limit'>구매제한</span>" : "";
+  var soldBadge = b.status==="soldout" ? "<span class='b-tag b-soldout' data-uc='UC-INFO-17'>일시품절</span>" : "";
   var wished = !!state.wish[b.id];
   var off = b.price>b.sale ? Math.round((1-b.sale/b.price)*100) : 0;
   var actions, matBlock="", tutorBtn="";
@@ -1014,6 +1020,8 @@ function bookCardHTML(b){
       return "<span class='mat-chip "+(m.flag==="teacher"?"teacher":"")+" "+(ok?"":"locked")+"' title='"+matFlagLabel(m.flag)+"'>"+(ok?"⬇ ":"🔒 ")+m.k+"</span>";
     }).join("") + (b.mats.length===0 ? "<span class='mat-chip locked'>등록된 학습자료 없음</span>" : "") + "</div>";
     actions = "<div class='card-actions'><button class='btn btn-sm btn-primary btn-block' data-act='dl' data-id='"+b.id+"'>전체 다운로드</button></div>";
+  } else if(b.status==="soldout"){
+    actions = "<div class='card-actions'><button class='btn btn-sm btn-block' data-act='soldalert' data-id='"+b.id+"' data-uc='UC-INFO-17'>🔔 일시품절 · 알림신청</button></div>";
   } else {
     actions = "<div class='card-actions'><button class='btn btn-sm' data-act='cart' data-id='"+b.id+"' "+(b.status==="soldout"?"disabled":"")+">담기</button>"+
       "<button class='btn btn-sm btn-primary' data-act='buy' data-id='"+b.id+"' "+(b.status!=="onsale"?"disabled":"")+">바로구매</button></div>";
@@ -1022,9 +1030,9 @@ function bookCardHTML(b){
     tutorBtn = "<button class='btn btn-sm btn-tutor btn-block tutor-btn' data-act='tutor' data-id='"+b.id+"' data-uc='UC-MAT-11'>🎓 NE Tutor에서 선생님 자료 보기</button>";
   }
   return "<div class='book-card' data-uc='UC-INFO-01'>"+
-    "<div class='badges'>"+badge+limitBadge+"</div>"+
+    "<div class='badges'>"+badge+limitBadge+soldBadge+"</div>"+
     "<button class='wish "+(wished?"on":"")+"' data-act='wish' data-id='"+b.id+"'>"+(wished?"♥":"♡")+"</button>"+
-    "<a href='#/detail/"+b.id+"' class='thumb "+(b.status==="soldout"?"sold":"")+"' data-act='view' data-id='"+b.id+"'>"+b.title.slice(0,2)+"</a>"+
+    "<a href='#/detail/"+b.id+"' class='thumb' data-act='view' data-id='"+b.id+"'>"+b.title.slice(0,2)+"</a>"+
     "<div class='card-body'>"+
       "<span class='card-series'>"+catLabel(mainCat)+" · "+b.series+"</span>"+
       "<a href='#/detail/"+b.id+"' class='card-title' data-act='view' data-id='"+b.id+"'>"+b.title+"</a>"+
@@ -1046,6 +1054,7 @@ function wireBookCardEvents(scope){
       if(act==="buy"){ if(!requireLogin("바로구매는 로그인 후 진행됩니다.")) return; addToCart(b); go("#/cart"); }
       if(act==="dl"){ if(!requireLogin("학습자료 다운로드는 로그인 후 가능합니다.")) return; toast("전체 다운로드 시작 · 권한 있는 자료만 포함"); }
       if(act==="tutor"){ openTutor(b); }
+      if(act==="soldalert"){ toast("재입고 알림을 신청했습니다 · "+b.title); }
     });
   });
 }
@@ -1080,17 +1089,31 @@ function screenHome(){
 }
 
 function screenList(){
-  var filtered = BOOKS.filter(function(b){
+  var seriesPool = BOOKS.filter(function(b){
     if(state.listType==="material" && !b.hasMaterial) return false;
     if(state.filters.cat && b.cat.split("/")[0]!==state.filters.cat) return false;
+    return true;
+  });
+  var seriesList = seriesPool.map(function(b){return b.series;}).filter(function(s,i,arr){return arr.indexOf(s)===i;});
+
+  var filtered = seriesPool.filter(function(b){
+    if(state.filters.series && b.series!==state.filters.series) return false;
     if(state.onsaleOnly && b.status!=="onsale") return false;
     return true;
   });
   if(state.sort==="priceAsc") filtered = filtered.slice().sort(function(a,b){return a.sale-b.sale;});
   if(state.sort==="priceDesc") filtered = filtered.slice().sort(function(a,b){return b.sale-a.sale;});
 
+  var seriesOptionsHTML =
+    "<button class='series-chip "+(!state.filters.series?"active":"")+"' data-fs=''>전체</button>"+
+    seriesList.map(function(s){return "<button class='series-chip "+(state.filters.series===s?"active":"")+"' data-fs='"+s+"'>"+s+"</button>";}).join("");
+
   var filterHTML =
-    "<h3 data-uc='UC-FIND-05'>필터 <span style='float:right;font-weight:400;color:var(--ink-soft);'>PC=좌측 고정</span></h3>"+
+    "<h3 data-uc='UC-FIND-05'>필터 <span style='float:right;font-weight:400;color:var(--ink-soft);'>PC=시리즈 상단·그 외 좌측</span></h3>"+
+    "<div class='filter-group series-in-aside'><div class='fg-title'>시리즈</div>"+
+      "<label class='filter-opt'><input type='radio' name='fseries' "+(!state.filters.series?"checked":"")+" data-fs=''> 전체</label>"+
+      seriesList.map(function(s){return "<label class='filter-opt'><input type='radio' name='fseries' "+(state.filters.series===s?"checked":"")+" data-fs='"+s+"'> "+s+"</label>";}).join("")+
+    "</div>"+
     "<div class='filter-group'><div class='fg-title'>카테고리</div>"+
       CATS.map(function(c){return "<label class='filter-opt'><input type='radio' name='fcat' "+(state.filters.cat===c.key?"checked":"")+" data-fc='"+c.key+"'> "+c.label+"</label>";}).join("")+
       "<label class='filter-opt'><input type='radio' name='fcat' "+(!state.filters.cat?"checked":"")+" data-fc=''> 전체</label>"+
@@ -1101,16 +1124,18 @@ function screenList(){
     "<button class='btn btn-sm filter-reset' id='filterReset'>필터 초기화</button>";
 
   setTimeout(function(){
-    var col=document.getElementById("filterCol"); var sheet=document.getElementById("filterSheetBody");
-    [col,sheet].forEach(function(root){ if(!root) return;
-      root.querySelectorAll("[data-fc]").forEach(function(r){ r.addEventListener("change",function(){ state.filters.cat=r.getAttribute("data-fc")||null; render(); }); });
+    var col=document.getElementById("filterCol"); var sheet=document.getElementById("filterSheetBody"); var topBar=document.getElementById("seriesBar");
+    [col,sheet,topBar].forEach(function(root){ if(!root) return;
+      root.querySelectorAll("[data-fc]").forEach(function(r){ r.addEventListener(r.tagName==="BUTTON"?"click":"change",function(){ state.filters.cat=r.getAttribute("data-fc")||null; render(); }); });
+      root.querySelectorAll("[data-fs]").forEach(function(r){ r.addEventListener(r.tagName==="BUTTON"?"click":"change",function(){ state.filters.series=r.getAttribute("data-fs")||null; render(); }); });
       var os=root.querySelector("#onsaleOnly"); if(os) os.addEventListener("change",function(){ state.onsaleOnly=os.checked; render(); });
-      var rb=root.querySelector("#filterReset"); if(rb) rb.addEventListener("click",function(){ state.filters.cat=null; state.onsaleOnly=false; render(); });
+      var rb=root.querySelector("#filterReset"); if(rb) rb.addEventListener("click",function(){ state.filters.cat=null; state.filters.series=null; state.onsaleOnly=false; render(); });
     });
   },0);
 
   return ""+
   "<div class='crumb'>홈 › <b>"+(state.listType==="material"?"교재목록 · 학습자료형":"교재목록 · 교재구매형")+"</b></div>"+
+  "<div class='series-bar' id='seriesBar' data-uc='UC-FIND-05'><span class='fg-title'>시리즈</span>"+seriesOptionsHTML+"</div>"+
   "<div class='list-layout'>"+
     "<aside class='filter-col' id='filterCol'>"+filterHTML+"</aside>"+
     "<div>"+
@@ -1137,8 +1162,11 @@ function screenDetail(id){
   var b = BOOKS.filter(function(x){return x.id===id;})[0] || BOOKS[0];
   trackRecent(b);
   var off = b.price>b.sale ? Math.round((1-b.sale/b.price)*100) : 0;
-  var statusNote = b.status==="soldout" ? "<div class='status-note'>일시품절 · 재입고 알림 신청 가능</div>" :
-                   b.status==="limited" ? "<div class='status-note limit'>구매제한 상품입니다(개인 구매 불가)</div>" : "";
+  var statusNote = b.status==="limited" ? "<div class='status-note limit'>구매제한 상품입니다(개인 구매 불가)</div>" : "";
+  var buyButtonsHTML = b.status==="soldout"
+    ? "<button class='btn btn-block' id='detailSoldAlert' data-uc='UC-INFO-17'>🔔 일시품절 · 재입고 알림신청</button>"
+    : "<button class='btn' id='detailAdd'>장바구니 담기</button>"+
+      "<button class='btn btn-primary' id='detailBuy' "+(b.status!=="onsale"?"disabled":"")+">바로구매</button>";
   var tutorBtnTop = b.showTutor ? "<button class='btn btn-tutor btn-sm' style='margin-top:10px;' data-act='tutor' data-id='"+b.id+"' data-uc='UC-MAT-11'>🎓 NE Tutor에서 선생님 자료 보기</button>" : "";
 
   var matRows = b.mats.map(function(m){
@@ -1164,9 +1192,10 @@ function screenDetail(id){
     wireBookCardEvents(document);
     document.querySelectorAll("[data-act='tutor']").forEach(function(el){ el.addEventListener("click",function(){ openTutor(b); }); });
     document.querySelectorAll("[data-act='matdl']").forEach(function(el){ el.addEventListener("click",function(){ toast("다운로드 시작 · "+el.getAttribute("data-name")); }); });
-    var addBtn=document.getElementById("detailAdd"), buyBtn=document.getElementById("detailBuy"), wishBtn=document.getElementById("detailWish");
+    var addBtn=document.getElementById("detailAdd"), buyBtn=document.getElementById("detailBuy"), wishBtn=document.getElementById("detailWish"), soldBtn=document.getElementById("detailSoldAlert");
     if(addBtn) addBtn.addEventListener("click",function(){ addToCart(b); });
     if(buyBtn) buyBtn.addEventListener("click",function(){ if(!requireLogin("바로구매는 로그인 후 진행됩니다.")) return; addToCart(b); go("#/cart"); });
+    if(soldBtn) soldBtn.addEventListener("click",function(){ toast("재입고 알림을 신청했습니다 · "+b.title); });
     if(wishBtn) wishBtn.addEventListener("click",function(){ toggleWish(b,wishBtn); wishBtn.textContent = state.wish[b.id] ? "♥ 찜 해제":"♡ 찜하기"; });
   },0);
 
@@ -1180,8 +1209,7 @@ function screenDetail(id){
       "<div class='price-block'>"+(off>0?"<span class='price-off'>"+off+"%</span>":"")+"<span class='now'>"+fmt(b.sale)+"</span>"+(off>0?"<span class='price-was'>"+fmt(b.price)+"</span>":"")+"</div>"+
       "<div class='qty-row'>수량 <div class='qty-box'><button id='qtyMinus'>−</button><input id='qtyInput' value='1'><button id='qtyPlus'>+</button></div></div>"+
       "<div class='cta-row'>"+
-        "<button class='btn' id='detailAdd' "+(b.status==="soldout"?"disabled":"")+">장바구니 담기</button>"+
-        "<button class='btn btn-primary' id='detailBuy' "+(b.status!=="onsale"?"disabled":"")+">바로구매</button>"+
+        buyButtonsHTML+
         "<button class='btn' id='detailWish'>"+(state.wish[b.id]?"♥ 찜 해제":"♡ 찜하기")+"</button>"+
       "</div>"+
       statusNote+tutorBtnTop+
@@ -1192,7 +1220,18 @@ function screenDetail(id){
     "<button data-tab='t4'>학습법</button><button data-tab='t5' data-uc='UC-MAT-01'>학습자료</button><button data-tab='t6'>후기</button>"+
   "</div>"+
   "<div class='tabpane active' id='t1' data-uc='UC-INFO-06'><p>"+b.title+"은(는) "+catLabel(b.cat.split('/')[0])+" 영역의 대표 교재로, 최신 개정 교육과정을 반영해 구성되었습니다.</p></div>"+
-  "<div class='tabpane' id='t2' data-uc='UC-INFO-07'><table class='info-table'><tr><th>도서명</th><td>"+b.title+"</td></tr><tr><th>발행사</th><td>NE능률</td></tr><tr><th>쪽수</th><td>224쪽</td></tr><tr><th>제품 구성</th><td>본책 + 워크북</td></tr></table></div>"+
+  "<div class='tabpane' id='t2' data-uc='UC-INFO-07'><table class='info-table'>"+
+    "<tr><th>저자</th><td>NE능률 교재개발팀</td></tr>"+
+    "<tr><th>출판사</th><td>NE능률</td></tr>"+
+    "<tr><th>ISBN</th><td>979-11-000-0000-"+b.id+"</td></tr>"+
+    "<tr><th>쪽수</th><td>224쪽</td></tr>"+
+    "<tr><th>크기</th><td>257 x 188mm</td></tr>"+
+    "<tr><th>제품 구성</th><td>본책 + 워크북</td></tr>"+
+    "<tr><th>발행일(출간일)</th><td>2026-03-02</td></tr>"+
+    "<tr><th>KC인증코드</th><td>KC-2026-EDU-"+b.id+"</td></tr>"+
+    "<tr><th>취급방법 및 주의사항</th><td>고온·습기를 피해 보관하십시오. 파손 시 고객센터로 문의해주세요.</td></tr>"+
+    "<tr><th>목차</th><td>Chapter 1~12 (상세 목차는 미리보기에서 확인 가능)</td></tr>"+
+  "</table></div>"+
   "<div class='tabpane' id='t3' data-uc='UC-INFO-08'><p>교재 특성상 수령 후 7일 이내, 사용 흔적이 없는 경우에만 교환/반품이 가능합니다.</p></div>"+
   "<div class='tabpane' id='t4' data-uc='UC-INFO-09'><p>주 4회 학습 기준 8주 완성 커리큘럼을 권장합니다.</p></div>"+
   "<div class='tabpane' id='t5'>"+
@@ -1485,6 +1524,7 @@ function render(){
     var ss=document.getElementById("sortSel"); if(ss){ ss.value=state.sort; ss.addEventListener("change",function(){ state.sort=ss.value; render(); }); }
     var fs=document.getElementById("openFilterSheet"); if(fs) fs.addEventListener("click",function(){ document.getElementById("filterSheetBody").innerHTML = document.getElementById("filterCol").innerHTML; document.getElementById("filter-sheet").classList.add("open");
       document.getElementById("filterSheetBody").querySelectorAll("[data-fc]").forEach(function(r){ r.addEventListener("change",function(){ state.filters.cat=r.getAttribute("data-fc")||null; document.getElementById("filter-sheet").classList.remove("open"); render(); }); });
+      document.getElementById("filterSheetBody").querySelectorAll("[data-fs]").forEach(function(r){ r.addEventListener("change",function(){ state.filters.series=r.getAttribute("data-fs")||null; document.getElementById("filter-sheet").classList.remove("open"); render(); }); });
     });
   }
   else if((m=path.match(/^#\/detail\/(.+)/))){ app.innerHTML = screenDetail(m[1]); }
