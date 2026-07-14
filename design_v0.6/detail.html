@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bricks Reading 150 · L1 — NE Books</title>
+<meta name="description" content="NE Books 자사몰 개편 v0.6 — 교재상세 Figma 디자인 반영본">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/detail.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-top">
+    <a class="header-logo" href="index.html">
+      <img src="assets/logo-nebooks.png" alt="NE Books">
+    </a>
+    <div class="header-search">
+      <div class="search-box">
+        <input type="text" placeholder="교재명, 검색어를 입력해 주세요" id="searchInput">
+        <button class="search-submit" id="searchSubmit" aria-label="검색">
+          <img src="assets/icon-search.svg" alt="">
+        </button>
+      </div>
+    </div>
+    <div class="header-icons">
+      <a class="icon-group" href="mypage.html">
+        <img src="assets/icon-mypage.svg" alt="">
+        <span>MY</span>
+      </a>
+      <a class="icon-group" href="cart.html" id="cartGroup">
+        <span class="cart-count">
+          <img src="assets/icon-cart.svg" alt="">
+          <span class="cart-badge" id="cartBadge">1</span>
+        </span>
+        <span>장바구니</span>
+      </a>
+      <a class="icon-group" href="cs.html" id="csGroup">
+        <img src="assets/icon-cs.svg" alt="">
+        <span>고객센터</span>
+      </a>
+    </div>
+  </div>
+  <nav class="gnb">
+    <div class="gnb-row">
+      <button class="gnb-hamburger" id="hamburgerBtn" aria-label="전체 메뉴">
+        <img src="assets/icon-hamburger.svg" alt="">
+      </button>
+      <div class="gnb-nav">
+        <a class="gnb-link is-active" href="list.html">ELT</a>
+        <a class="gnb-link" href="list.html">초/중등</a>
+        <a class="gnb-link" href="list.html">고등</a>
+        <a class="gnb-link" href="list.html">교과서/자습서</a>
+        <a class="gnb-link" href="list.html">수험/일반</a>
+        <a class="gnb-link" href="list.html">수학/국어</a>
+        <a class="gnb-link" href="list.html?tab=ebook">학습자료실</a>
+        <a class="gnb-link" href="list.html">도서몰</a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<section class="location-section" style="padding-bottom:0;">
+  <div class="location-inner" style="width:1360px;">
+    <div style="display:flex;align-items:center;gap:16px;">
+      <span style="font-size:13px;color:var(--gray-666);font-weight:700;">ELT</span>
+    </div>
+    <div class="location-crumbs">
+      <img src="assets/icon-home.svg" alt="홈">
+      <span class="dot">·</span>
+      <span class="crumb">ELT</span>
+      <span class="dot">·</span>
+      <span class="chip">Coursebook</span>
+    </div>
+  </div>
+</section>
+<section style="display:flex;justify-content:center;padding:16px 0 32px;border-bottom:1px solid var(--gray-e5);">
+  <div style="width:1360px;max-width:calc(100% - 40px);display:flex;gap:28px;overflow-x:auto;">
+    <a style="font-size:14px;font-weight:700;color:var(--black);white-space:nowrap;" href="#">Coursebook</a>
+    <a style="font-size:14px;color:var(--gray-666);white-space:nowrap;" href="#">Phonics</a>
+    <a style="font-size:14px;color:var(--gray-666);white-space:nowrap;" href="#">Readers</a>
+    <a style="font-size:14px;color:var(--gray-666);white-space:nowrap;" href="#">Reading</a>
+    <a style="font-size:14px;color:var(--gray-666);white-space:nowrap;" href="#">Listening</a>
+    <a style="font-size:14px;color:var(--gray-666);white-space:nowrap;" href="#">Speaking</a>
+    <a style="font-size:14px;color:var(--gray-666);white-space:nowrap;" href="#">Writing</a>
+    <a style="font-size:14px;color:var(--gray-666);white-space:nowrap;" href="#">Grammar</a>
+    <a style="font-size:14px;color:var(--gray-666);white-space:nowrap;" href="#">Vocabulary</a>
+  </div>
+</section>
+
+<main class="detail-wrap">
+
+  <div class="detail-hero">
+    <div class="detail-cover-wrap">
+      <img class="cover" src="assets/cover-placeholder.png" alt="Bricks Reading 150 · L1">
+      <button class="detail-preview-btn" id="previewBtn" aria-label="미리보기">
+        <img src="assets/icon-search.svg" alt="" style="filter:invert(1);">
+      </button>
+    </div>
+
+    <div class="detail-info">
+      <div class="detail-title-block">
+        <div class="detail-title-top">
+          <div class="detail-tags">
+            <span class="tag tag-brand-logo"><img src="assets/logo-ne-badge.svg" alt=""></span>
+            <span class="tag tag-category">Coursebook</span>
+            <span class="tag tag-level">유치~초등(저)</span>
+            <span class="tag tag-lexile-navy" style="height:29px;display:inline-flex;align-items:center;padding:5px 13px;border-radius:9999px;font-size:12px;font-weight:500;">Lexile® 400L</span>
+          </div>
+          <div class="card-actions-top" id="detailShareWish"></div>
+        </div>
+        <p class="detail-name">Bricks Reading 150 · L1</p>
+        <p class="detail-tagline">읽기 자신감을 키우는 단계별 리딩 프로그램</p>
+        <div class="detail-price-row">
+          <span class="discount">10%</span>
+          <span class="sale">13,500원</span>
+          <span class="list">15,000원</span>
+        </div>
+      </div>
+
+      <div>
+        <div class="notice-box">
+          <div class="notice-links">
+            <a href="#">출간일정 보기</a>
+            <a href="#">교재정오 신청</a>
+          </div>
+          <div class="notice-body">
+            <span class="notice-badge">공지</span>
+            <p class="notice-text">READT IT 100 시리즈의 표지 변경으로 ISBN도 변경되었습니다.<br>구매처 재고의 생산일자에 따라 표지와 ISBN이 사이트 정보와 다를 수 있으나 교재 내용은 동일합니다.<br>자세한 내용은 고객센터 &gt; FAQ에서 관련 게시물을 참고해 주시기 바랍니다.</p>
+          </div>
+        </div>
+        <div class="material-quicklinks" style="margin-top:16px;">
+          <a class="mq-link" href="#tab-material"><img src="assets/icon-dl-all.svg" alt=""><span class="mq-label">전체 다운로드</span><span class="mq-count">(12)</span></a>
+          <a class="mq-link" href="#tab-material"><img src="assets/icon-dl-answer.svg" alt=""><span class="mq-label">정답</span><span class="mq-count">(2)</span></a>
+          <a class="mq-link" href="#tab-material"><img src="assets/icon-dl-mp3.svg" alt=""><span class="mq-label">MP3</span><span class="mq-count">(5)</span></a>
+          <a class="mq-link" href="#tab-material"><img src="assets/icon-dl-wordlist.svg" alt=""><span class="mq-label">Word List</span><span class="mq-count">(3)</span></a>
+        </div>
+        <div class="teacher-notice" style="margin-top:16px;">
+          <span>교강사 자료는 NE Tutor에서 제공됩니다.</span>
+          <img src="assets/icon-chevron-down.svg" alt="" style="transform:rotate(-90deg);filter:invert(1);">
+        </div>
+      </div>
+
+      <div class="detail-buybox">
+        <div class="buybox-row"><span>적립</span><span class="value accent"><b>675p</b> 적립(5%)</span></div>
+        <div class="buybox-row"><span>배송비</span><span class="value">2,500원(30,000원 이상 무료)</span></div>
+        <div class="qty-price-row">
+          <div class="qty-stepper">
+            <button id="qtyMinus" aria-label="수량 감소">−</button>
+            <input type="text" id="qtyInput" value="1" inputmode="numeric">
+            <button id="qtyPlus" aria-label="수량 증가">+</button>
+          </div>
+          <span class="total-price" id="totalPrice">13,500원</span>
+        </div>
+      </div>
+
+      <div class="detail-cta">
+        <button class="btn btn-outline" id="addCartBtn">장바구니</button>
+        <button class="btn btn-primary" id="buyNowBtn">바로구매</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="detail-body">
+    <div class="detail-main">
+      <nav class="detail-tabs" id="detailTabs">
+        <button data-tab="material" class="is-active">학습자료</button>
+        <button data-tab="spec">상품상세</button>
+        <button data-tab="howto">학습법</button>
+        <button data-tab="series">시리즈 교재</button>
+        <button data-tab="next">다음단계 교재</button>
+        <button data-tab="related">연관교재</button>
+        <button data-tab="review">후기</button>
+        <button data-tab="notice">정보고시</button>
+        <button data-tab="caution">구매유의사항</button>
+      </nav>
+
+      <section class="tab-section" id="tab-material">
+        <p class="tab-section-title">학습자료</p>
+        <table class="material-table">
+          <thead>
+            <tr><th></th><th>구분</th><th>자료유형</th><th>자료명</th><th>다운로드</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><input type="checkbox"></td><td><span class="audience-pill all">전체</span></td><td>정답지</td><td>L1 정답 및 해설</td><td><button class="dl-btn" data-dl="L1 정답 및 해설"><img src="assets/icon-dl-answer.svg" alt="" style="width:18px;height:18px;"></button></td></tr>
+            <tr><td><input type="checkbox"></td><td><span class="audience-pill member">회원</span></td><td>워크시트</td><td>Unit 1~5 워크시트</td><td><button class="dl-btn" data-dl="Unit 1~5 워크시트"><img src="assets/icon-dl-all.svg" alt="" style="width:18px;height:18px;"></button></td></tr>
+            <tr><td><input type="checkbox"></td><td><span class="audience-pill member">회원</span></td><td>정답지</td><td>L1 정답 및 해설</td><td><button class="dl-btn" data-dl="L1 정답 및 해설(회원)"><img src="assets/icon-dl-answer.svg" alt="" style="width:18px;height:18px;"></button></td></tr>
+            <tr><td><input type="checkbox" disabled></td><td><span class="audience-pill teacher">선생님</span></td><td>선생님자료</td><td>어휘리스트, MP3, 정답 및 해설, 워크시트 등</td><td><button class="dl-btn" disabled title="교강사 전용"><img src="assets/icon-dl-mp3.svg" alt="" style="width:18px;height:18px;opacity:.4;"></button></td></tr>
+            <tr><td><input type="checkbox" disabled></td><td><span class="audience-pill teacher">선생님</span></td><td>E-book</td><td>온라인 교재 서비스</td><td><button class="dl-btn" disabled title="교강사 전용"><img src="assets/icon-dl-all.svg" alt="" style="width:18px;height:18px;opacity:.4;"></button></td></tr>
+          </tbody>
+        </table>
+        <div class="tutor-banner">
+          <span>이 교재를 사용하는 선생님이라면</span>
+          <button class="btn btn-outline" id="tutorGoBtn">NE Tutor 바로가기</button>
+        </div>
+        <div class="material-table-actions">
+          <button class="btn btn-outline" id="selectDlBtn">선택 다운로드</button>
+          <button class="btn btn-primary" id="allDlBtn">전체 다운로드</button>
+        </div>
+      </section>
+
+      <section class="tab-section" id="tab-spec">
+        <p class="tab-section-title">상품상세</p>
+        <div class="detail-image-expand">
+          <img src="assets/cover-placeholder.png" alt="교재상세 이미지">
+          <br>
+          <button class="expand-btn" id="expandSpecBtn">교재상세 펼치기 <img src="assets/icon-chevron-down.svg" alt="" style="width:12px;height:12px;"></button>
+        </div>
+      </section>
+
+      <section class="tab-section" id="tab-howto">
+        <p class="tab-section-title">학습법</p>
+        <div class="study-steps">
+          <div class="study-step">
+            <p class="step-label">STEP 01 · 어휘 학습</p>
+            <ul>
+              <li>단어장 / Word List로 핵심 어휘를 먼저 익힙니다.</li>
+              <li>MP3로 표제어 발음을 들으며 반복 암기합니다.</li>
+            </ul>
+          </div>
+          <div class="study-step">
+            <p class="step-label">STEP 02 · 본문 학습</p>
+            <ul>
+              <li>E-Book(본책)으로 지문을 단계별로 학습합니다.</li>
+              <li>MP3 듣기로 끊어 읽기와 청해를 병행합니다.</li>
+            </ul>
+          </div>
+          <div class="study-step">
+            <p class="step-label">STEP 03 · 문제 풀이</p>
+            <ul>
+              <li>Test Sheet · 워크시트로 학습 내용을 점검합니다.</li>
+              <li>단어시험지로 어휘 암기 정도를 확인합니다.</li>
+            </ul>
+          </div>
+          <div class="study-step">
+            <p class="step-label">STEP 04 · 복습 &amp; 심화</p>
+            <ul>
+              <li>모바일 학습지원으로 틀린 문항과 어휘를 반복 복습합니다.</li>
+              <li>NE Waffle로 추가 학습 콘텐츠를 활용합니다.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="tab-section" id="tab-series">
+        <div class="series-header">
+          <p class="tab-section-title" style="margin:0;">시리즈 <span class="count">(총 6권)</span></p>
+          <div class="bulk-actions">
+            <label style="display:flex;align-items:center;gap:6px;"><input type="checkbox" checked> 전체선택</label>
+            <button class="btn btn-outline">선택 장바구니 담기</button>
+          </div>
+        </div>
+        <div class="series-scroller" id="seriesScroller"></div>
+      </section>
+
+      <section class="tab-section" id="tab-next">
+        <div class="series-header">
+          <p class="tab-section-title" style="margin:0;">다음단계 교재 <span class="count">(총 4권)</span></p>
+          <div class="bulk-actions">
+            <label style="display:flex;align-items:center;gap:6px;"><input type="checkbox" checked> 전체선택</label>
+            <button class="btn btn-outline">선택 장바구니 담기</button>
+          </div>
+        </div>
+        <div class="series-scroller" id="nextScroller"></div>
+      </section>
+
+      <section class="tab-section" id="tab-related">
+        <div class="series-header">
+          <p class="tab-section-title" style="margin:0;">연관교재 <span class="count">(총 4권)</span></p>
+          <div class="bulk-actions">
+            <label style="display:flex;align-items:center;gap:6px;"><input type="checkbox" checked> 전체선택</label>
+            <button class="btn btn-outline">선택 장바구니 담기</button>
+          </div>
+        </div>
+        <div class="series-scroller" id="relatedScroller"></div>
+      </section>
+
+      <section class="tab-section" id="tab-review">
+        <div class="review-summary">
+          <p class="tab-section-title" style="margin:0;">후기</p>
+          <button class="btn btn-primary" id="writeReviewBtn">교재 후기쓰기</button>
+        </div>
+        <p class="rules" style="margin-bottom:16px;">· 교재후기 작성 시, 작성횟수 및 교재와 상관없이 당일 최초 작성후기에 대해 1회만 500P가 적립됩니다.<br>· 교재후기와 무관한 내용이나 동일 문자의 반복 등 부적합한 내용의 경우에는 무통보 삭제 및 포인트가 회수될 수 있습니다.</p>
+        <div class="review-write-form" id="reviewForm">
+          <div class="field-row"><label>별점 *</label><span class="star-picker" id="starPicker">★★★★★</span></div>
+          <div class="field-row"><label>제목 *</label><input type="text" placeholder="제목을 입력해 주세요."></div>
+          <div class="field-row"><label>내용 *</label><textarea placeholder="내용을 입력해 주세요."></textarea></div>
+          <div style="display:flex;justify-content:flex-end;gap:8px;">
+            <button class="btn btn-outline" id="cancelReviewBtn">작성 취소</button>
+            <button class="btn btn-primary" id="submitReviewBtn">등록</button>
+          </div>
+        </div>
+        <div class="review-list" id="reviewList"></div>
+      </section>
+
+      <section class="tab-section" id="tab-notice">
+        <p class="tab-section-title">정보고시</p>
+        <table class="info-table">
+          <tr><th>저자</th><td>NE능률 편집부</td></tr>
+          <tr><th>출판사</th><td>NE능률</td></tr>
+          <tr><th>ISBN</th><td>9788812345678</td></tr>
+          <tr><th>쪽수</th><td>120p</td></tr>
+          <tr><th>크기</th><td>210 x 275mm</td></tr>
+          <tr><th>제품구성</th><td>본책 1권</td></tr>
+          <tr><th>발행일</th><td>2026-03-02</td></tr>
+          <tr><th>KC인증코드</th><td>해당 없음(도서)</td></tr>
+          <tr><th>취급방법 및 주의사항</th><td>직사광선 및 습기를 피해 보관해 주세요.</td></tr>
+          <tr><th>목차</th><td>Unit 1~10, 정답 및 해설 수록</td></tr>
+        </table>
+      </section>
+
+      <section class="tab-section" id="tab-caution" style="border-bottom:none;">
+        <p class="tab-section-title">구매유의사항</p>
+        <table class="info-table">
+          <tr><th>반품/교환 방법</th><td>고객센터(1833-8368) 또는 1:1 문의 접수 후 반품/교환 진행</td></tr>
+          <tr><th>반품/교환 가능 기간</th><td>상품 수령 후 7일 이내</td></tr>
+          <tr><th>반품/교환 비용</th><td>단순 변심 시 왕복 배송비 고객 부담</td></tr>
+          <tr><th>반품/교환 불가 사유</th><td>포장 훼손, 사용 흔적, 부록(MP3 등) 사용 시</td></tr>
+          <tr><th>배송안내</th><td>결제 완료 후 평균 2~3영업일 이내 출고</td></tr>
+          <tr><th>소비자 피해보상</th><td>관련 법령 및 공정거래위원회 고시에 따름</td></tr>
+          <tr><th>기타</th><td>교재 정오 및 출간 일정은 공지사항을 참고해 주세요.</td></tr>
+        </table>
+      </section>
+    </div>
+
+    <aside class="detail-side">
+      <div class="detail-side-sticky">
+        <p class="mini-title">Bricks Reading 150 · L1</p>
+        <p class="mini-price">13,500원</p>
+        <div class="qty-stepper" style="width:100%;justify-content:center;">
+          <button id="qtyMinusSide" aria-label="수량 감소">−</button>
+          <input type="text" id="qtyInputSide" value="1" inputmode="numeric" style="flex:1;">
+          <button id="qtyPlusSide" aria-label="수량 증가">+</button>
+        </div>
+        <div class="detail-cta" style="margin:0;">
+          <button class="btn btn-outline" id="addCartBtnSide">장바구니</button>
+          <button class="btn btn-primary" id="buyNowBtnSide">바로구매</button>
+        </div>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-top">
+    <nav class="footer-links">
+      <a href="#">개인정보처리방침</a>
+      <a href="#">이용약관</a>
+      <a href="#">이메일무단수집거부</a>
+      <a href="cs.html">지사안내</a>
+    </nav>
+    <div class="footer-social">
+      <a class="ch-link" href="#">Ch</a>
+      <a href="#"><img src="assets/icon-youtube.svg" alt="유튜브"></a>
+      <a class="family-site" href="#">FAMILY SITE <img src="assets/icon-arrow-familysite.svg" alt=""></a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-info">
+      <p>㈜NE능률 (03925) 서울특별시 마포구 월드컵북로 396(상암동) 누리꿈스퀘어 비즈니스타워 10층 <span class="sep">|</span> 대표이사 : 이정진 <span class="sep">|</span> 대표번호 : 02-2014-7114 <span class="accent">사업별 고객센터 안내</span></p>
+      <p>팩스 : 02-337-4956 <span class="sep">|</span> 고객센터 : 1833-8368 <span class="sep">|</span> 사업자등록번호 : 105-81-65267 <span class="sep">|</span> 통신판매신고번호 : 제2004-02120호 <span class="accent">정보조회</span></p>
+      <p>개인정보 보호책임자(CPO) : 선민재(necpo@neungyule.com)</p>
+      <p style="margin-top:8px;">Copyright ⓒ NE Neungyule, Inc. All Rights Reserved</p>
+    </div>
+    <div class="footer-logo"><img src="assets/logo-footer-ne.png" alt="NE능률"></div>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/shared.js"></script>
+<script src="js/detail.js"></script>
+</body>
+</html>

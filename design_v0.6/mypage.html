@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>마이페이지 — NE Books</title>
+<meta name="description" content="NE Books 자사몰 개편 v0.6 — 마이페이지">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/mypage.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-top">
+    <a class="header-logo" href="index.html">
+      <img src="assets/logo-nebooks.png" alt="NE Books">
+    </a>
+    <div class="header-search">
+      <div class="search-box">
+        <input type="text" placeholder="교재명, 검색어를 입력해 주세요" id="searchInput">
+        <button class="search-submit" id="searchSubmit" aria-label="검색">
+          <img src="assets/icon-search.svg" alt="">
+        </button>
+      </div>
+    </div>
+    <div class="header-icons">
+      <a class="icon-group" href="mypage.html">
+        <img src="assets/icon-mypage.svg" alt="">
+        <span>MY</span>
+      </a>
+      <a class="icon-group" href="cart.html" id="cartGroup">
+        <span class="cart-count">
+          <img src="assets/icon-cart.svg" alt="">
+          <span class="cart-badge" id="cartBadge">3</span>
+        </span>
+        <span>장바구니</span>
+      </a>
+      <a class="icon-group" href="cs.html" id="csGroup">
+        <img src="assets/icon-cs.svg" alt="">
+        <span>고객센터</span>
+      </a>
+    </div>
+  </div>
+  <nav class="gnb">
+    <div class="gnb-row">
+      <button class="gnb-hamburger" id="hamburgerBtn" aria-label="전체 메뉴">
+        <img src="assets/icon-hamburger.svg" alt="">
+      </button>
+      <div class="gnb-nav">
+        <a class="gnb-link" href="list.html">ELT</a>
+        <a class="gnb-link" href="list.html">초/중등</a>
+        <a class="gnb-link" href="list.html">고등</a>
+        <a class="gnb-link" href="list.html">교과서/자습서</a>
+        <a class="gnb-link" href="list.html">수험/일반</a>
+        <a class="gnb-link" href="list.html">수학/국어</a>
+        <a class="gnb-link" href="list.html?tab=ebook">학습자료실</a>
+        <a class="gnb-link" href="list.html">도서몰</a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<div class="page-title-bar"><div class="inner"><h1>마이페이지</h1></div></div>
+
+<main class="mypage-layout"><div class="mypage-inner">
+
+  <nav class="mypage-nav" id="mypageNav">
+    <button class="is-active" data-mp-tab="home">홈</button>
+    <button data-mp-tab="orders">주문내역</button>
+    <button data-mp-tab="wish">찜</button>
+    <button data-mp-tab="points">포인트</button>
+    <button data-mp-tab="inquiry">문의/답변</button>
+    <button data-mp-tab="reviews">후기</button>
+    <button data-mp-tab="events">이벤트/세미나</button>
+    <button data-mp-tab="profile">회원정보수정</button>
+    <button class="is-logout" id="logoutBtn">로그아웃</button>
+  </nav>
+
+  <div class="mypage-main">
+
+    <section class="mypage-panel is-active" id="mp-home">
+      <p class="welcome-banner"><b>홍길동</b>님, 환영합니다.</p>
+      <div class="dash-grid">
+        <div class="dash-card">
+          <p class="dc-title">나의 정보</p>
+          <p class="dc-row">이름 <span class="num">홍길동</span></p>
+          <button class="btn btn-outline" data-mp-goto="profile" style="width:100%;height:32px;font-size:12px;margin-top:8px;">회원정보수정</button>
+        </div>
+        <div class="dash-card">
+          <p class="dc-title">활동 요약</p>
+          <p class="dc-row"><span data-mp-goto="inquiry" style="cursor:pointer;">문의/답변</span><span class="num">2</span></p>
+          <p class="dc-row"><span data-mp-goto="events" style="cursor:pointer;">세미나 신청</span><span class="num">1</span></p>
+          <p class="dc-row"><span data-mp-goto="reviews" style="cursor:pointer;">작성한 후기</span><span class="num">3</span></p>
+        </div>
+        <div class="dash-card">
+          <p class="dc-title">포인트 <a href="#" data-mp-goto="points">더보기 &gt;</a></p>
+          <p class="dc-row">사용가능 <span class="num">3,200P</span></p>
+          <p class="dc-row">소멸예정(30일 내) <span class="num">200P</span></p>
+        </div>
+        <div class="dash-card wide">
+          <p class="dc-title">주문 현황 <a href="#" data-mp-goto="orders">더보기 &gt;</a></p>
+          <div style="display:flex;gap:24px;">
+            <span class="dc-row" style="flex:1;justify-content:center;flex-direction:column;align-items:center;">입금대기<span class="num" style="font-size:20px;">0</span></span>
+            <span class="dc-row" style="flex:1;justify-content:center;flex-direction:column;align-items:center;">결제완료<span class="num" style="font-size:20px;">1</span></span>
+            <span class="dc-row" style="flex:1;justify-content:center;flex-direction:column;align-items:center;">배송중<span class="num" style="font-size:20px;">1</span></span>
+            <span class="dc-row" style="flex:1;justify-content:center;flex-direction:column;align-items:center;">배송완료<span class="num" style="font-size:20px;">2</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dash-card" style="margin-bottom:16px;">
+        <p class="dc-title">최근 본 학습자료</p>
+        <div class="mini-list" id="recentMaterials"></div>
+      </div>
+      <div style="display:flex;gap:16px;">
+        <div class="dash-card" style="flex:1;">
+          <p class="dc-title">찜한 교재 <a href="#" data-mp-goto="wish">더보기 &gt;</a></p>
+          <div class="mini-list" id="recentWish"></div>
+        </div>
+        <div class="dash-card" style="flex:1;">
+          <p class="dc-title">최근 본 교재</p>
+          <div class="mini-list" id="recentViewed"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mypage-panel" id="mp-orders">
+      <div class="mypage-search-bar">
+        <input type="text" placeholder="주문번호 또는 상품명을 입력하세요.">
+        <button>검색</button>
+      </div>
+      <div class="order-detail-panel" id="orderDetailPanel"></div>
+      <table class="data-table" id="orderTable">
+        <thead><tr><th>주문번호</th><th>상품명</th><th>결제금액</th><th>주문상태</th><th>관리</th></tr></thead>
+        <tbody id="orderTableBody"></tbody>
+      </table>
+      <p style="font-size:12px;color:var(--gray-a9);margin-top:16px;line-height:1.7;">
+        · 입금대기: 입금이 아직 이뤄지지 않은 단계입니다. 7일 이내 미입금 시 주문 취소됩니다.<br>
+        · 배송 상품의 교환/반품 신청은 1:1문의를 이용해 주세요. 배송완료 후 7일 이내 직접 구매확정, 경과 시 자동 구매확정됩니다.
+      </p>
+    </section>
+
+    <section class="mypage-panel" id="mp-wish">
+      <div class="wish-grid" id="wishGrid"></div>
+      <div style="text-align:right;margin-top:16px;"><button class="row-actions" style="display:inline-block;" id="wishClearBtn">전체삭제</button></div>
+    </section>
+
+    <section class="mypage-panel" id="mp-points">
+      <div class="point-summary">
+        <div><span class="label">누적 적립</span><span class="num">18,900P</span></div>
+        <div><span class="label">사용가능</span><span class="num">3,200P</span></div>
+        <div><span class="label">소멸예정(30일 내)</span><span class="num">200P</span></div>
+      </div>
+      <div class="status-tabs">
+        <button class="is-active">전체</button><button>적립</button><button>사용</button><button>소멸</button>
+      </div>
+      <table class="data-table">
+        <thead><tr><th>일자</th><th>구분</th><th>내용</th><th>포인트</th><th>잔액</th></tr></thead>
+        <tbody id="pointTableBody"></tbody>
+      </table>
+    </section>
+
+    <section class="mypage-panel" id="mp-inquiry">
+      <div class="status-tabs"><button class="is-active">전체</button><button>답변완료</button><button>답변대기</button></div>
+      <table class="data-table">
+        <thead><tr><th>번호</th><th>분류</th><th>제목</th><th>등록일</th><th>답변여부</th></tr></thead>
+        <tbody id="inquiryTableBody"></tbody>
+      </table>
+    </section>
+
+    <section class="mypage-panel" id="mp-reviews">
+      <div class="review-list" id="myReviewList"></div>
+    </section>
+
+    <section class="mypage-panel" id="mp-events">
+      <div class="event-grid" id="myEventGrid"></div>
+    </section>
+
+    <section class="mypage-panel" id="mp-profile">
+      <p style="font-size:14px;color:var(--gray-666);">회원정보수정은 NE 통합회원 시스템에서 관리됩니다. 아래 버튼을 누르면 통합회원 정보수정 화면으로 이동합니다.</p>
+      <button class="btn btn-primary" id="profileGoBtn" style="margin-top:16px;">통합회원 정보수정으로 이동</button>
+    </section>
+
+  </div>
+</div></main>
+
+<footer class="site-footer">
+  <div class="footer-top">
+    <nav class="footer-links">
+      <a href="#">개인정보처리방침</a>
+      <a href="#">이용약관</a>
+      <a href="#">이메일무단수집거부</a>
+      <a href="cs.html">지사안내</a>
+    </nav>
+    <div class="footer-social">
+      <a class="ch-link" href="#">Ch</a>
+      <a href="#"><img src="assets/icon-youtube.svg" alt="유튜브"></a>
+      <a class="family-site" href="#">FAMILY SITE <img src="assets/icon-arrow-familysite.svg" alt=""></a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-info">
+      <p>㈜NE능률 (03925) 서울특별시 마포구 월드컵북로 396(상암동) 누리꿈스퀘어 비즈니스타워 10층 <span class="sep">|</span> 대표이사 : 이정진 <span class="sep">|</span> 대표번호 : 02-2014-7114 <span class="accent">사업별 고객센터 안내</span></p>
+      <p>팩스 : 02-337-4956 <span class="sep">|</span> 고객센터 : 1833-8368 <span class="sep">|</span> 사업자등록번호 : 105-81-65267 <span class="sep">|</span> 통신판매신고번호 : 제2004-02120호 <span class="accent">정보조회</span></p>
+      <p>개인정보 보호책임자(CPO) : 선민재(necpo@neungyule.com)</p>
+      <p style="margin-top:8px;">Copyright ⓒ NE Neungyule, Inc. All Rights Reserved</p>
+    </div>
+    <div class="footer-logo"><img src="assets/logo-footer-ne.png" alt="NE능률"></div>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/shared.js"></script>
+<script src="js/mypage.js"></script>
+</body>
+</html>

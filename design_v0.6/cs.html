@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>고객센터 — NE Books</title>
+<meta name="description" content="NE Books 자사몰 개편 v0.6 — 고객센터">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/mypage.css">
+<link rel="stylesheet" href="css/cs.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-top">
+    <a class="header-logo" href="index.html">
+      <img src="assets/logo-nebooks.png" alt="NE Books">
+    </a>
+    <div class="header-search">
+      <div class="search-box">
+        <input type="text" placeholder="교재명, 검색어를 입력해 주세요" id="searchInput">
+        <button class="search-submit" id="searchSubmit" aria-label="검색">
+          <img src="assets/icon-search.svg" alt="">
+        </button>
+      </div>
+    </div>
+    <div class="header-icons">
+      <a class="icon-group" href="mypage.html">
+        <img src="assets/icon-mypage.svg" alt="">
+        <span>MY</span>
+      </a>
+      <a class="icon-group" href="cart.html" id="cartGroup">
+        <span class="cart-count">
+          <img src="assets/icon-cart.svg" alt="">
+          <span class="cart-badge" id="cartBadge">0</span>
+        </span>
+        <span>장바구니</span>
+      </a>
+      <a class="icon-group" href="cs.html" id="csGroup">
+        <img src="assets/icon-cs.svg" alt="">
+        <span>고객센터</span>
+      </a>
+    </div>
+  </div>
+  <nav class="gnb">
+    <div class="gnb-row">
+      <button class="gnb-hamburger" id="hamburgerBtn" aria-label="전체 메뉴">
+        <img src="assets/icon-hamburger.svg" alt="">
+      </button>
+      <div class="gnb-nav">
+        <a class="gnb-link" href="list.html">ELT</a>
+        <a class="gnb-link" href="list.html">초/중등</a>
+        <a class="gnb-link" href="list.html">고등</a>
+        <a class="gnb-link" href="list.html">교과서/자습서</a>
+        <a class="gnb-link" href="list.html">수험/일반</a>
+        <a class="gnb-link" href="list.html">수학/국어</a>
+        <a class="gnb-link" href="list.html?tab=ebook">학습자료실</a>
+        <a class="gnb-link" href="list.html">도서몰</a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<div class="page-title-bar"><div class="inner"><h1>고객센터</h1></div></div>
+
+<main class="cs-layout"><div class="cs-inner">
+
+  <nav class="cs-tabbar" id="csTabbar">
+    <button class="is-active" data-cs-tab="notice">공지사항</button>
+    <button data-cs-tab="faq">FAQ</button>
+    <button data-cs-tab="event">이벤트/신간·개정/세미나</button>
+    <button data-cs-tab="fix">교재 오류정정</button>
+    <button data-cs-tab="inquiry">1:1문의</button>
+    <button data-cs-tab="branch">지사안내</button>
+  </nav>
+
+  <section class="cs-panel is-active" id="cs-notice">
+    <div class="cs-filter-row">
+      <div class="pill-filter" id="noticeBadgeFilter">
+        <button class="is-active" data-badge="전체">전체</button>
+        <button data-badge="필독">필독</button>
+        <button data-badge="중요">중요</button>
+        <button data-badge="안내">안내</button>
+      </div>
+      <select id="noticeCatFilter">
+        <option>전체</option><option>공통</option><option>ELT</option><option>초중고(영어)</option>
+        <option>교과서 관련</option><option>수험·일반</option><option>수학·국어</option>
+      </select>
+      <input type="text" placeholder="검색어를 입력하세요">
+    </div>
+    <table class="notice-list-table">
+      <thead><tr><th style="width:60px;">NO</th><th>분류</th><th>제목</th><th style="width:100px;">등록일</th><th style="width:70px;">조회수</th></tr></thead>
+      <tbody id="noticeTableBody"></tbody>
+    </table>
+  </section>
+
+  <section class="cs-panel" id="cs-faq">
+    <div class="faq-cats" id="faqCats">
+      <button class="is-active" data-faq-cat="전체">전체</button>
+      <button data-faq-cat="사이트 이용">사이트 이용</button>
+      <button data-faq-cat="회원정보">회원정보</button>
+      <button data-faq-cat="NE Point">NE Point</button>
+      <button data-faq-cat="교재">교재</button>
+      <button data-faq-cat="부가서비스">부가서비스</button>
+      <button data-faq-cat="주문결제">주문결제</button>
+      <button data-faq-cat="취소환불">취소환불</button>
+      <button data-faq-cat="배송">배송</button>
+      <button data-faq-cat="기타">기타</button>
+    </div>
+    <div class="cs-filter-row"><input type="text" placeholder="궁금한 내용을 검색해 보세요" style="flex:1;"></div>
+    <div id="faqList"></div>
+  </section>
+
+  <section class="cs-panel" id="cs-event">
+    <div class="event-subtabs" id="eventSubtabs">
+      <button class="is-active" data-event-sub="이벤트">이벤트</button>
+      <button data-event-sub="신간·개정">신간·개정</button>
+      <button data-event-sub="세미나">세미나</button>
+      <button class="btn btn-outline winner-btn" id="winnerBtn" data-toast="당첨자발표 페이지로 이동합니다.">🏆 당첨자발표</button>
+    </div>
+    <div class="event-grid" id="csEventGrid"></div>
+  </section>
+
+  <section class="cs-panel" id="cs-fix">
+    <div class="cs-filter-row">
+      <select><option>구분 전체</option><option>ELT</option><option>초중등</option><option>고등</option></select>
+      <input type="text" placeholder="교재명을 검색하세요">
+      <button class="btn btn-primary" style="margin-left:auto;" data-toast="교재 오류 신고 등록 폼을 엽니다 (회원 전용).">교재 오류 신고하기</button>
+    </div>
+    <table class="notice-list-table">
+      <thead><tr><th style="width:60px;">NO</th><th>분류</th><th>제목</th><th style="width:100px;">등록일</th><th style="width:70px;">조회</th></tr></thead>
+      <tbody id="fixTableBody"></tbody>
+    </table>
+  </section>
+
+  <section class="cs-panel" id="cs-inquiry">
+    <div class="inquiry-subtabs" id="inquirySubtabs">
+      <button class="is-active" data-inq-sub="list">문의 목록</button>
+      <button data-inq-sub="write">문의 등록 (회원)</button>
+      <button data-inq-sub="guest">비회원 문의</button>
+    </div>
+
+    <div class="inquiry-panel is-active" id="inq-list">
+      <div class="status-tabs"><button class="is-active">전체</button><button>답변완료</button><button>답변대기</button></div>
+      <table class="data-table">
+        <thead><tr><th>번호</th><th>분류</th><th>제목</th><th>등록일</th><th>답변여부</th></tr></thead>
+        <tbody id="csInquiryTableBody"></tbody>
+      </table>
+    </div>
+
+    <div class="inquiry-panel" id="inq-write">
+      <p class="cs-filter-row" style="gap:16px;">
+        <a href="#" data-cs-tab="faq" style="font-size:12px;color:var(--gray-666);">도움말(FAQ)</a>
+        <a href="#" data-toast="교재정오 알림 페이지로 이동합니다." style="font-size:12px;color:var(--gray-666);">교재정오 알림</a>
+        <a href="#" data-toast="교과서 콘텐츠 FAQ로 이동합니다." style="font-size:12px;color:var(--gray-666);">교과서 콘텐츠 FAQ</a>
+      </p>
+      <div class="consult-type-row">
+        <select id="consultTypeSelect">
+          <option value="">상담유형을 선택하세요</option>
+          <option value="general">일반문의</option>
+          <option value="error">교재 오류신고</option>
+          <option value="order">주문·배송</option>
+        </select>
+      </div>
+      <div class="order-link-box" id="orderLinkBox">
+        주문·배송 문의는 본인 주문만 선택할 수 있습니다.
+        <select><option>NB20260710000042 · Phonics Code 1 : Student Book</option><option>NB20260705000031 · Bricks Reading 150 · L1 외 1건</option></select>
+      </div>
+      <div class="info-grid">
+        <span class="label">제목 *</span><input type="text" id="wTitle">
+        <span class="label">내용 *</span><textarea id="wBody" rows="5" placeholder="교강사 자료 요청 시 재직 학교/학원명·주소와 거래 지사(총판)명을 함께 적어주시면 빠르게 안내해드립니다."></textarea>
+        <span class="label">이메일 *</span><input type="text" id="wEmail" placeholder="example@domain.com">
+        <span class="label">연락처</span><input type="text" placeholder="선택 입력">
+        <span class="label">알림</span><label style="display:flex;align-items:center;gap:8px;"><input type="checkbox"> 답변 완료 시 SMS로 알림받기</label>
+        <span class="label">첨부파일</span><input type="file">
+      </div>
+      <div style="text-align:right;margin-top:16px;"><button class="btn btn-primary" id="submitInquiryBtn">등록</button></div>
+    </div>
+
+    <div class="inquiry-panel" id="inq-guest">
+      <p style="font-size:13px;color:var(--gray-666);margin-bottom:16px;">선생님이시라면 로그인 후 문의 시 소속 학교/지사 이력이 함께 관리됩니다.</p>
+      <div class="consult-type-row">
+        <select><option value="">상담유형을 선택하세요</option><option>일반문의</option><option>교재 오류신고</option></select>
+      </div>
+      <div class="info-grid">
+        <span class="label">이름 *</span><input type="text" id="gName">
+        <span class="label">이메일 *</span><input type="text" id="gEmail">
+        <span class="label">연락처</span><input type="text" placeholder="선택 입력">
+        <span class="label">제목 *</span><input type="text" id="gTitle">
+        <span class="label">내용 *</span><textarea rows="5" id="gBody"></textarea>
+        <span class="label">첨부파일</span><input type="file">
+        <span class="label">보안문자 *</span><input type="text" id="gCaptcha" placeholder="자동입력방지문자 4자리">
+      </div>
+      <table class="consent-table">
+        <thead><tr><th>구분</th><th>수집 목적</th><th>수집 항목</th><th>보유·이용기간</th></tr></thead>
+        <tbody>
+          <tr><td>필수</td><td>문의 답변 처리</td><td>이름, 이메일</td><td>수집일로부터 3개월</td></tr>
+          <tr><td>선택</td><td>답변 통지 알림</td><td>휴대폰번호</td><td>수집일로부터 3개월</td></tr>
+        </tbody>
+      </table>
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px;margin-bottom:8px;"><input type="checkbox" id="gConsentRequired"> (필수) 개인정보 수집·이용에 동의합니다.</label>
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px;margin-bottom:16px;"><input type="checkbox"> (선택) 답변 완료 시 SMS로 알림받기</label>
+      <div style="text-align:right;"><button class="btn btn-primary" id="submitGuestInquiryBtn">등록</button></div>
+    </div>
+  </section>
+
+  <section class="cs-panel" id="cs-branch">
+    <div class="branch-grid" id="branchGrid"></div>
+  </section>
+
+</div></main>
+
+<footer class="site-footer">
+  <div class="footer-top">
+    <nav class="footer-links">
+      <a href="#">개인정보처리방침</a>
+      <a href="#">이용약관</a>
+      <a href="#">이메일무단수집거부</a>
+      <a href="cs.html">지사안내</a>
+    </nav>
+    <div class="footer-social">
+      <a class="ch-link" href="#">Ch</a>
+      <a href="#"><img src="assets/icon-youtube.svg" alt="유튜브"></a>
+      <a class="family-site" href="#">FAMILY SITE <img src="assets/icon-arrow-familysite.svg" alt=""></a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-info">
+      <p>㈜NE능률 (03925) 서울특별시 마포구 월드컵북로 396(상암동) 누리꿈스퀘어 비즈니스타워 10층 <span class="sep">|</span> 대표이사 : 이정진 <span class="sep">|</span> 대표번호 : 02-2014-7114 <span class="accent">사업별 고객센터 안내</span></p>
+      <p>팩스 : 02-337-4956 <span class="sep">|</span> 고객센터 : 1833-8368 <span class="sep">|</span> 사업자등록번호 : 105-81-65267 <span class="sep">|</span> 통신판매신고번호 : 제2004-02120호 <span class="accent">정보조회</span></p>
+      <p>개인정보 보호책임자(CPO) : 선민재(necpo@neungyule.com)</p>
+      <p style="margin-top:8px;">Copyright ⓒ NE Neungyule, Inc. All Rights Reserved</p>
+    </div>
+    <div class="footer-logo"><img src="assets/logo-footer-ne.png" alt="NE능률"></div>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/shared.js"></script>
+<script src="js/cs.js"></script>
+</body>
+</html>

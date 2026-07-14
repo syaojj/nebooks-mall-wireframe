@@ -1,0 +1,56 @@
+/* ==========================================================================
+   NE Books · 장바구니 (design_v0.6)
+   No Figma design exists for this screen — built from EP-BUY PRD (UC-BUY-06~12)
+   ========================================================================== */
+
+.cart-layout {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 120px;
+}
+.cart-inner { width: 1360px; max-width: calc(100% - 40px); display: flex; gap: 32px; align-items: flex-start; }
+.cart-main { flex: 1; min-width: 0; }
+.cart-summary-col { width: 320px; flex: 0 0 auto; position: sticky; top: 24px; }
+
+.cart-select-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0;
+  border-bottom: 2px solid var(--black);
+}
+.cart-select-bar label { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--gray-666); }
+.cart-select-bar .bulk-del { font-size: 13px; color: var(--gray-a9); }
+
+.cart-item {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--gray-e5);
+}
+.cart-item .cb { flex: 0 0 auto; }
+.cart-item .thumb { width: 96px; height: 96px; flex: 0 0 auto; background: var(--gray-f3); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+.cart-item .thumb img { max-width: 56px; max-height: 74px; }
+.cart-item .info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.cart-item .name { font-size: 15px; font-weight: 700; }
+.cart-item .name a { color: var(--black); }
+.cart-item .meta { font-size: 12px; color: var(--gray-a9); }
+.cart-item .meta .list { text-decoration: line-through; margin-right: 6px; }
+.cart-item .meta .pct { color: var(--red); margin-right: 6px; }
+.cart-item .point { font-size: 12px; color: var(--gray-666); }
+.cart-item .soldout-flag { display: inline-flex; background: var(--gray-666); color: #fff; font-size: 11px; padding: 2px 8px; border-radius: 9999px; margin-left: 8px; }
+.cart-item .qty-col { flex: 0 0 auto; }
+.cart-item .line-total { width: 110px; flex: 0 0 auto; text-align: right; font-size: 16px; font-weight: 700; }
+.cart-item .remove-btn { flex: 0 0 auto; width: 28px; height: 28px; color: var(--gray-a9); font-size: 18px; }
+
+
+.cart-empty { display: none; flex-direction: column; align-items: center; gap: 20px; padding: 120px 0; text-align: center; }
+.cart-empty.is-visible { display: flex; }
+.cart-empty p { font-size: 16px; color: var(--gray-666); }
+.cart-empty .btn { padding: 0 32px; height: 48px; }
+
+@media (max-width: 1180px) {
+  .cart-inner { flex-direction: column; }
+  .cart-summary-col { width: 100%; position: static; }
+}

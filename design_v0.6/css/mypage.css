@@ -1,0 +1,89 @@
+/* ==========================================================================
+   NE Books · 마이페이지 (design_v0.6)
+   No Figma design exists for this screen — built from UC-CS-14/15, UC-ORD-15/16,
+   UC-BUY-14/15, UC-PNT-01/04/05, UC-CS-13, UC-AUTH-05
+   ========================================================================== */
+
+.mypage-layout { display: flex; justify-content: center; padding-bottom: 120px; }
+.mypage-inner { width: 1200px; max-width: calc(100% - 40px); display: flex; gap: 40px; align-items: flex-start; }
+
+.mypage-nav { width: 200px; flex: 0 0 auto; border-right: 1px solid var(--gray-e5); }
+.mypage-nav button {
+  display: block; width: 100%; text-align: left; padding: 14px 16px; font-size: 14px; color: var(--gray-666); border-radius: 8px;
+}
+.mypage-nav button.is-active { background: var(--gray-f3); color: var(--black); font-weight: 700; }
+.mypage-nav button.is-logout { color: var(--red); margin-top: 16px; }
+
+.mypage-main { flex: 1; min-width: 0; }
+.mypage-panel { display: none; }
+.mypage-panel.is-active { display: block; }
+
+.welcome-banner { font-size: 20px; margin-bottom: 24px; }
+.welcome-banner b { font-weight: 800; }
+
+.dash-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 32px; }
+.dash-card { border: 1px solid var(--gray-e5); border-radius: 16px; padding: 20px; }
+.dash-card .dc-title { display: flex; justify-content: space-between; align-items: center; font-size: 14px; font-weight: 700; margin-bottom: 12px; }
+.dash-card .dc-title a { font-size: 12px; color: var(--gray-a9); font-weight: 400; }
+.dash-card .dc-row { display: flex; justify-content: space-between; font-size: 13px; color: var(--gray-666); padding: 4px 0; }
+.dash-card .dc-row .num { color: var(--black); font-weight: 700; font-variant-numeric: tabular-nums; }
+.dash-card.wide { grid-column: span 3; }
+
+.mini-list { display: flex; gap: 12px; overflow-x: auto; }
+.mini-list .mi-card { width: 96px; flex: 0 0 auto; text-align: center; }
+.mini-list .mi-card .thumb { width: 96px; height: 96px; background: var(--gray-f3); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 6px; }
+.mini-list .mi-card .thumb img { max-width: 56px; max-height: 74px; }
+.mini-list .mi-card p { font-size: 12px; line-height: 1.3; }
+.empty-inline { font-size: 13px; color: var(--gray-a9); padding: 24px 0; text-align: center; }
+
+.mypage-search-bar { display: flex; gap: 8px; margin-bottom: 20px; }
+.mypage-search-bar input { flex: 1; border: 1px solid var(--gray-e5); border-radius: 8px; padding: 10px 14px; font-size: 14px; }
+.mypage-search-bar button { padding: 0 20px; border: 1px solid var(--gray-e5); border-radius: 8px; font-size: 14px; color: var(--gray-666); }
+
+.status-tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+.status-tabs button { padding: 8px 16px; border-radius: 9999px; border: 1px solid var(--gray-e5); font-size: 13px; color: var(--gray-666); }
+.status-tabs button.is-active { background: var(--black); color: #fff; border-color: var(--black); }
+
+.data-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.data-table th { background: var(--gray-f3); color: var(--gray-666); font-weight: 600; font-size: 13px; padding: 12px; text-align: left; }
+.data-table td { padding: 14px 12px; border-bottom: 1px solid var(--gray-e5); vertical-align: middle; }
+.status-pill { display: inline-block; padding: 3px 10px; border-radius: 9999px; font-size: 12px; font-weight: 600; background: var(--gray-f3); color: var(--gray-666); }
+.status-pill.done { background: #e7f6ec; color: #1c8a44; }
+.status-pill.wait { background: #fef4e3; color: #b3730a; }
+.row-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.row-actions button { font-size: 12px; padding: 6px 10px; border: 1px solid var(--gray-e5); border-radius: 6px; color: var(--gray-666); }
+.row-actions button.danger { color: var(--red); border-color: var(--red); }
+
+.order-detail-panel { display: none; border: 1px solid var(--gray-e5); border-radius: 16px; padding: 24px; margin-bottom: 24px; }
+.order-detail-panel.is-open { display: block; }
+.order-detail-panel .back-link { font-size: 13px; color: var(--gray-666); margin-bottom: 16px; display: inline-block; }
+
+.wish-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.wish-card { border: 1px solid var(--gray-e5); border-radius: 12px; padding: 12px; position: relative; }
+.wish-card .thumb { width: 100%; aspect-ratio: 3/4; background: var(--gray-f3); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 8px; }
+.wish-card .thumb img { max-width: 70%; max-height: 70%; }
+.wish-card .name { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+.wish-card .price { font-size: 13px; font-weight: 700; margin-bottom: 8px; }
+.wish-card .remove-x { position: absolute; top: 12px; right: 12px; width: 22px; height: 22px; background: #fff; border-radius: 9999px; box-shadow: 0 1px 4px rgba(0,0,0,.2); font-size: 12px; color: var(--gray-666); }
+.wish-card .btn { width: 100%; height: 32px; font-size: 12px; padding: 0; }
+
+.point-summary { display: flex; gap: 32px; margin-bottom: 24px; }
+.point-summary div span.label { display: block; font-size: 13px; color: var(--gray-666); margin-bottom: 4px; }
+.point-summary div span.num { font-family: 'Paperlogy', sans-serif; font-size: 24px; font-weight: 800; }
+
+.period-tabs { display: flex; gap: 8px; }
+
+.event-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.event-card { border: 1px solid var(--gray-e5); border-radius: 12px; overflow: hidden; }
+.event-card .ec-thumb { height: 100px; background: linear-gradient(135deg, #2f74d1, #1d2b5c); }
+.event-card .ec-body { padding: 14px; }
+.event-card .ec-label { font-size: 11px; color: var(--red); font-weight: 700; }
+.event-card .ec-title { font-size: 14px; font-weight: 600; margin: 4px 0; }
+.event-card .ec-period { font-size: 12px; color: var(--gray-a9); }
+
+@media (max-width: 1180px) {
+  .mypage-inner { flex-direction: column; }
+  .mypage-nav { width: 100%; border-right: none; border-bottom: 1px solid var(--gray-e5); display: flex; flex-wrap: wrap; }
+  .dash-grid, .wish-grid, .event-grid { grid-template-columns: repeat(2, 1fr); }
+  .dash-card.wide { grid-column: span 2; }
+}

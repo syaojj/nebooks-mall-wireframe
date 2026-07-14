@@ -1,0 +1,72 @@
+/* ==========================================================================
+   NE Books · 고객센터 (design_v0.6)
+   No Figma design exists for this screen — built from EP-CS PRD (UC-CS-01,03,04,05,07~11,17)
+   ========================================================================== */
+
+.cs-layout { display: flex; justify-content: center; padding-bottom: 120px; }
+.cs-inner { width: 1200px; max-width: calc(100% - 40px); }
+
+.cs-tabbar { display: flex; gap: 8px; border-bottom: 2px solid var(--black); margin-bottom: 32px; }
+.cs-tabbar button { padding: 14px 24px; font-size: 15px; font-weight: 600; color: var(--gray-666); }
+.cs-tabbar button.is-active { color: var(--black); font-weight: 800; border-bottom: 3px solid var(--black); margin-bottom: -2px; }
+
+.cs-panel { display: none; }
+.cs-panel.is-active { display: block; }
+
+.cs-filter-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; align-items: center; }
+.cs-filter-row select, .cs-filter-row input[type="text"] {
+  border: 1px solid var(--gray-e5); border-radius: 8px; padding: 10px 14px; font-size: 13px; font-family: inherit;
+}
+.pill-filter { display: flex; gap: 6px; }
+.pill-filter button { padding: 6px 14px; border-radius: 9999px; border: 1px solid var(--gray-e5); font-size: 12px; color: var(--gray-666); }
+.pill-filter button.is-active { background: var(--black); color: #fff; border-color: var(--black); }
+
+.notice-list-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.notice-list-table th { background: var(--gray-f3); color: var(--gray-666); font-size: 13px; font-weight: 600; padding: 12px; text-align: left; }
+.notice-list-table td { padding: 14px 12px; border-bottom: 1px solid var(--gray-e5); }
+.notice-list-table tr.is-pinned td { background: #fef8f7; }
+.n-tag { font-size: 11px; padding: 2px 8px; border-radius: 9999px; background: var(--gray-f3); color: var(--gray-666); margin-right: 6px; }
+.n-tag.must { background: #fde9e7; color: var(--red); }
+.notice-list-table a.n-title-link { color: var(--black); }
+
+.faq-cats { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+.faq-cats button { padding: 8px 16px; border-radius: 9999px; border: 1px solid var(--gray-e5); font-size: 13px; color: var(--gray-666); }
+.faq-cats button.is-active { background: var(--red); color: #fff; border-color: var(--red); }
+.faq-item { border-bottom: 1px solid var(--gray-e5); }
+.faq-q { display: flex; justify-content: space-between; align-items: center; padding: 18px 4px; cursor: pointer; }
+.faq-q .q-text { font-size: 14px; font-weight: 600; }
+.faq-q .q-cat { font-size: 12px; color: var(--gray-a9); margin-right: 12px; }
+.faq-a { display: none; padding: 0 4px 18px; font-size: 13px; color: var(--gray-666); line-height: 1.6; }
+.faq-item.is-open .faq-a { display: block; }
+.faq-item.is-open .faq-q .chevron { transform: rotate(180deg); }
+
+.event-subtabs { display: flex; gap: 16px; margin-bottom: 16px; }
+.event-subtabs button { font-size: 15px; font-weight: 700; color: var(--gray-a9); padding-bottom: 6px; border-bottom: 2px solid transparent; }
+.event-subtabs button.is-active { color: var(--black); border-color: var(--black); }
+.winner-btn { float: right; }
+
+.inquiry-subtabs { display: flex; gap: 8px; margin-bottom: 20px; }
+.inquiry-subtabs button { padding: 10px 20px; border-radius: 9999px; border: 1px solid var(--gray-e5); font-size: 13px; color: var(--gray-666); }
+.inquiry-subtabs button.is-active { background: var(--black); color: #fff; border-color: var(--black); }
+
+.inquiry-panel { display: none; }
+.inquiry-panel.is-active { display: block; }
+
+.consult-type-row { display: flex; gap: 12px; margin-bottom: 16px; }
+.consult-type-row select { flex: 1; border: 1px solid var(--gray-e5); border-radius: 8px; padding: 10px 14px; font-size: 14px; }
+.order-link-box { background: var(--gray-f3); border-radius: 8px; padding: 14px; font-size: 13px; color: var(--gray-666); margin-bottom: 16px; display: none; }
+.order-link-box.is-visible { display: block; }
+.order-link-box select { width: 100%; margin-top: 8px; border: 1px solid var(--gray-e5); border-radius: 8px; padding: 8px 12px; }
+
+.consent-table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 12px 0; }
+.consent-table th, .consent-table td { border: 1px solid var(--gray-e5); padding: 8px 10px; text-align: left; }
+.consent-table th { background: var(--gray-f3); }
+
+.branch-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.branch-card { border: 1px solid var(--gray-e5); border-radius: 12px; padding: 20px; }
+.branch-card .b-name { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+.branch-card .b-addr, .branch-card .b-tel { font-size: 13px; color: var(--gray-666); }
+
+@media (max-width: 1180px) {
+  .branch-grid { grid-template-columns: repeat(2, 1fr); }
+}

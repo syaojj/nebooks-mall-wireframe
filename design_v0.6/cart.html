@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>장바구니 — NE Books</title>
+<meta name="description" content="NE Books 자사몰 개편 v0.6 — 장바구니">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/cart.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-top">
+    <a class="header-logo" href="index.html">
+      <img src="assets/logo-nebooks.png" alt="NE Books">
+    </a>
+    <div class="header-search">
+      <div class="search-box">
+        <input type="text" placeholder="교재명, 검색어를 입력해 주세요" id="searchInput">
+        <button class="search-submit" id="searchSubmit" aria-label="검색">
+          <img src="assets/icon-search.svg" alt="">
+        </button>
+      </div>
+    </div>
+    <div class="header-icons">
+      <a class="icon-group" href="mypage.html">
+        <img src="assets/icon-mypage.svg" alt="">
+        <span>MY</span>
+      </a>
+      <a class="icon-group" href="cart.html" id="cartGroup">
+        <span class="cart-count">
+          <img src="assets/icon-cart.svg" alt="">
+          <span class="cart-badge" id="cartBadge">3</span>
+        </span>
+        <span>장바구니</span>
+      </a>
+      <a class="icon-group" href="cs.html" id="csGroup">
+        <img src="assets/icon-cs.svg" alt="">
+        <span>고객센터</span>
+      </a>
+    </div>
+  </div>
+  <nav class="gnb">
+    <div class="gnb-row">
+      <button class="gnb-hamburger" id="hamburgerBtn" aria-label="전체 메뉴">
+        <img src="assets/icon-hamburger.svg" alt="">
+      </button>
+      <div class="gnb-nav">
+        <a class="gnb-link" href="list.html">ELT</a>
+        <a class="gnb-link" href="list.html">초/중등</a>
+        <a class="gnb-link" href="list.html">고등</a>
+        <a class="gnb-link" href="list.html">교과서/자습서</a>
+        <a class="gnb-link" href="list.html">수험/일반</a>
+        <a class="gnb-link" href="list.html">수학/국어</a>
+        <a class="gnb-link" href="list.html?tab=ebook">학습자료실</a>
+        <a class="gnb-link" href="list.html">도서몰</a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<div class="page-title-bar"><div class="inner"><h1>장바구니</h1></div></div>
+
+<main class="cart-layout">
+  <div class="cart-inner">
+    <div class="cart-main">
+      <div class="cart-select-bar">
+        <label><input type="checkbox" id="selectAll" checked> 전체선택 (<span id="selectedCount">3</span>/<span id="totalItemCount">3</span>)</label>
+        <button class="bulk-del" id="bulkDeleteBtn">선택삭제</button>
+      </div>
+      <div id="cartItems"></div>
+      <div class="cart-empty" id="cartEmpty">
+        <p>장바구니가 비어있습니다.</p>
+        <a class="btn btn-primary" href="index.html">쇼핑 계속하기</a>
+      </div>
+    </div>
+
+    <aside class="cart-summary-col">
+      <div class="summary-box">
+        <div class="row"><span>상품금액</span><span class="v" id="sumSubtotal">0원</span></div>
+        <div class="row"><span>할인금액</span><span class="v" id="sumDiscount">0원</span></div>
+        <div class="row"><span>배송비</span><span class="v" id="sumShipping">0원</span></div>
+        <div class="divider"></div>
+        <div class="row total"><span>결제예정금액</span><span class="v" id="sumTotal">0원</span></div>
+        <p class="reward-note" id="sumReward">적립 예정 포인트 0P</p>
+        <button class="btn btn-primary" id="orderSelectedBtn">선택상품 주문</button>
+        <button class="btn-outline2" id="orderAllBtn">전체상품 주문</button>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-top">
+    <nav class="footer-links">
+      <a href="#">개인정보처리방침</a>
+      <a href="#">이용약관</a>
+      <a href="#">이메일무단수집거부</a>
+      <a href="cs.html">지사안내</a>
+    </nav>
+    <div class="footer-social">
+      <a class="ch-link" href="#">Ch</a>
+      <a href="#"><img src="assets/icon-youtube.svg" alt="유튜브"></a>
+      <a class="family-site" href="#">FAMILY SITE <img src="assets/icon-arrow-familysite.svg" alt=""></a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-info">
+      <p>㈜NE능률 (03925) 서울특별시 마포구 월드컵북로 396(상암동) 누리꿈스퀘어 비즈니스타워 10층 <span class="sep">|</span> 대표이사 : 이정진 <span class="sep">|</span> 대표번호 : 02-2014-7114 <span class="accent">사업별 고객센터 안내</span></p>
+      <p>팩스 : 02-337-4956 <span class="sep">|</span> 고객센터 : 1833-8368 <span class="sep">|</span> 사업자등록번호 : 105-81-65267 <span class="sep">|</span> 통신판매신고번호 : 제2004-02120호 <span class="accent">정보조회</span></p>
+      <p>개인정보 보호책임자(CPO) : 선민재(necpo@neungyule.com)</p>
+      <p style="margin-top:8px;">Copyright ⓒ NE Neungyule, Inc. All Rights Reserved</p>
+    </div>
+    <div class="footer-logo"><img src="assets/logo-footer-ne.png" alt="NE능률"></div>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/shared.js"></script>
+<script src="js/cart.js"></script>
+</body>
+</html>

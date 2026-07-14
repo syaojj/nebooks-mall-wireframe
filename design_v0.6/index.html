@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NE Books · 영어 교재 전문 서점</title>
+<meta name="description" content="NE Books 자사몰 개편 v0.6 — 메인(홈)">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/home.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-top">
+    <a class="header-logo" href="index.html">
+      <img src="assets/logo-nebooks.png" alt="NE Books">
+    </a>
+    <div class="header-search">
+      <div class="search-box">
+        <input type="text" placeholder="교재명, 검색어를 입력해 주세요" id="searchInput">
+        <button class="search-submit" id="searchSubmit" aria-label="검색">
+          <img src="assets/icon-search.svg" alt="">
+        </button>
+      </div>
+    </div>
+    <div class="header-icons">
+      <a class="icon-group" href="mypage.html">
+        <img src="assets/icon-mypage.svg" alt="">
+        <span>MY</span>
+      </a>
+      <a class="icon-group" href="cart.html" id="cartGroup">
+        <span class="cart-count">
+          <img src="assets/icon-cart.svg" alt="">
+          <span class="cart-badge" id="cartBadge">0</span>
+        </span>
+        <span>장바구니</span>
+      </a>
+      <a class="icon-group" href="cs.html" id="csGroup">
+        <img src="assets/icon-cs.svg" alt="">
+        <span>고객센터</span>
+      </a>
+    </div>
+  </div>
+  <nav class="gnb">
+    <div class="gnb-row">
+      <button class="gnb-hamburger" id="hamburgerBtn" aria-label="전체 메뉴">
+        <img src="assets/icon-hamburger.svg" alt="">
+      </button>
+      <div class="gnb-nav">
+        <a class="gnb-link" href="list.html">ELT</a>
+        <a class="gnb-link" href="list.html">초/중등</a>
+        <a class="gnb-link" href="list.html">고등</a>
+        <a class="gnb-link" href="list.html">교과서/자습서</a>
+        <a class="gnb-link" href="list.html">수험/일반</a>
+        <a class="gnb-link" href="list.html">수학/국어</a>
+        <a class="gnb-link" href="list.html?tab=ebook">학습자료실</a>
+        <a class="gnb-link" href="list.html">도서몰</a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<section class="hero-banner">
+  <div class="hero-track" id="heroTrack">
+    <div class="hero-slide" style="background:linear-gradient(135deg,#e83828,#ff8a65);">
+      <span class="eyebrow">2026 여름방학 특별전</span>
+      <h2>파닉스부터 수능까지, NE Books 여름 특가</h2>
+      <p>ELT 전 교재 최대 20% 할인 + 적립 2배 이벤트 · 7월 한 달간 진행</p>
+    </div>
+    <div class="hero-slide" style="background:linear-gradient(135deg,#2f74d1,#1d2b5c);">
+      <span class="eyebrow">신간 소식</span>
+      <h2>Bricks Reading 150 개정판 출시</h2>
+      <p>더 쉬워진 어휘 구성과 새로워진 워크시트로 만나보세요</p>
+    </div>
+    <div class="hero-slide" style="background:linear-gradient(135deg,#1d1717,#4d4e4d);">
+      <span class="eyebrow">NE Tutor</span>
+      <h2>선생님을 위한 디지털 문제뱅크</h2>
+      <p>어휘 문제 마법사 · 문법 문제뱅크를 무료로 이용해보세요</p>
+    </div>
+  </div>
+  <div class="hero-keywords" id="heroKeywords">
+    <button class="is-active" data-slide="0">여름방학 특가</button>
+    <button data-slide="1">신간 소식</button>
+    <button data-slide="2">NE Tutor</button>
+  </div>
+</section>
+
+<section class="home-section"><div class="home-inner">
+  <div class="quicklinks-grid">
+    <a href="list.html"><span class="ql-icon">📖</span><span class="ql-label">교재 구매</span></a>
+    <a href="#" data-toast="레벨차트 페이지로 이동합니다."><span class="ql-icon">📊</span><span class="ql-label">레벨차트</span></a>
+    <a href="list.html?tab=ebook"><span class="ql-icon">🗂️</span><span class="ql-label">학습자료실</span></a>
+    <a href="#" data-toast="정답·MP3 다운로드 팝업을 엽니다."><span class="ql-icon">🎧</span><span class="ql-label">정답·MP3 다운</span></a>
+    <a href="#" data-toast="NE Waffle로 이동합니다 (새 창)."><span class="ql-icon">🧇</span><span class="ql-label">NE Waffle</span></a>
+    <a href="#" data-toast="NE Tutor 영어 선생님 메인으로 이동합니다 (새 창)."><span class="ql-icon">🇬🇧</span><span class="ql-label">영어 선생님</span></a>
+    <a href="#" data-toast="NE Tutor 수학 선생님 메인으로 이동합니다 (새 창)."><span class="ql-icon">➗</span><span class="ql-label">수학 선생님</span></a>
+  </div>
+</div></section>
+
+<section class="home-section"><div class="home-inner" style="padding:32px 0;">
+  <div class="promo-tabs" id="promoTabs">
+    <button class="is-active" data-panel="bestseller">베스트셀러</button>
+    <button data-panel="course">기획전</button>
+  </div>
+
+  <div class="promo-panel is-active" id="panel-bestseller">
+    <div class="promo-books" id="bestsellerGrid"></div>
+  </div>
+
+  <div class="promo-panel" id="panel-course">
+    <div class="promo-layout">
+      <div class="promo-course-card">
+        <div>
+          <p class="course-title">여름방학 파닉스 완성 코스</p>
+          <p class="course-sub">Phonics Code 시리즈 전권을 한 번에 — 최대 5권까지 담아보세요.</p>
+        </div>
+        <button class="btn" id="bundleAddBtn">전체선택 담기 · 5권</button>
+      </div>
+      <div class="promo-books" id="courseGrid"></div>
+    </div>
+    <div class="promo-bundle-bar">
+      <label><input type="checkbox" id="courseSelectAll" checked> 전체선택</label>
+      <button class="btn btn-primary" id="courseBundleBtn">선택 장바구니 담기</button>
+    </div>
+  </div>
+</div></section>
+
+<section class="home-section"><div class="home-inner" style="padding:32px 0;">
+  <div class="home-heading"><h3>지금, NE Books 소식</h3></div>
+  <div class="curation-grid" id="curationGrid"></div>
+</div></section>
+
+<section class="home-section"><div class="home-inner" style="padding:32px 0;">
+  <div class="tutor-section">
+    <h3>선생님을 위한 티칭 플랫폼 · NE Tutor</h3>
+    <div class="tutor-groups">
+      <div class="tutor-group">
+        <p class="tg-title">수업자료</p>
+        <a href="#" data-toast="NE Tutor 중등 교재자료로 이동합니다 (새 창).">교재자료 (중등)</a>
+      </div>
+      <div class="tutor-group">
+        <p class="tg-title">디지털 문제뱅크</p>
+        <a href="#" data-toast="어휘 문제 마법사로 이동합니다.">어휘 문제 마법사</a>
+        <a href="#" data-toast="문법 문제뱅크로 이동합니다.">문법 문제뱅크</a>
+        <a href="#" data-toast="문법 예문 검색으로 이동합니다.">문법 예문 검색</a>
+      </div>
+      <div class="tutor-group">
+        <p class="tg-title">평가 서비스</p>
+        <a href="#" data-toast="NELT 평가 서비스로 이동합니다.">NELT</a>
+        <a href="#" data-toast="성취 TEST로 이동합니다.">성취 TEST</a>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<section class="home-section"><div class="home-inner" style="padding:32px 0;">
+  <div class="home-heading"><h3>공지사항</h3><a class="more" href="cs.html">더보기 &gt;</a></div>
+  <ul class="notice-strip" id="noticeStrip"></ul>
+</div></section>
+
+<section class="home-section"><div class="home-inner" style="padding:32px 0;">
+  <div class="sns-row">
+    <a href="#" data-toast="NE능률 Lounge 카페로 이동합니다 (새 창).">☕ NE능률 Lounge</a>
+    <a href="#" data-toast="인스타그램으로 이동합니다 (새 창).">📷 Instagram</a>
+    <a href="#" data-toast="유튜브로 이동합니다 (새 창).">▶ YouTube</a>
+  </div>
+</div></section>
+
+<section class="home-section"><div class="home-inner" style="padding:32px 0 56px;">
+  <div class="cs-blocks">
+    <div class="cs-block">
+      <p class="cs-name">NE능률 고객센터</p>
+      <span class="cs-tel">1833-8368</span>
+      <p class="cs-hours">평일 9:00~16:00 (점심시간 12:00~13:00 제외)</p>
+      <div class="cs-actions">
+        <button class="btn btn-outline" data-toast="1:1문의 페이지로 이동합니다.">1:1문의</button>
+        <button class="btn btn-outline" data-toast="FAQ 페이지로 이동합니다.">FAQ</button>
+        <button class="btn btn-outline" data-toast="문자상담을 시작합니다.">문자상담</button>
+      </div>
+    </div>
+    <div class="cs-block">
+      <p class="cs-name">AI 디지털 교육자료 공동 CS센터</p>
+      <span class="cs-tel">1661-0777</span>
+      <p class="cs-hours">평일 9:00~18:00</p>
+      <div class="cs-actions">
+        <button class="btn btn-outline" data-toast="공동 CS센터 1:1문의로 이동합니다.">1:1문의</button>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<footer class="site-footer">
+  <div class="footer-top">
+    <nav class="footer-links">
+      <a href="#">개인정보처리방침</a>
+      <a href="#">이용약관</a>
+      <a href="#">이메일무단수집거부</a>
+      <a href="cs.html">지사안내</a>
+    </nav>
+    <div class="footer-social">
+      <a class="ch-link" href="#">Ch</a>
+      <a href="#"><img src="assets/icon-youtube.svg" alt="유튜브"></a>
+      <a class="family-site" href="#">FAMILY SITE <img src="assets/icon-arrow-familysite.svg" alt=""></a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-info">
+      <p>㈜NE능률 (03925) 서울특별시 마포구 월드컵북로 396(상암동) 누리꿈스퀘어 비즈니스타워 10층 <span class="sep">|</span> 대표이사 : 이정진 <span class="sep">|</span> 대표번호 : 02-2014-7114 <span class="accent">사업별 고객센터 안내</span></p>
+      <p>팩스 : 02-337-4956 <span class="sep">|</span> 고객센터 : 1833-8368 <span class="sep">|</span> 사업자등록번호 : 105-81-65267 <span class="sep">|</span> 통신판매신고번호 : 제2004-02120호 <span class="accent">정보조회</span></p>
+      <p>개인정보 보호책임자(CPO) : 선민재(necpo@neungyule.com)</p>
+      <p style="margin-top:8px;">Copyright ⓒ NE Neungyule, Inc. All Rights Reserved</p>
+    </div>
+    <div class="footer-logo"><img src="assets/logo-footer-ne.png" alt="NE능률"></div>
+  </div>
+</footer>
+
+<button class="reco-fab" id="recoFab">🎁 맞춤형 교재추천 받기</button>
+<div class="reco-modal-backdrop" id="recoModal">
+  <div class="reco-modal">
+    <h4>맞춤형 교재추천</h4>
+    <p>학년과 목표를 알려주시면 딱 맞는 교재를 추천해드려요.</p>
+    <button class="btn btn-primary" id="recoStartBtn">추천 받기 시작</button>
+    <button class="close-x" id="recoCloseBtn">닫기</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/shared.js"></script>
+<script src="js/home.js"></script>
+</body>
+</html>

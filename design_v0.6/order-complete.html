@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>주문완료 — NE Books</title>
+<meta name="description" content="NE Books 자사몰 개편 v0.6 — 주문완료">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/checkout.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-top">
+    <a class="header-logo" href="index.html">
+      <img src="assets/logo-nebooks.png" alt="NE Books">
+    </a>
+    <div class="header-search">
+      <div class="search-box">
+        <input type="text" placeholder="교재명, 검색어를 입력해 주세요" id="searchInput">
+        <button class="search-submit" id="searchSubmit" aria-label="검색">
+          <img src="assets/icon-search.svg" alt="">
+        </button>
+      </div>
+    </div>
+    <div class="header-icons">
+      <a class="icon-group" href="mypage.html">
+        <img src="assets/icon-mypage.svg" alt="">
+        <span>MY</span>
+      </a>
+      <a class="icon-group" href="cart.html" id="cartGroup">
+        <span class="cart-count">
+          <img src="assets/icon-cart.svg" alt="">
+          <span class="cart-badge" id="cartBadge">0</span>
+        </span>
+        <span>장바구니</span>
+      </a>
+      <a class="icon-group" href="cs.html" id="csGroup">
+        <img src="assets/icon-cs.svg" alt="">
+        <span>고객센터</span>
+      </a>
+    </div>
+  </div>
+  <nav class="gnb">
+    <div class="gnb-row">
+      <button class="gnb-hamburger" id="hamburgerBtn" aria-label="전체 메뉴">
+        <img src="assets/icon-hamburger.svg" alt="">
+      </button>
+      <div class="gnb-nav">
+        <a class="gnb-link" href="list.html">ELT</a>
+        <a class="gnb-link" href="list.html">초/중등</a>
+        <a class="gnb-link" href="list.html">고등</a>
+        <a class="gnb-link" href="list.html">교과서/자습서</a>
+        <a class="gnb-link" href="list.html">수험/일반</a>
+        <a class="gnb-link" href="list.html">수학/국어</a>
+        <a class="gnb-link" href="list.html?tab=ebook">학습자료실</a>
+        <a class="gnb-link" href="list.html">도서몰</a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<main class="complete-layout"><div class="complete-inner">
+  <div class="complete-hero">
+    <div class="check">✓</div>
+    <h1>주문이 완료되었습니다.</h1>
+    <p>주문해 주셔서 감사합니다. 아래에서 주문 내역을 확인하실 수 있습니다.</p>
+    <p class="order-no" id="orderNoDisplay">주문번호 NB20260714000000</p>
+  </div>
+
+  <div class="complete-cols">
+    <div>
+      <section class="co-section">
+        <p class="co-section-title">배송지 정보</p>
+        <div class="info-grid" id="addressInfo"></div>
+      </section>
+      <section class="co-section">
+        <p class="co-section-title">결제 정보</p>
+        <div class="info-grid" id="paymentInfo"></div>
+      </section>
+      <section class="co-section" style="border-bottom:none;">
+        <p class="co-section-title">유의사항</p>
+        <p class="pay-disclaimer">※ ㈜NE능률은 한국소비자원의 "소비자분쟁해결기준"을 준수합니다. 결제 취소 및 환불은 고객센터(1833-8368)로 문의하시기 바랍니다.</p>
+      </section>
+    </div>
+    <div>
+      <section class="co-section" style="border-bottom:none;">
+        <p class="co-section-title">결제금액</p>
+        <div class="summary-box" id="amountBox" style="border:none;padding:0;"></div>
+      </section>
+    </div>
+  </div>
+
+  <div class="complete-actions">
+    <a class="btn btn-outline" href="mypage.html?tab=orders&view=detail">주문상세 보기</a>
+    <a class="btn btn-outline" href="mypage.html?tab=orders">주문배송현황</a>
+    <a class="btn btn-primary" href="index.html">홈으로</a>
+  </div>
+</div></main>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/shared.js"></script>
+<script src="js/order-complete.js"></script>
+</body>
+</html>

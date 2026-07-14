@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NE Books · 교재목록</title>
+<meta name="description" content="NE Books 자사몰 개편 v0.6 — 교재목록(교재구매형 · E-Book·자료형) Figma 디자인 반영본">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy.css">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-top">
+    <a class="header-logo" href="index.html">
+      <img src="assets/logo-nebooks.png" alt="NE Books">
+    </a>
+    <div class="header-search">
+      <div class="search-box">
+        <input type="text" placeholder="교재명, 검색어를 입력해 주세요" id="searchInput">
+        <button class="search-submit" id="searchSubmit" aria-label="검색">
+          <img src="assets/icon-search.svg" alt="">
+        </button>
+      </div>
+    </div>
+    <div class="header-icons">
+      <a class="icon-group" href="mypage.html">
+        <img src="assets/icon-mypage.svg" alt="">
+        <span>MY</span>
+      </a>
+      <a class="icon-group" href="cart.html" id="cartGroup">
+        <span class="cart-count">
+          <img src="assets/icon-cart.svg" alt="">
+          <span class="cart-badge" id="cartBadge">0</span>
+        </span>
+        <span>장바구니</span>
+      </a>
+      <a class="icon-group" href="cs.html" id="csGroup">
+        <img src="assets/icon-cs.svg" alt="">
+        <span>고객센터</span>
+      </a>
+    </div>
+  </div>
+  <nav class="gnb">
+    <div class="gnb-row">
+      <button class="gnb-hamburger" id="hamburgerBtn" aria-label="전체 메뉴">
+        <img src="assets/icon-hamburger.svg" alt="">
+      </button>
+      <div class="gnb-nav">
+        <a class="gnb-link is-active" href="list.html">ELT</a>
+        <a class="gnb-link" href="list.html">초/중등</a>
+        <a class="gnb-link" href="list.html">고등</a>
+        <a class="gnb-link" href="list.html">교과서/자습서</a>
+        <a class="gnb-link" href="list.html">수험/일반</a>
+        <a class="gnb-link" href="list.html">수학/국어</a>
+        <a class="gnb-link" href="list.html?tab=ebook">학습자료실</a>
+        <a class="gnb-link" href="list.html">도서몰</a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<section class="location-section">
+  <div class="location-inner">
+    <h1 class="location-title">ELT</h1>
+    <div class="location-crumbs">
+      <img src="assets/icon-home.svg" alt="홈">
+      <span class="dot">·</span>
+      <span class="crumb">ELT</span>
+      <span class="dot">·</span>
+      <span class="chip">Coursebook</span>
+    </div>
+  </div>
+</section>
+
+<section class="quicklink-banner">
+  <div class="quicklink-inner">
+    <a class="pill" href="#">파닉스가 된다</a>
+    <a class="pill" href="#">사이트 워드가 된다</a>
+    <a class="pill" href="#">GRAMMAR BUDDY</a>
+    <a class="pill" href="#">GRAMMAR BEAN</a>
+    <a class="pill" href="#">문법이 된다</a>
+    <a class="pill" href="#">Grammar Inside</a>
+    <a class="pill" href="#">Grammar Ten</a>
+  </div>
+</section>
+
+<main class="page-body">
+  <div class="content-wrap">
+
+    <aside class="sidebar">
+      <div class="sidebar-heading">교재 찾기</div>
+
+      <div class="filter-group" data-filter-group="level">
+        <p class="filter-group-title">레벨</p>
+        <label class="filter-option"><input type="checkbox" value="유아"><span>유아</span></label>
+        <label class="filter-option"><input type="checkbox" value="초등"><span>초등</span></label>
+        <label class="filter-option"><input type="checkbox" value="중등"><span>중등</span></label>
+        <label class="filter-option"><input type="checkbox" value="고등"><span>고등</span></label>
+        <label class="filter-option"><input type="checkbox" value="성인"><span>성인</span></label>
+      </div>
+
+      <div class="filter-group" data-filter-group="type">
+        <p class="filter-group-title">제품유형</p>
+        <label class="filter-option"><input type="checkbox" value="메인교재"><span>메인교재</span></label>
+        <label class="filter-option"><input type="checkbox" value="Word Book"><span>Word Book</span></label>
+        <label class="filter-option"><input type="checkbox" value="Test & Worksheet"><span>Test &amp; Worksheet</span></label>
+        <label class="filter-option"><input type="checkbox" value="Tests"><span>Tests</span></label>
+        <label class="filter-option"><input type="checkbox" value="Teacher's Guide"><span>Teacher's Guide</span></label>
+        <label class="filter-option"><input type="checkbox" value="Class Pack"><span>Class Pack</span></label>
+      </div>
+
+      <div class="filter-group" data-filter-group="brand">
+        <p class="filter-group-title">브랜드</p>
+        <label class="filter-option"><input type="checkbox" value="NE능률"><img class="brand-logo" src="assets/logo-brand-ne.svg" alt="NE능률"></label>
+        <label class="filter-option"><input type="checkbox" value="NE.Build & Grow"><img class="brand-logo" src="assets/logo-brand-buildgrow.svg" alt="NE.Build & Grow"></label>
+        <label class="filter-option"><input type="checkbox" value="OXFORD"><img class="brand-logo-oxford" src="assets/logo-oxford.png" alt="OXFORD"></label>
+      </div>
+    </aside>
+
+    <section class="product-area">
+      <div class="list-controls">
+        <div style="display:flex;align-items:center;">
+          <p class="list-count"><span>총 </span><b id="totalCount">128</b><span>개 상품</span></p>
+          <label class="onsale-only">
+            <input type="checkbox" id="onsaleOnly">
+            <span>판매중 교재만 보기</span>
+          </label>
+        </div>
+        <div class="list-controls-right">
+          <div class="type-tabs">
+            <button class="type-tab is-active" data-tab-btn="buy">
+              <img src="assets/icon-tab-buy.svg" alt=""> 교재구매형
+            </button>
+            <button class="type-tab" data-tab-btn="ebook">
+              <img src="assets/icon-tab-ebook.svg" alt=""> E-Book·자료형
+            </button>
+          </div>
+          <div class="list-controls-divider"></div>
+          <div class="sort-select" id="sortSelect">
+            <button class="sort-btn" id="sortBtn">
+              <span id="sortLabel">최신순</span>
+              <img src="assets/icon-chevron-down.svg" alt="">
+            </button>
+            <div class="sort-menu">
+              <button data-sort="최신순" class="is-selected">최신순</button>
+              <button data-sort="과거순">과거순</button>
+              <button data-sort="인기순">인기순</button>
+              <button data-sort="별점순">별점순</button>
+              <button data-sort="가나다순">가나다순</button>
+              <button data-sort="역가나다순">역가나다순</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-list is-active" data-tab="buy" id="listBuy"></div>
+      <div class="product-list" data-tab="ebook" id="listEbook"></div>
+
+      <p class="empty-state" id="emptyState">일치하는 검색 결과가 없습니다.</p>
+
+      <div class="pagination" id="pagination">
+        <button class="page-btn page-nav" id="pagePrev" aria-label="이전"><img src="assets/icon-prev.svg" alt=""></button>
+        <button class="page-btn is-active" data-page="1">1</button>
+        <button class="page-btn" data-page="2">2</button>
+        <button class="page-btn" data-page="3">3</button>
+        <button class="page-btn" data-page="4">4</button>
+        <button class="page-btn" data-page="5">5</button>
+        <button class="page-btn page-nav" id="pageNext" aria-label="다음"><img src="assets/icon-next.svg" alt=""></button>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-top">
+    <nav class="footer-links">
+      <a href="#">개인정보처리방침</a>
+      <a href="#">이용약관</a>
+      <a href="#">이메일무단수집거부</a>
+      <a href="cs.html">지사안내</a>
+    </nav>
+    <div class="footer-social">
+      <a class="ch-link" href="#">Ch</a>
+      <a href="#"><img src="assets/icon-youtube.svg" alt="유튜브"></a>
+      <a class="family-site" href="#">FAMILY SITE <img src="assets/icon-arrow-familysite.svg" alt=""></a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-info">
+      <p>㈜NE능률 (03925) 서울특별시 마포구 월드컵북로 396(상암동) 누리꿈스퀘어 비즈니스타워 10층 <span class="sep">|</span> 대표이사 : 이정진 <span class="sep">|</span> 대표번호 : 02-2014-7114 <span class="accent">사업별 고객센터 안내</span></p>
+      <p>팩스 : 02-337-4956 <span class="sep">|</span> 고객센터 : 1833-8368 <span class="sep">|</span> 사업자등록번호 : 105-81-65267 <span class="sep">|</span> 통신판매신고번호 : 제2004-02120호 <span class="accent">정보조회</span></p>
+      <p>개인정보 보호책임자(CPO) : 선민재(necpo@neungyule.com)</p>
+      <p style="margin-top:8px;">Copyright ⓒ NE Neungyule, Inc. All Rights Reserved</p>
+    </div>
+    <div class="footer-logo"><img src="assets/logo-footer-ne.png" alt="NE능률"></div>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/shared.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
