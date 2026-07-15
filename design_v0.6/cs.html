@@ -27,10 +27,25 @@
       </div>
     </div>
     <div class="header-icons">
-      <a class="icon-group" href="mypage.html">
-        <img src="assets/icon-mypage.svg" alt="">
-        <span>MY</span>
-      </a>
+      <div class="icon-group has-layer" id="mypageGroup">
+        <a class="icon-group-link" href="mypage.html">
+          <img src="assets/icon-mypage.svg" alt="">
+          <span>MY</span>
+        </a>
+        <div class="header-layer">
+          <p class="header-layer-user"><b>홍길동</b>님, 안녕하세요.</p>
+          <ul class="header-layer-links">
+            <li><a href="mypage.html?tab=orders">주문내역</a></li>
+            <li><a href="mypage.html?tab=wish">찜한 교재</a></li>
+            <li><a href="mypage.html?tab=points">포인트</a></li>
+            <li><a href="mypage.html?tab=inquiry">문의/답변</a></li>
+            <li><a href="mypage.html?tab=reviews">후기</a></li>
+            <li><a href="mypage.html?tab=events">이벤트/세미나</a></li>
+            <li><a href="mypage.html?tab=profile">회원정보수정</a></li>
+          </ul>
+          <button class="header-layer-logout" id="headerLayerLogoutBtn">로그아웃</button>
+        </div>
+      </div>
       <a class="icon-group" href="cart.html" id="cartGroup">
         <span class="cart-count">
           <img src="assets/icon-cart.svg" alt="">
@@ -38,10 +53,23 @@
         </span>
         <span>장바구니</span>
       </a>
-      <a class="icon-group" href="cs.html" id="csGroup">
-        <img src="assets/icon-cs.svg" alt="">
-        <span>고객센터</span>
-      </a>
+      <div class="icon-group has-layer" id="csGroup">
+        <a class="icon-group-link" href="cs.html">
+          <img src="assets/icon-cs.svg" alt="">
+          <span>고객센터</span>
+        </a>
+        <div class="header-layer">
+          <ul class="header-layer-links">
+            <li><a href="cs.html?tab=notice">공지사항</a></li>
+            <li><a href="cs.html?tab=faq">FAQ</a></li>
+            <li><a href="cs.html?tab=event">이벤트/신간·개정/세미나</a></li>
+            <li><a href="cs.html?tab=fix">교재 오류정정</a></li>
+            <li><a href="cs.html?tab=inquiry">1:1문의</a></li>
+            <li><a href="cs.html?tab=branch">지사안내</a></li>
+          </ul>
+          <p class="header-layer-tel">고객센터 1833-8368</p>
+        </div>
+      </div>
     </div>
   </div>
   <nav class="gnb">

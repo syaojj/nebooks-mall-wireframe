@@ -172,4 +172,10 @@
   renderNotices("전체");
   renderFaq("전체");
   renderCsEvents("이벤트");
+
+  var params = new URLSearchParams(window.location.search);
+  var tabParam = params.get("tab");
+  if (tabParam && document.getElementById("cs-" + tabParam)) {
+    switchCsTab(tabParam);
+  }
 })();

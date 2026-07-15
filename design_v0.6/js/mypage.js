@@ -213,8 +213,9 @@
   renderEvents();
 
   var params = new URLSearchParams(window.location.search);
-  if (params.get("tab") === "orders") {
-    switchTab("orders");
-    if (params.get("view") === "detail") openOrderDetail(0);
+  var tabParam = params.get("tab");
+  if (tabParam && document.getElementById("mp-" + tabParam)) {
+    switchTab(tabParam);
+    if (tabParam === "orders" && params.get("view") === "detail") openOrderDetail(0);
   }
 })();

@@ -28,12 +28,15 @@ window.NEBooks = (function () {
       });
     }
 
-    ["csGroup", "hamburgerBtn"].forEach(function (id) {
-      var el = document.getElementById(id);
-      if (el) el.addEventListener("click", function (e) {
-        e.preventDefault();
-        showToast("이 메뉴의 오버레이 화면은 별도로 구현됩니다 (UC-CS-06 / UC-FIND-04).");
-      });
+    var hamburgerBtn = document.getElementById("hamburgerBtn");
+    if (hamburgerBtn) hamburgerBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+      showToast("이 메뉴의 오버레이 화면은 별도로 구현됩니다 (UC-FIND-04).");
+    });
+
+    var layerLogoutBtn = document.getElementById("headerLayerLogoutBtn");
+    if (layerLogoutBtn) layerLogoutBtn.addEventListener("click", function () {
+      if (confirm("로그아웃 하시겠습니까?")) window.location.href = "index.html";
     });
   }
 
