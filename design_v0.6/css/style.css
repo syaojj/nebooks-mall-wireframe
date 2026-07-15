@@ -160,7 +160,7 @@ img { display: block; max-width: 100%; }
   z-index: 30;
   text-align: left;
 }
-.icon-group.has-layer:hover .header-layer,
+.icon-group.has-layer.is-open .header-layer,
 .icon-group.has-layer:focus-within .header-layer {
   display: block;
 }
@@ -181,6 +181,14 @@ img { display: block; max-width: 100%; }
   border-radius: 6px;
 }
 .header-layer-links a:hover { background: var(--gray-f3); color: var(--black); }
+.header-layer-links a.header-layer-home {
+  font-weight: 700;
+  color: var(--black);
+  border-bottom: 1px solid var(--gray-eee);
+  border-radius: 0;
+  padding-bottom: 10px;
+  margin-bottom: 4px;
+}
 .header-layer-logout {
   display: block;
   width: 100%;

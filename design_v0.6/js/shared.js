@@ -38,6 +38,29 @@ window.NEBooks = (function () {
     if (layerLogoutBtn) layerLogoutBtn.addEventListener("click", function () {
       if (confirm("로그아웃 하시겠습니까?")) window.location.href = "index.html";
     });
+
+    function closeAllLayers(except) {
+      document.querySelectorAll(".icon-group.has-layer.is-open").forEach(function (el) {
+        if (el !== except) el.classList.remove("is-open");
+      });
+    }
+
+    document.querySelectorAll(".icon-group.has-layer > .icon-group-link").forEach(function (link) {
+      link.addEventListener("click", function (e) {
+        e.preventDefault();
+        var group = link.closest(".icon-group.has-layer");
+        var wasOpen = group.classList.contains("is-open");
+        closeAllLayers();
+        if (!wasOpen) group.classList.add("is-open");
+      });
+    });
+
+    document.addEventListener("click", function (e) {
+      if (!e.target.closest(".icon-group.has-layer")) closeAllLayers();
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") closeAllLayers();
+    });
   }
 
   document.addEventListener("DOMContentLoaded", wireHeader);
