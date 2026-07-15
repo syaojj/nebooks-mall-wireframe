@@ -50,9 +50,14 @@
 .status-pill { display: inline-block; padding: 3px 10px; border-radius: 9999px; font-size: 12px; font-weight: 600; background: var(--gray-f3); color: var(--gray-666); }
 .status-pill.done { background: #e7f6ec; color: #1c8a44; }
 .status-pill.wait { background: #fef4e3; color: #b3730a; }
+.status-pill.prep { background: #eef2fc; color: var(--blue-lexile); }
+.status-pill.cancel { background: var(--gray-f3); color: var(--gray-9a); }
+.order-substatus { font-size: 11px; color: var(--gray-a9); margin-top: 4px; }
 .row-actions { display: flex; gap: 6px; flex-wrap: wrap; }
 .row-actions button { font-size: 12px; padding: 6px 10px; border: 1px solid var(--gray-e5); border-radius: 6px; color: var(--gray-666); }
 .row-actions button.danger { color: var(--red); border-color: var(--red); }
+.row-actions button.primary { background: var(--black); color: #fff; border-color: var(--black); }
+.row-actions button.primary:hover { opacity: .85; }
 
 .order-detail-panel { display: none; border: 1px solid var(--gray-e5); border-radius: 16px; padding: 24px; margin-bottom: 24px; }
 .order-detail-panel.is-open { display: block; }

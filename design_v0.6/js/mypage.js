@@ -7,18 +7,54 @@
   var showToast = window.NEBooks.showToast;
 
   var ORDERS = [
-    { no: "NB20260710000042", items: ["Phonics Code 1 : Student Book"], amount: 13500, status: "결제완료" },
-    { no: "NB20260705000031", items: ["Bricks Reading 150 · L1", "Grammar Inside 1"], amount: 27900, status: "배송중" },
-    { no: "NB20260628000019", items: ["Grammar Ten 1"], amount: 13000, status: "배송완료" },
-    { no: "NB20260615000008", items: ["사이트 워드가 된다 1"], amount: 12500, status: "구매확정" }
+    { no: "NB20260714000051", items: ["천일문 Grammar"], amount: 14400, status: "입금대기", payMethod: "vbank" },
+    { no: "NB20260712000045", items: ["Phonics Code 2 : Student Book"], amount: 13500, status: "결제완료", payMethod: "vbank" },
+    { no: "NB20260713000047", items: ["Grammar Inside 1"], amount: 13000, status: "결제완료", payMethod: "card" },
+    { no: "NB20260711000044", items: ["사이트 워드가 된다 1"], amount: 12500, status: "배송준비중", payMethod: "card" },
+    { no: "NB20260710000042", items: ["Phonics Code 1 : Student Book"], amount: 13500, status: "배송중", payMethod: "transfer" },
+    { no: "NB20260705000031", items: ["Bricks Reading 150 · L1", "Grammar Inside 1"], amount: 27900, status: "배송완료", payMethod: "card", confirmDday: 2 },
+    { no: "NB20260628000019", items: ["Grammar Ten 1"], amount: 13000, status: "구매확정", payMethod: "card" },
+    { no: "NB20260609000005", items: ["Bricks Reading 150 · L1"], amount: 13500, status: "입금취소", payMethod: "vbank" },
+    { no: "NB20260602000002", items: ["Phonics Code 1 : Student Book"], amount: 13500, status: "결제취소", payMethod: "card", refundAmount: 13500 }
   ];
-  var STATUS_ACTIONS = {
-    "결제완료": ['<button data-cancel-pay>결제취소</button>'],
-    "배송중": ['<button data-track>배송조회</button>'],
-    "배송완료": ['<button data-track>배송조회</button>', '<button data-confirm-buy>구매확정</button>', '<button class="danger" data-return>반품/환불</button>'],
-    "구매확정": []
+  var STATUS_CLASS = {
+    "입금대기": "wait", "결제완료": "done", "배송준비중": "prep", "배송중": "wait",
+    "배송완료": "done", "구매확정": "done", "입금취소": "cancel", "결제취소": "cancel"
   };
-  var STATUS_CLASS = { "결제완료": "done", "배송중": "wait", "배송완료": "done", "구매확정": "done" };
+
+  function orderActions(o) {
+    switch (o.status) {
+      case "입금대기":
+        return ['<button data-cancel-vbank="' + o.no + '">입금취소</button>'];
+      case "결제완료":
+        return o.payMethod === "vbank"
+          ? ['<button class="danger" data-return>반품/환불</button>']
+          : ['<button data-cancel-pay="' + o.no + '">결제취소</button>'];
+      case "배송준비중":
+      case "배송중":
+        return ['<button data-track>배송조회</button>', '<button class="danger" data-return>반품/환불</button>'];
+      case "배송완료":
+        return ['<button class="primary" data-confirm-buy="' + o.no + '">구매확정</button>', '<button data-track>배송조회</button>', '<button class="danger" data-return>반품/환불</button>'];
+      case "구매확정":
+      case "입금취소":
+      case "결제취소":
+        return [];
+      default:
+        return [];
+    }
+  }
+
+  function findOrder(no) {
+    for (var i = 0; i < ORDERS.length; i++) if (ORDERS[i].no === no) return ORDERS[i];
+    return null;
+  }
+
+  function orderSubstatus(o) {
+    if (o.status === "배송완료" && o.confirmDday != null) return '자동 구매확정까지 D-' + o.confirmDday;
+    if (o.status === "입금취소") return '환불 대상 금액 없음';
+    if (o.status === "결제취소" && o.refundAmount != null) return '환불 ' + o.refundAmount.toLocaleString() + '원 · 포인트 복원 완료';
+    return "";
+  }
 
   var WISH_ITEMS = [
     { name: "Phonics Code 1 : Student Book", list: 15000, sale: 13500 },
@@ -64,18 +100,23 @@
   function renderOrders() {
     document.getElementById("orderTableBody").innerHTML = ORDERS.map(function (o, idx) {
       var itemLabel = o.items.length > 1 ? o.items[0] + " 외 " + (o.items.length - 1) + "건" : o.items[0];
-      var actions = (STATUS_ACTIONS[o.status] || []).join("");
+      var actions = orderActions(o).join("");
+      var substatus = orderSubstatus(o);
       return (
         '<tr>' +
           '<td>' + o.no + '</td>' +
           '<td><a href="#" data-order-detail="' + idx + '" style="color:var(--black);">' + itemLabel + '</a></td>' +
           '<td>' + o.amount.toLocaleString() + '원 <button style="font-size:11px;color:var(--gray-a9);" data-receipt>영수증</button></td>' +
-          '<td><span class="status-pill ' + (STATUS_CLASS[o.status] || "") + '">' + o.status + '</span></td>' +
+          '<td><span class="status-pill ' + (STATUS_CLASS[o.status] || "") + '">' + o.status + '</span>' +
+            (substatus ? '<div class="order-substatus">' + substatus + '</div>' : "") +
+          '</td>' +
           '<td><div class="row-actions">' + actions + '</div></td>' +
         '</tr>'
       );
     }).join("");
   }
+
+  var PAY_METHOD_LABEL = { card: "신용카드", transfer: "계좌이체", vbank: "무통장입금(가상계좌)" };
 
   function openOrderDetail(idx) {
     var o = ORDERS[idx];
@@ -86,7 +127,9 @@
       '<div class="info-grid">' +
         '<span class="label">주문상품</span><span>' + o.items.join(", ") + '</span>' +
         '<span class="label">결제금액</span><span>' + o.amount.toLocaleString() + '원</span>' +
-        '<span class="label">주문상태</span><span><span class="status-pill ' + (STATUS_CLASS[o.status] || "") + '">' + o.status + '</span></span>' +
+        '<span class="label">결제수단</span><span>' + (PAY_METHOD_LABEL[o.payMethod] || "-") + '</span>' +
+        '<span class="label">주문상태</span><span><span class="status-pill ' + (STATUS_CLASS[o.status] || "") + '">' + o.status + '</span>' +
+          (orderSubstatus(o) ? ' <span style="font-size:12px;color:var(--gray-a9);">' + orderSubstatus(o) + '</span>' : "") + '</span>' +
         '<span class="label">배송지</span><span>홍길동 / 010-1234-5678 / 서울특별시 마포구 월드컵북로 396</span>' +
       '</div>';
     panel.classList.add("is-open");
@@ -176,10 +219,42 @@
     if (orderDetail) { e.preventDefault(); openOrderDetail(Number(orderDetail.getAttribute("data-order-detail"))); return; }
 
     if (e.target.closest("[data-receipt]")) { showToast("결제 영수증(PG 확인 페이지)을 엽니다."); return; }
-    if (e.target.closest("[data-cancel-pay]")) { showToast("결제취소 사유 선택 레이어를 엽니다."); return; }
     if (e.target.closest("[data-track]")) { showToast("스윗트래커 배송조회 팝업을 엽니다."); return; }
-    if (e.target.closest("[data-confirm-buy]")) { showToast("구매가 확정되었습니다. 포인트가 적립됩니다."); return; }
-    if (e.target.closest("[data-return]")) { showToast("반품/환불 신청 — 1:1문의로 이동합니다."); return; }
+    if (e.target.closest("[data-return]")) { showToast("취소/반품/교환 신청이 1:1문의로 접수됩니다. 담당자 확인 후 환불이 진행됩니다."); return; }
+
+    var cancelPay = e.target.closest("[data-cancel-pay]");
+    if (cancelPay) {
+      var payOrder = findOrder(cancelPay.getAttribute("data-cancel-pay"));
+      if (payOrder && confirm("결제를 취소하시겠습니까? PG사를 통해 자동으로 환불 처리됩니다.")) {
+        payOrder.status = "결제취소";
+        payOrder.refundAmount = payOrder.amount;
+        renderOrders();
+        showToast("결제취소가 완료되었습니다. 환불이 진행됩니다.");
+      }
+      return;
+    }
+
+    var cancelVbank = e.target.closest("[data-cancel-vbank]");
+    if (cancelVbank) {
+      var vbankOrder = findOrder(cancelVbank.getAttribute("data-cancel-vbank"));
+      if (vbankOrder && confirm("입금 전 주문을 취소하시겠습니까?")) {
+        vbankOrder.status = "입금취소";
+        renderOrders();
+        showToast("입금취소가 완료되었습니다.");
+      }
+      return;
+    }
+
+    var confirmBuy = e.target.closest("[data-confirm-buy]");
+    if (confirmBuy) {
+      var confirmOrder = findOrder(confirmBuy.getAttribute("data-confirm-buy"));
+      if (confirmOrder && confirm("구매를 확정하시겠습니까? 이후 취소/반품/교환은 1:1문의로만 접수됩니다.")) {
+        confirmOrder.status = "구매확정";
+        renderOrders();
+        showToast("구매가 확정되었습니다. 포인트가 적립됩니다.");
+      }
+      return;
+    }
 
     var wishRemove = e.target.closest("[data-wish-remove]");
     if (wishRemove) {
